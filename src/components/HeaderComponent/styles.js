@@ -29,6 +29,7 @@ export const WrapperUserText = styled.div`
 export const WrapperUserAll = styled.div`
   display: flex;
   align-items: center;
+  margin-left: 28px;
 `;
 
 export const WrapperCart = styled.div`

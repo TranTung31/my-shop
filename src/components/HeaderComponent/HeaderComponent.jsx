@@ -1,7 +1,18 @@
 import { Col } from "antd";
-import { WrapperCart, WrapperHeader, WrapperLogo, WrapperUser, WrapperUserAll, WrapperUserText } from "./styles";
-import Search from "antd/es/input/Search";
-import { UserOutlined, CaretDownOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import {
+  WrapperCart,
+  WrapperHeader,
+  WrapperLogo,
+  WrapperUser,
+  WrapperUserAll,
+  WrapperUserText,
+} from "./styles";
+import {
+  UserOutlined,
+  CaretDownOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
+import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 
 const HeaderComponent = () => {
   return (
@@ -12,25 +23,32 @@ const HeaderComponent = () => {
             <WrapperLogo>My Shop</WrapperLogo>
           </Col>
           <Col span={12}>
-            <Search
-              placeholder="input search text"
-            //   onSearch={onSearch}
-              enterButton
-              style={{ width: 550 }}
+            <ButtonInputSearch
+              size="large"
+              buttonText="Tìm kiếm"
+              inputText="Vui lòng nhập"
             />
           </Col>
           <Col span={6}>
             <WrapperUserAll>
               <WrapperUser>
-                <div style={{ fontSize: "30px", color: "#fff" }}><UserOutlined /></div>
+                <div style={{ fontSize: "30px", color: "#fff" }}>
+                  <UserOutlined />
+                </div>
                 <WrapperUserText>
                   <span>Đăng nhập/Đăng ký</span>
-                  <span>Tài khoản <CaretDownOutlined /></span>
+                  <span>
+                    Tài khoản <CaretDownOutlined />
+                  </span>
                 </WrapperUserText>
               </WrapperUser>
               <WrapperCart>
-                <div style={{ fontSize: "30px", color: "#fff" }}><ShoppingCartOutlined /></div>
-                <span style={{ color: "#fff", marginLeft: "6px" }}>Giỏ hàng</span>
+                <div style={{ fontSize: "30px", color: "#fff" }}>
+                  <ShoppingCartOutlined />
+                </div>
+                <span style={{ color: "#fff", marginLeft: "6px" }}>
+                  Giỏ hàng
+                </span>
               </WrapperCart>
             </WrapperUserAll>
           </Col>
