@@ -6,6 +6,7 @@ export const WrapperHeader = styled(Row)`
   background-color: #007fff;
   height: 80px;
   align-items: center;
+  width: 100%;
 `;
 
 export const WrapperLogo = styled.span`

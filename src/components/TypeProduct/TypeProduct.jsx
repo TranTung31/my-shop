@@ -1,5 +1,7 @@
+import { WrapperTextProduct } from "./styles";
+
 const TypeProduct = ({ name }) => {
-  return <h1>{name}</h1>;
+  return <WrapperTextProduct>{name}</WrapperTextProduct>;
 };
 
 export default TypeProduct;
