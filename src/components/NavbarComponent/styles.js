@@ -1,10 +1,9 @@
 import { styled } from "styled-components";
 
 export const WrapperNavbar = styled.div`
-  width: 200px;
   background-color: #fff;
   padding: 10px;
-  margin-top: 20px;
+  margin-right: 10px;
 `;
 
 export const WrapperTitleText = styled.h4`
