@@ -1,6 +1,10 @@
 import SlitherComponent from "../../components/SliderComponent/SliderComponent";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
-import { WrapperButtonMore, WrapperTypeProduct } from "./styles";
+import {
+  WrapperButtonMore,
+  WrapperProducts,
+  WrapperTypeProduct,
+} from "./styles";
 import slider1 from "../../assets/images/slider1.webp";
 import slider2 from "../../assets/images/slider2.webp";
 import slider3 from "../../assets/images/slider3.webp";
@@ -25,15 +29,7 @@ const HomePage = () => {
         }}
       >
         <SlitherComponent arrImages={[slider1, slider2, slider3]} />
-        <div
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-            flexWrap: "wrap",
-          }}
-        >
+        <WrapperProducts>
           <CardProduct />
           <CardProduct />
           <CardProduct />
@@ -45,7 +41,7 @@ const HomePage = () => {
           <CardProduct />
           <CardProduct />
           <CardProduct />
-        </div>
+        </WrapperProducts>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <WrapperButtonMore
             buttonText={"Xem thêm"}
