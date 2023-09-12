@@ -1,9 +1,16 @@
 import { Button } from "antd";
 
-const ButtonComponent = ({ icon, size, styleButton, buttonText, ...rests }) => {
+const ButtonComponent = ({
+  icon,
+  size,
+  styleButton,
+  buttonText,
+  styleTextButton,
+  ...rests
+}) => {
   return (
     <Button icon={icon} size={size} style={styleButton}>
-      <span>{buttonText}</span>
+      <span style={styleTextButton}>{buttonText}</span>
     </Button>
   );
 };

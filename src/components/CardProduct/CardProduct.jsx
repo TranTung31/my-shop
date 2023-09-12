@@ -4,6 +4,7 @@ import {
   WrapperPriceDiscount,
   WrapperPriceProduct,
   WrapperReportProduct,
+  WrapperStyleTextSell,
 } from "./styles";
 import { StarFilled } from "@ant-design/icons";
 import logo from "../../assets/images/logo.png";
@@ -39,9 +40,9 @@ const CardProduct = () => {
       <StyleNameProduct>Iphone 14 Pro</StyleNameProduct>
       <WrapperReportProduct>
         <span style={{ marginRight: "5px" }}>
-          2.5 <StarFilled style={{ color: "yellow" }} />{" "}
+          2.5 <StarFilled style={{ color: "#FFC400" }} />{" "}
         </span>
-        <span> | Đã bán 10+</span>
+        <WrapperStyleTextSell> | Đã bán 10+</WrapperStyleTextSell>
       </WrapperReportProduct>
       <WrapperPriceProduct>
         1.000.000 VND <WrapperPriceDiscount>- 10 %</WrapperPriceDiscount>

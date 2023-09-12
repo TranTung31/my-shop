@@ -30,3 +30,9 @@ export const WrapperPriceDiscount = styled.span`
   margin-left: 6px;
   font-weight: 500;
 `;
+
+export const WrapperStyleTextSell = styled.span`
+  font-size: 1.4rem;
+  line-height: 24px;
+  color: rgb(120, 120, 120);
+`;
