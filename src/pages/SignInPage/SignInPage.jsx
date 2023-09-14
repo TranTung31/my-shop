@@ -8,8 +8,11 @@ import {
   WrapperTextLight,
 } from "./styles";
 import imageForm from "../../assets/images/logo-signin.png";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
 const SignInPage = () => {
+  const [isShowPassword, setIsShowPassword] = useState(false);
   return (
     <div
       style={{
@@ -26,8 +29,33 @@ const SignInPage = () => {
           <span style={{ fontSize: "16px", lineHeight: "20px" }}>
             Đăng nhập và tạo tài khoản
           </span>
-          <InputForm placeholder="abc@gmail.com" style={{ margin: "10px 0" }} size="large" />
-          <InputForm placeholder="password" size="large"/>
+          <InputForm
+            placeholder="abc@gmail.com"
+            style={{ margin: "10px 0" }}
+            size="large"
+          />
+          <div style={{ position: "relative" }}>
+            <span
+              onClick={() => {
+                setIsShowPassword(!isShowPassword);
+              }}
+              style={{
+                fontSize: "16px",
+                position: "absolute",
+                zIndex: "10",
+                top: "14px",
+                right: "16px",
+                cursor: "pointer",
+              }}
+            >
+              {isShowPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+            </span>
+            <InputForm
+              placeholder="password"
+              size="large"
+              type={isShowPassword ? "text" : "password"}
+            />
+          </div>
           <ButtonComponent
             buttonText="Đăng nhập"
             styleButton={{

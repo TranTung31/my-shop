@@ -1,4 +1,4 @@
-import Slider from "react-slick";
+import { WrapperSlider } from "./styles";
 
 const SlitherComponent = ({ arrImages }) => {
   const settings = {
@@ -11,11 +11,11 @@ const SlitherComponent = ({ arrImages }) => {
     autoplay: true,
   };
   return (
-    <Slider {...settings}>
+    <WrapperSlider {...settings}>
       {arrImages.map((image, index) => {
         return <img src={image} alt="slider" key={index} width="100%"/>;
       })}
-    </Slider>
+    </WrapperSlider>
   );
 };
 

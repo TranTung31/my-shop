@@ -2,11 +2,10 @@ import { Row } from "antd";
 import { styled } from "styled-components";
 
 export const WrapperHeader = styled(Row)`
-  padding: 10px 120px;
-  background-color: #007fff;
+  padding: 10px 0;
   height: 80px;
   align-items: center;
-  width: 100%;
+  width: 1285px;
 `;
 
 export const WrapperLogo = styled.span`

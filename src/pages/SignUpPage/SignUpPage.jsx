@@ -8,8 +8,12 @@ import {
   WrapperTextLight,
 } from "./styles";
 import imageForm from "../../assets/images/logo-signin.png";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
-const SignOutPage = () => {
+const SignUpPage = () => {
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowConfirm, setIsShowConfirm] = useState(false);
   return (
     <div
       style={{
@@ -31,12 +35,53 @@ const SignOutPage = () => {
             style={{ margin: "10px 0" }}
             size="large"
           />
-          <InputForm placeholder="password" size="large" />
-          <InputForm
-            placeholder="confirm password"
-            size="large"
-            style={{ marginTop: "10px" }}
-          />
+
+          <div style={{ position: "relative" }}>
+            <span
+              onClick={() => {
+                setIsShowPassword(!isShowPassword);
+              }}
+              style={{
+                fontSize: "16px",
+                position: "absolute",
+                zIndex: "10",
+                top: "14px",
+                right: "16px",
+                cursor: "pointer",
+              }}
+            >
+              {isShowPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+            </span>
+            <InputForm
+              placeholder="password"
+              size="large"
+              type={isShowPassword ? "text" : "password"}
+            />
+          </div>
+
+          <div style={{ position: "relative", marginTop: "10px" }}>
+            <span
+              onClick={() => {
+                setIsShowConfirm(!isShowConfirm);
+              }}
+              style={{
+                fontSize: "16px",
+                position: "absolute",
+                zIndex: "10",
+                top: "14px",
+                right: "16px",
+                cursor: "pointer",
+              }}
+            >
+              {isShowConfirm ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+            </span>
+            <InputForm
+              placeholder="confirm password"
+              size="large"
+              type={isShowConfirm ? "text" : "password"}
+            />
+          </div>
+
           <ButtonComponent
             buttonText="Đăng ký"
             styleButton={{
@@ -74,4 +119,4 @@ const SignOutPage = () => {
   );
 };
 
-export default SignOutPage;
+export default SignUpPage;

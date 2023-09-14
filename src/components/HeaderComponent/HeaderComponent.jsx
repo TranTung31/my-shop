@@ -17,7 +17,14 @@ import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 const HeaderComponent = () => {
   return (
     <>
-      <div>
+      <div
+        style={{
+          width: "100%",
+          backgroundColor: "#007fff",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <WrapperHeader>
           <Col span={6}>
             <WrapperLogo>My Shop</WrapperLogo>

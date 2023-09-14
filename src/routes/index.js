@@ -4,7 +4,7 @@ import ProductsPage from "../pages/ProductsPage/ProductsPage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
 import SignInPage from "../pages/SignInPage/SignInPage";
-import SignOutPage from "../pages/SignOutPage/SignOutPage";
+import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import ProductDetail from "../pages/ProductDetail/ProductDetail";
 
 export const routes = [
@@ -34,8 +34,8 @@ export const routes = [
     isShowHeader: false,
   },
   {
-    path: "/sign-out",
-    page: SignOutPage,
+    path: "/sign-up",
+    page: SignUpPage,
     isShowHeader: false,
   },
   {
