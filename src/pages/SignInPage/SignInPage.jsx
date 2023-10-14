@@ -10,9 +10,25 @@ import {
 import imageForm from "../../assets/images/logo-signin.png";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const handleNavigateSignUp = () => {
+    navigate("/sign-up");
+  };
+  const handleOnChangeEmail = (e) => {
+    setEmail(e.target.value);
+  };
+  const handleOnChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
+  const handleSignIn = () => {
+    console.log("sign in: ", email, password);
+  };
   return (
     <div
       style={{
@@ -33,6 +49,8 @@ const SignInPage = () => {
             placeholder="abc@gmail.com"
             style={{ margin: "10px 0" }}
             size="large"
+            value={email}
+            onChange={handleOnChangeEmail}
           />
           <div style={{ position: "relative" }}>
             <span
@@ -54,6 +72,8 @@ const SignInPage = () => {
               placeholder="password"
               size="large"
               type={isShowPassword ? "text" : "password"}
+              value={password}
+              onChange={handleOnChangePassword}
             />
           </div>
           <ButtonComponent
@@ -70,11 +90,15 @@ const SignInPage = () => {
               fontSize: "15px",
               fontWeight: "700",
             }}
+            disabled={!email || !password}
+            onClick={handleSignIn}
           />
           <WrapperTextLight>Quên mật khẩu?</WrapperTextLight>
           <p style={{ fontSize: "1.5rem" }}>
             Chưa có tài khoản?{" "}
-            <WrapperTextLight>Tạo tài khoản</WrapperTextLight>
+            <WrapperTextLight onClick={handleNavigateSignUp}>
+              Tạo tài khoản
+            </WrapperTextLight>
           </p>
         </WrapperContainerLeft>
         <WrapperContainerRight>

@@ -10,10 +10,30 @@ import {
 import imageForm from "../../assets/images/logo-signin.png";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirm, setIsShowConfirm] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+  const handleNavigateLogin = () => {
+    navigate("/sign-in");
+  };
+  const handleOnChangeEmail = (e) => {
+    setEmail(e.target.value);
+  };
+  const handleOnChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
+  const handleOnChangeConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+  const handleSignUp = () => {
+    console.log('sign up: ', email, password, confirmPassword);
+  }
   return (
     <div
       style={{
@@ -34,6 +54,8 @@ const SignUpPage = () => {
             placeholder="abc@gmail.com"
             style={{ margin: "10px 0" }}
             size="large"
+            value={email}
+            onChange={handleOnChangeEmail}
           />
 
           <div style={{ position: "relative" }}>
@@ -56,6 +78,7 @@ const SignUpPage = () => {
               placeholder="password"
               size="large"
               type={isShowPassword ? "text" : "password"}
+              onChange={handleOnChangePassword}
             />
           </div>
 
@@ -79,6 +102,7 @@ const SignUpPage = () => {
               placeholder="confirm password"
               size="large"
               type={isShowConfirm ? "text" : "password"}
+              onChange={handleOnChangeConfirmPassword}
             />
           </div>
 
@@ -96,10 +120,14 @@ const SignUpPage = () => {
               fontSize: "15px",
               fontWeight: "700",
             }}
+            disabled={!email || !password || !confirmPassword}
+            onClick={handleSignUp}
           />
           <p style={{ fontSize: "1.5rem" }}>
             Đã có tài khoản?{" "}
-            <WrapperTextLight>Đăng nhập</WrapperTextLight>
+            <WrapperTextLight onClick={handleNavigateLogin}>
+              Đăng nhập
+            </WrapperTextLight>
           </p>
         </WrapperContainerLeft>
         <WrapperContainerRight>

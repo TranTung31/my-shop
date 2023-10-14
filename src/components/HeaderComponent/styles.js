@@ -24,6 +24,7 @@ export const WrapperUserText = styled.div`
   flex-direction: column;
   color: #fff;
   margin-left: 6px;
+  cursor: pointer;
 `;
 
 export const WrapperUserAll = styled.div`
