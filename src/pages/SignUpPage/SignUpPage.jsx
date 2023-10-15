@@ -11,6 +11,9 @@ import imageForm from "../../assets/images/logo-signin.png";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import * as UserService from "../../services/UserService";
+import useMutationHook from "../../hooks/useMutationHook";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 
 const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -19,21 +22,33 @@ const SignUpPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
+
+  const mutation = useMutationHook((data) => UserService.signupUser(data));
+  console.log("mutation sign up: ", mutation);
+
+  const { data, isLoading } = mutation;
+
   const handleNavigateLogin = () => {
     navigate("/sign-in");
   };
+
   const handleOnChangeEmail = (e) => {
     setEmail(e.target.value);
   };
+
   const handleOnChangePassword = (e) => {
     setPassword(e.target.value);
   };
+
   const handleOnChangeConfirmPassword = (e) => {
     setConfirmPassword(e.target.value);
   };
+
   const handleSignUp = () => {
-    console.log('sign up: ', email, password, confirmPassword);
-  }
+    mutation.mutate({ email, password, confirmPassword });
+    console.log("sign up: ", email, password, confirmPassword);
+  };
+
   return (
     <div
       style={{
@@ -104,25 +119,39 @@ const SignUpPage = () => {
               type={isShowConfirm ? "text" : "password"}
               onChange={handleOnChangeConfirmPassword}
             />
+            {data?.status === "ERR" && (
+              <span
+                style={{
+                  fontSize: "15px",
+                  color: "red",
+                  display: "block",
+                  paddingTop: "10px",
+                }}
+              >
+                {data?.message}
+              </span>
+            )}
           </div>
 
-          <ButtonComponent
-            buttonText="Đăng ký"
-            styleButton={{
-              backgroundColor: "rgb(255, 66, 78)",
-              width: "100%",
-              height: "48px",
-              border: "none",
-              margin: "26px 0 10px",
-            }}
-            styleTextButton={{
-              color: "#fff",
-              fontSize: "15px",
-              fontWeight: "700",
-            }}
-            disabled={!email || !password || !confirmPassword}
-            onClick={handleSignUp}
-          />
+          <LoadingComponent isLoading={isLoading}>
+            <ButtonComponent
+              buttonText="Đăng ký"
+              styleButton={{
+                backgroundColor: "rgb(255, 66, 78)",
+                width: "100%",
+                height: "48px",
+                border: "none",
+                margin: "26px 0 10px",
+              }}
+              styleTextButton={{
+                color: "#fff",
+                fontSize: "15px",
+                fontWeight: "700",
+              }}
+              disabled={!email || !password || !confirmPassword}
+              onClick={handleSignUp}
+            />
+          </LoadingComponent>
           <p style={{ fontSize: "1.5rem" }}>
             Đã có tài khoản?{" "}
             <WrapperTextLight onClick={handleNavigateLogin}>
