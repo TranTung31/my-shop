@@ -9,11 +9,12 @@ import {
 } from "./styles";
 import imageForm from "../../assets/images/logo-signin.png";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as UserService from "../../services/UserService";
 import useMutationHook from "../../hooks/useMutationHook";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import * as Message from "../../components/Message/Message";
 
 const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -26,7 +27,17 @@ const SignUpPage = () => {
   const mutation = useMutationHook((data) => UserService.signupUser(data));
   console.log("mutation sign up: ", mutation);
 
-  const { data, isLoading } = mutation;
+  const { data, isLoading, isSuccess, isError } = mutation;
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("isSuccess: ", isSuccess);
+      Message.success();
+      handleNavigateLogin();
+    } else if (isError) {
+      Message.error();
+    }
+  }, [isSuccess, isError]);
 
   const handleNavigateLogin = () => {
     navigate("/sign-in");

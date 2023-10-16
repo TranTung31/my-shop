@@ -9,17 +9,22 @@ import {
 } from "./styles";
 import imageForm from "../../assets/images/logo-signin.png";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as UserService from "../../services/UserService";
 import useMutationHook from "../../hooks/useMutationHook";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import * as Message from "../../components/Message/Message";
+import jwt_decode from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../../redux/slides/userSlide";
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNavigateSignUp = () => {
     navigate("/sign-up");
@@ -35,7 +40,27 @@ const SignInPage = () => {
 
   const mutation = useMutationHook((data) => UserService.loginUser(data));
 
-  const { data, isLoading } = mutation;
+  const { data, isLoading, isSuccess } = mutation;
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/");
+      Message.success();
+      localStorage.setItem("access_token", data?.access_token);
+
+      if (data?.access_token) {
+        const decoded = jwt_decode(data?.access_token);
+        if (decoded?.id) {
+          handleGetDetailUser(decoded?.id, data?.access_token);
+        }
+      }
+    }
+  }, [isSuccess]);
+
+  const handleGetDetailUser = async (id, token) => {
+    const res = await UserService.getDetailUser(id, token);
+    dispatch(updateUser({...res?.data, access_token: token}));
+  }
 
   const handleSignIn = () => {
     mutation.mutate({ email, password });
