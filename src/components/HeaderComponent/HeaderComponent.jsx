@@ -1,6 +1,7 @@
-import { Badge, Col } from "antd";
+import { Badge, Col, Popover } from "antd";
 import {
   WrapperCart,
+  WrapperContentPopover,
   WrapperHeader,
   WrapperLogo,
   WrapperUser,
@@ -15,15 +16,40 @@ import {
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import * as UserService from "../../services/UserService";
+import { useDispatch } from "react-redux";
+import { resetUser } from "../../redux/slides/userSlide";
+import { useState } from "react";
+import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleNavigateLogin = () => {
     navigate("/sign-in");
   };
 
   const user = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    setIsLoading(true);
+    localStorage.removeItem("access_token");
+    await UserService.logOutUser();
+    dispatch(resetUser());
+    setIsLoading(false);
+  }
+
+  const content = (
+    <div>
+      <WrapperContentPopover onClick={handleLogout}>Đăng xuất</WrapperContentPopover>
+      <WrapperContentPopover>Thông tin người dùng</WrapperContentPopover>
+    </div>
+  );
+
   return (
     <>
       <div
@@ -52,16 +78,20 @@ const HeaderComponent = () => {
                   <UserOutlined />
                 </div>
                 {user?.name ? (
-                  <span
-                    style={{
-                      color: "rgba(255, 255, 255)",
-                      display: "block",
-                      cursor: "pointer",
-                      marginLeft: "4px",
-                    }}
-                  >
-                    {user?.name}
-                  </span>
+                  <LoadingComponent isLoading={isLoading}>
+                  <Popover content={content} trigger="click">
+                    <span
+                      style={{
+                        color: "rgba(255, 255, 255)",
+                        display: "block",
+                        cursor: "pointer",
+                        marginLeft: "4px",
+                      }}
+                    >
+                      {user?.name}
+                    </span>
+                  </Popover>
+                  </LoadingComponent>
                 ) : (
                   <WrapperUserText onClick={handleNavigateLogin}>
                     <span>Đăng nhập/Đăng ký</span>

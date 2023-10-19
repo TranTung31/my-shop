@@ -10,3 +10,8 @@ body {
 html {
     font-size: 62.5%;
 }
+
+.ant-popover-inner {
+    padding: 6px !important;
+    overflow: hidden;
+}

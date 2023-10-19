@@ -14,6 +14,16 @@ export const WrapperLogo = styled.span`
   color: #fff;
 `;
 
+export const WrapperContentPopover = styled.p`
+  cursor: pointer;
+  padding: 12px;
+  margin: 0;
+  &:hover {
+    background-color: #007fff;
+    color: #fff;
+  }
+`;
+
 export const WrapperUser = styled.div`
   display: flex;
   align-items: center;

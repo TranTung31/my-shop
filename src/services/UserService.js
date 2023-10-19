@@ -18,6 +18,11 @@ export const signupUser = async (data) => {
   return res.data;
 };
 
+export const logOutUser = async () => {
+  const res = await axios.post(`${process.env.REACT_APP_API}/user/log-out`);
+  return res.data;
+};
+
 export const getDetailUser = async (id, access_token) => {
   const res = await axiosJWT.get(
     `${process.env.REACT_APP_API}/user/get-detail-user/${id}`,
