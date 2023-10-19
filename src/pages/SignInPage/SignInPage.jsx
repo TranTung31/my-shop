@@ -46,7 +46,7 @@ const SignInPage = () => {
     if (isSuccess) {
       navigate("/");
       Message.success();
-      localStorage.setItem("access_token", data?.access_token);
+      localStorage.setItem("access_token", JSON.stringify(data?.access_token));
 
       if (data?.access_token) {
         const decoded = jwt_decode(data?.access_token);
@@ -59,8 +59,8 @@ const SignInPage = () => {
 
   const handleGetDetailUser = async (id, token) => {
     const res = await UserService.getDetailUser(id, token);
-    dispatch(updateUser({...res?.data, access_token: token}));
-  }
+    dispatch(updateUser({ ...res?.data, access_token: token }));
+  };
 
   const handleSignIn = () => {
     mutation.mutate({ email, password });

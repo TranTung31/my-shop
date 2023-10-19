@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    name: "",
-    email: "",
-    access_token: ""
+  name: "",
+  email: "",
+  access_token: "",
 };
 
 export const userSlide = createSlice({
@@ -15,7 +15,7 @@ export const userSlide = createSlice({
       state.name = name || email;
       state.email = email;
       state.access_token = access_token;
-    }
+    },
   },
 });
 
