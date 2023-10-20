@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import InputForm from "../../components/InputForm/InputForm";
 import {
+  WrapperButtonComponent,
   WrapperContent,
   WrapperHeader,
   WrapperInput,
   WrapperLable,
   WrapperUpload,
 } from "./styles";
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as Message from "../../components/Message/Message";
 import { updateUser } from "../../redux/slides/userSlide";
-import { Button, Upload } from "antd";
+import { Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { getBase64 } from "../../utils";
 
@@ -104,17 +104,11 @@ const ProfilePage = () => {
             onChange={handleOnChangeName}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
-          <ButtonComponent
+          <WrapperButtonComponent
             buttonText="Cập nhật"
             disabled={false}
-            styleButton={{
-              backgroundColor: "#fff",
-              marginLeft: "20px",
-              border: "1px solid #007fff",
-              color: "#007fff",
-            }}
             onClick={handleUpdate}
-          ></ButtonComponent>
+          ></WrapperButtonComponent>
         </WrapperInput>
 
         <WrapperInput>
@@ -124,17 +118,11 @@ const ProfilePage = () => {
             onChange={handleOnChangeEmail}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
-          <ButtonComponent
+          <WrapperButtonComponent
             buttonText="Cập nhật"
             disabled={false}
-            styleButton={{
-              backgroundColor: "#fff",
-              marginLeft: "20px",
-              border: "1px solid #007fff",
-              color: "#007fff",
-            }}
             onClick={handleUpdate}
-          ></ButtonComponent>
+          ></WrapperButtonComponent>
         </WrapperInput>
 
         <WrapperInput>
@@ -144,17 +132,11 @@ const ProfilePage = () => {
             onChange={handleOnChangePhone}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
-          <ButtonComponent
+          <WrapperButtonComponent
             buttonText="Cập nhật"
             disabled={false}
-            styleButton={{
-              backgroundColor: "#fff",
-              marginLeft: "20px",
-              border: "1px solid #007fff",
-              color: "#007fff",
-            }}
             onClick={handleUpdate}
-          ></ButtonComponent>
+          ></WrapperButtonComponent>
         </WrapperInput>
 
         <WrapperInput>
@@ -164,17 +146,11 @@ const ProfilePage = () => {
             onChange={handleOnChangeAddress}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
-          <ButtonComponent
+          <WrapperButtonComponent
             buttonText="Cập nhật"
             disabled={false}
-            styleButton={{
-              backgroundColor: "#fff",
-              marginLeft: "20px",
-              border: "1px solid #007fff",
-              color: "#007fff",
-            }}
             onClick={handleUpdate}
-          ></ButtonComponent>
+          ></WrapperButtonComponent>
         </WrapperInput>
 
         <WrapperInput>
@@ -195,17 +171,11 @@ const ProfilePage = () => {
               }}
             />
           )}
-          <ButtonComponent
+          <WrapperButtonComponent
             buttonText="Cập nhật"
             disabled={false}
-            styleButton={{
-              backgroundColor: "#fff",
-              marginLeft: "20px",
-              border: "1px solid #007fff",
-              color: "#007fff",
-            }}
             onClick={handleUpdate}
-          ></ButtonComponent>
+          ></WrapperButtonComponent>
         </WrapperInput>
       </WrapperContent>
     </div>

@@ -1,5 +1,6 @@
 import { Upload } from "antd";
 import styled from "styled-components";
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 
 export const WrapperHeader = styled.h1`
   color: #000;
@@ -32,4 +33,20 @@ export const WrapperUpload = styled(Upload)`
   & .ant-upload-list-item-container {
     display: none;
   }
-`
+`;
+
+export const WrapperButtonComponent = styled(ButtonComponent)`
+  background-color: #fff;
+  margin-left: 20px;
+  border: 1px solid #d9d9d9;
+
+  span {
+    color: #000;
+    font-weight: 600;
+  }
+
+  & :hover {
+    color: #007fff;
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  `;

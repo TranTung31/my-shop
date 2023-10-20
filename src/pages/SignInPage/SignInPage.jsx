@@ -40,22 +40,27 @@ const SignInPage = () => {
 
   const mutation = useMutationHook((data) => UserService.loginUser(data));
 
-  const { data, isLoading, isSuccess } = mutation;
+  const { data, isLoading } = mutation;
 
   useEffect(() => {
-    if (isSuccess) {
+    if (data?.status === "OK") {
       navigate("/");
-      Message.success();
+      Message.success("Login Successfully");
       localStorage.setItem("access_token", JSON.stringify(data?.access_token));
 
       if (data?.access_token) {
+        // Giải mã access_token bằng JWT decoded
         const decoded = jwt_decode(data?.access_token);
         if (decoded?.id) {
           handleGetDetailUser(decoded?.id, data?.access_token);
         }
       }
     }
-  }, [isSuccess]);
+
+    if (data?.status === "ERR") {
+      Message.error("Login Error");
+    }
+  }, [data?.status]);
 
   const handleGetDetailUser = async (id, token) => {
     const res = await UserService.getDetailUser(id, token);

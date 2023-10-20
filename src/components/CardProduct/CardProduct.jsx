@@ -9,7 +9,18 @@ import {
 import { StarFilled } from "@ant-design/icons";
 import logo from "../../assets/images/logo.png";
 
-const CardProduct = () => {
+const CardProduct = (props) => {
+  const {
+    name,
+    price,
+    image,
+    rating,
+    description,
+    countInStock,
+    type,
+    discount,
+    selled,
+  } = props;
   return (
     <WrapperCardStyle
       hoverable
@@ -37,15 +48,15 @@ const CardProduct = () => {
           borderTopLeftRadius: "8px",
         }}
       />
-      <StyleNameProduct>Iphone 14 Pro</StyleNameProduct>
+      <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportProduct>
         <span style={{ marginRight: "5px" }}>
-          2.5 <StarFilled style={{ color: "#FFC400" }} />{" "}
+          {rating} <StarFilled style={{ color: "#FFC400" }} />{" "}
         </span>
-        <WrapperStyleTextSell> | Đã bán 10+</WrapperStyleTextSell>
+        <WrapperStyleTextSell> | Đã bán {selled || 100}+</WrapperStyleTextSell>
       </WrapperReportProduct>
       <WrapperPriceProduct>
-        1.000.000 VND <WrapperPriceDiscount>- 10 %</WrapperPriceDiscount>
+        {price} <WrapperPriceDiscount>- {discount || 5} %</WrapperPriceDiscount>
       </WrapperPriceProduct>
     </WrapperCardStyle>
   );

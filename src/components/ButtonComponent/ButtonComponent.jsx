@@ -16,7 +16,7 @@ const ButtonComponent = ({
       size={size}
       style={{
         ...styleButton,
-        backgroundColor: disabled ? "#ccc" : styleButton.backgroundColor,
+        backgroundColor: disabled ? "#ccc" : styleButton?.backgroundColor,
       }}
       onClick={onClick}
       disabled={disabled}
