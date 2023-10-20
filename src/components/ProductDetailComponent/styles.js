@@ -1,6 +1,5 @@
 import { Image, InputNumber } from "antd";
 import { styled } from "styled-components";
-import ButtonComponent from "../ButtonComponent/ButtonComponent";
 
 export const WrapperImageProductSmall = styled(Image)`
   // width: 64px;

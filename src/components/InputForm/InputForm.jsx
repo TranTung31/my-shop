@@ -1,9 +1,15 @@
 import { WrapperInput } from "./styles";
 
 const InputForm = (props) => {
-  const { placeholder, value, onChange, ...rests } = props;
+  const { placeholder, value, onChange, style, ...rests } = props;
   return (
-    <WrapperInput placeholder={placeholder} value={value} onChange={onChange} {...rests} />
+    <WrapperInput
+      placeholder={placeholder}
+      value={value}
+      style={style}
+      onChange={onChange}
+      {...rests}
+    />
   );
 };
 

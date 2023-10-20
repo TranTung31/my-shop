@@ -9,6 +9,7 @@ export const WrapperHeader = styled(Row)`
 `;
 
 export const WrapperLogo = styled.span`
+  cursor: pointer;
   font-size: 20px;
   font-weight: 600;
   color: #fff;

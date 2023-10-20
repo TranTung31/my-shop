@@ -19,13 +19,16 @@ import { useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import { useDispatch } from "react-redux";
 import { resetUser } from "../../redux/slides/userSlide";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
 const HeaderComponent = () => {
+
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [valueName, setValueName] = useState("");
+  const [valueAvatar, setValueAvatar] = useState("");
 
   const handleNavigateLogin = () => {
     navigate("/sign-in");
@@ -35,18 +38,30 @@ const HeaderComponent = () => {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    setIsLoading(true);
+    setValueName(user?.name);
+    setValueAvatar(user?.avatar);
+    setIsLoading(false);
+  }, [user?.name, user?.avatar]);
+
   const handleLogout = async () => {
     setIsLoading(true);
+    navigate("/");
     localStorage.removeItem("access_token");
     await UserService.logOutUser();
     dispatch(resetUser());
     setIsLoading(false);
-  }
+  };
 
   const content = (
     <div>
-      <WrapperContentPopover onClick={handleLogout}>Đăng xuất</WrapperContentPopover>
-      <WrapperContentPopover>Thông tin người dùng</WrapperContentPopover>
+      <WrapperContentPopover onClick={handleLogout}>
+        Đăng xuất
+      </WrapperContentPopover>
+      <WrapperContentPopover onClick={() => navigate("/user-detail")}>
+        Thông tin người dùng
+      </WrapperContentPopover>
     </div>
   );
 
@@ -62,7 +77,7 @@ const HeaderComponent = () => {
       >
         <WrapperHeader>
           <Col span={6}>
-            <WrapperLogo>My Shop</WrapperLogo>
+            <WrapperLogo onClick={() => navigate("/")}>My Shop</WrapperLogo>
           </Col>
           <Col span={12}>
             <ButtonInputSearch
@@ -74,23 +89,37 @@ const HeaderComponent = () => {
           <Col span={6}>
             <WrapperUserAll>
               <WrapperUser>
-                <div style={{ fontSize: "30px", color: "#fff" }}>
-                  <UserOutlined />
-                </div>
-                {user?.name ? (
+                {valueAvatar ? (
+                  <img
+                    src={valueAvatar}
+                    alt="avatar"
+                    style={{
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <div style={{ fontSize: "30px", color: "#fff" }}>
+                    <UserOutlined />
+                  </div>
+                )}
+
+                {user?.access_token ? (
                   <LoadingComponent isLoading={isLoading}>
-                  <Popover content={content} trigger="click">
-                    <span
-                      style={{
-                        color: "rgba(255, 255, 255)",
-                        display: "block",
-                        cursor: "pointer",
-                        marginLeft: "4px",
-                      }}
-                    >
-                      {user?.name}
-                    </span>
-                  </Popover>
+                    <Popover content={content} trigger="hover">
+                      <span
+                        style={{
+                          color: "rgba(255, 255, 255)",
+                          display: "block",
+                          cursor: "pointer",
+                          marginLeft: "4px",
+                        }}
+                      >
+                        {valueName || user?.email || "User"}
+                      </span>
+                    </Popover>
                   </LoadingComponent>
                 ) : (
                   <WrapperUserText onClick={handleNavigateLogin}>
