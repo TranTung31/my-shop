@@ -20,6 +20,7 @@ function App() {
     if (decoded?.id) {
       handleGetDetailUser(decoded?.id, storageData);
     }
+    setIsLoading(false);
   }, []);
 
   const handleDecoded = () => {

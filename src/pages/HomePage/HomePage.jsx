@@ -19,8 +19,6 @@ const HomePage = () => {
 
   const { data: products } = useQuery(["products"], getAllProduct);
 
-  console.log("products: ", products);
-
   return (
     <>
       <div style={{ width: "1285px", margin: "0 auto" }}>

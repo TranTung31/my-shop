@@ -22,8 +22,7 @@ import { resetUser } from "../../redux/slides/userSlide";
 import { useEffect, useState } from "react";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
-const HeaderComponent = () => {
-
+const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -56,11 +55,16 @@ const HeaderComponent = () => {
 
   const content = (
     <div>
-      <WrapperContentPopover onClick={handleLogout}>
-        Đăng xuất
-      </WrapperContentPopover>
       <WrapperContentPopover onClick={() => navigate("/user-detail")}>
         Thông tin người dùng
+      </WrapperContentPopover>
+      {user?.isAdmin === true && (
+        <WrapperContentPopover onClick={() => navigate("/system/admin")}>
+          Quản lý hệ thống
+        </WrapperContentPopover>
+      )}
+      <WrapperContentPopover onClick={handleLogout}>
+        Đăng xuất
       </WrapperContentPopover>
     </div>
   );
@@ -75,17 +79,24 @@ const HeaderComponent = () => {
           justifyContent: "center",
         }}
       >
-        <WrapperHeader>
+        <WrapperHeader
+          style={{
+            justifyContent:
+              isHiddenSearch && isHiddenCart ? "space-between" : "unset",
+          }}
+        >
           <Col span={6}>
             <WrapperLogo onClick={() => navigate("/")}>My Shop</WrapperLogo>
           </Col>
-          <Col span={12}>
-            <ButtonInputSearch
-              size="large"
-              buttonText="Tìm kiếm"
-              inputText="Vui lòng nhập"
-            />
-          </Col>
+          {!isHiddenSearch && (
+            <Col span={12}>
+              <ButtonInputSearch
+                size="large"
+                buttonText="Tìm kiếm"
+                inputText="Vui lòng nhập"
+              />
+            </Col>
+          )}
           <Col span={6}>
             <WrapperUserAll>
               <WrapperUser>
@@ -130,16 +141,18 @@ const HeaderComponent = () => {
                   </WrapperUserText>
                 )}
               </WrapperUser>
-              <WrapperCart>
-                <Badge count={5} size="small">
-                  <div style={{ fontSize: "30px", color: "#fff" }}>
-                    <ShoppingCartOutlined />
-                  </div>
-                </Badge>
-                <span style={{ color: "#fff", marginLeft: "6px" }}>
-                  Giỏ hàng
-                </span>
-              </WrapperCart>
+              {!isHiddenCart && (
+                <WrapperCart>
+                  <Badge count={5} size="small">
+                    <div style={{ fontSize: "30px", color: "#fff" }}>
+                      <ShoppingCartOutlined />
+                    </div>
+                  </Badge>
+                  <span style={{ color: "#fff", marginLeft: "6px" }}>
+                    Giỏ hàng
+                  </span>
+                </WrapperCart>
+              )}
             </WrapperUserAll>
           </Col>
         </WrapperHeader>
