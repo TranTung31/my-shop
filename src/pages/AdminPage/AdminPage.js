@@ -1,61 +1,50 @@
 import React, { useState } from "react";
-import {
-  AppstoreOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { AppstoreOutlined, UserOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import { getItem } from "../../utils";
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
+import AdminUser from "../../components/AdminUser/AdminUser";
+import AdminProduct from "../../components/AdminProduct/AdminProduct";
+import { WrapperContent } from "./styles";
 
 const AdminPage = () => {
-  const items = [
-    getItem("Người dùng", "sub1", <UserOutlined />, [
-      getItem("Option 1", "1"),
-      getItem("Option 2", "2"),
-      getItem("Option 3", "3"),
-      getItem("Option 4", "4"),
-    ]),
-    getItem("Sản phẩm", "sub2", <AppstoreOutlined />, [
-      getItem("Option 5", "5"),
-      getItem("Option 6", "6"),
-      getItem("Submenu", "sub3", null, [
-        getItem("Option 7", "7"),
-        getItem("Option 8", "8"),
-      ]),
-    ])
-  ];
-  const rootSubmenuKeys = ["sub1", "sub2", "sub4"];
-  const [openKeys, setOpenKeys] = useState(["sub1"]);
-  const onOpenChange = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-    if (latestOpenKey && rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      setOpenKeys(keys);
-    } else {
-      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+  const renderKey = (key) => {
+    switch (key) {
+      case "user":
+        return <AdminUser />;
+      case "product":
+        return <AdminProduct />;
+      default:
+        return <></>;
     }
   };
-
+  const items = [
+    getItem("Người dùng", "user", <UserOutlined />),
+    getItem("Sản phẩm", "product", <AppstoreOutlined />),
+  ];
   const [keySelected, setKeySelected] = useState("");
 
   const handleClick = ({ item, key }) => {
-    setKeySelected(key)
-  }
+    setKeySelected(key);
+  };
 
   return (
     <>
-      <HeaderComponent isHiddenSearch isHiddenCart/>
+      <HeaderComponent isHiddenSearch isHiddenCart />
       <div style={{ display: "flex" }}>
         <Menu
           mode="inline"
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
           onClick={handleClick}
           style={{
             width: 256,
+            height: "100vh",
+            borderRight: "2px solid #ccc",
           }}
           items={items}
         />
-        <div>{`Value option ${keySelected}`}</div>
+        <WrapperContent style={{ padding: "10px 15px 15px", flex: 1 }}>
+          {renderKey(keySelected)}
+        </WrapperContent>
       </div>
     </>
   );
