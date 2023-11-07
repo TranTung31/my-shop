@@ -103,7 +103,7 @@ const SignInPage = () => {
                 fontSize: "16px",
                 position: "absolute",
                 zIndex: "10",
-                top: "14px",
+                top: "10px",
                 right: "16px",
                 cursor: "pointer",
               }}
