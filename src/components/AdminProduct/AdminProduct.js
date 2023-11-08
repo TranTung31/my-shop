@@ -1,5 +1,5 @@
 import { WrapperButton, WrapperHeader, WrapperUpload } from "./styles";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
 import { Button, Form, Modal } from "antd";
 import { useEffect, useState } from "react";
@@ -8,9 +8,11 @@ import { getBase64 } from "../../utils";
 import * as ProductService from "../../services/ProductService";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as Message from "../../components/Message/Message";
+import { useQuery } from "@tanstack/react-query";
 
 const AdminProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [stateProduct, setStateProduct] = useState({
     name: "",
     type: "",
@@ -20,11 +22,18 @@ const AdminProduct = () => {
     image: "",
   });
 
+  const [form] = Form.useForm();
+
   const mutation = useMutationHook((data) =>
     ProductService.createProduct(data)
   );
 
-  const { data, isSuccess, isError } = mutation;
+  const { data, isSuccess } = mutation;
+
+  const { isLoading: isLoadingProducts, data: products } = useQuery({
+    queryKey: ["products"],
+    queryFn: ProductService.getAllProduct,
+  });
 
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {
@@ -37,9 +46,19 @@ const AdminProduct = () => {
         rating: "",
         image: "",
       });
+      form.resetFields();
       setIsModalOpen(false);
     } else if (data?.status === "ERROR") {
       Message.error("Create product error!");
+      setStateProduct({
+        name: "",
+        type: "",
+        price: "",
+        countInStock: "",
+        rating: "",
+        image: "",
+      });
+      form.resetFields();
       setIsModalOpen(false);
     }
   }, [isSuccess]);
@@ -48,17 +67,12 @@ const AdminProduct = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    console.log(stateProduct);
-    // setIsModalOpen(false);
-  };
-
   const handleCancel = () => {
+    form.resetFields();
     setIsModalOpen(false);
   };
 
   const onFinish = () => {
-    console.log("finish: ", stateProduct);
     mutation.mutate(stateProduct);
   };
 
@@ -79,6 +93,54 @@ const AdminProduct = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  const renderIcons = () => {
+    return (
+      <div>
+        <DeleteOutlined
+          style={{
+            fontSize: "26px",
+            color: "red",
+            cursor: "pointer",
+            marginRight: "10px",
+          }}
+        />
+        <EditOutlined
+          style={{ fontSize: "26px", color: "orange", cursor: "pointer" }}
+        />
+      </div>
+    );
+  };
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+    },
+    {
+      title: "Rating",
+      dataIndex: "rating",
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: renderIcons,
+    },
+  ];
+
+  const dataProducts = products?.data.map((product) => {
+    return { ...product, key: product._id };
+  });
+
   return (
     <div>
       <WrapperHeader>Quản lý sản phẩm</WrapperHeader>
@@ -88,16 +150,16 @@ const AdminProduct = () => {
       <Modal
         title="Tạo sản phẩm mới"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
+        footer={null}
       >
         <Form
           name="basic"
           labelCol={{
-            span: 8,
+            span: 6,
           }}
           wrapperCol={{
-            span: 16,
+            span: 20,
           }}
           style={{
             maxWidth: 600,
@@ -107,6 +169,7 @@ const AdminProduct = () => {
           }}
           onFinish={onFinish}
           autoComplete="off"
+          form={form}
         >
           <Form.Item
             label="Name"
@@ -199,7 +262,7 @@ const AdminProduct = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your rating!",
+                message: "Please input your image!",
               },
             ]}
           >
@@ -225,7 +288,7 @@ const AdminProduct = () => {
 
           <Form.Item
             wrapperCol={{
-              offset: 8,
+              offset: 20,
               span: 16,
             }}
           >
@@ -236,7 +299,11 @@ const AdminProduct = () => {
         </Form>
       </Modal>
       <div style={{ marginTop: "20px" }}>
-        <TableComponent />
+        <TableComponent
+          isLoading={isLoadingProducts}
+          columns={columns}
+          data={dataProducts}
+        />
       </div>
     </div>
   );
