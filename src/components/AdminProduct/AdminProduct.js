@@ -9,9 +9,17 @@ import * as ProductService from "../../services/ProductService";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as Message from "../../components/Message/Message";
 import { useQuery } from "@tanstack/react-query";
+import DrawerComponent from "../DrawerComponent/DrawerComponent";
+import { useSelector } from "react-redux";
+import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
 const AdminProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRowSelected, setIsRowSelected] = useState("");
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+
+  const user = useSelector((state) => state.user);
 
   const [stateProduct, setStateProduct] = useState({
     name: "",
@@ -22,13 +30,36 @@ const AdminProduct = () => {
     image: "",
   });
 
+  const [stateDetailProduct, setStateDetailProduct] = useState({
+    name: "",
+    type: "",
+    price: "",
+    countInStock: "",
+    rating: "",
+    image: "",
+  });
+
   const [form] = Form.useForm();
+
+  const mutationUpdate = useMutationHook(({ id, data, access_token }) => {
+    ProductService.updateProduct(id, data, access_token);
+  });
 
   const mutation = useMutationHook((data) =>
     ProductService.createProduct(data)
   );
 
   const { data, isSuccess } = mutation;
+
+  const {
+    variables: dataUpdateProduct,
+    isSuccess: isSuccessUpdateProduct,
+    status: statusUpdateProduct,
+  } = mutationUpdate;
+
+  // console.log("mutationUpdate: ", mutationUpdate);
+  // console.log("dataUpdateProduct: ", dataUpdateProduct?.data);
+  // console.log("isSuccessUpdateProduct: ", isSuccessUpdateProduct);
 
   const { isLoading: isLoadingProducts, data: products } = useQuery({
     queryKey: ["products"],
@@ -63,6 +94,21 @@ const AdminProduct = () => {
     }
   }, [isSuccess]);
 
+  useEffect(() => {
+    if (statusUpdateProduct === "success") {
+      Message.success("Update product success!");
+      setStateDetailProduct({
+        name: "",
+        type: "",
+        price: "",
+        countInStock: "",
+        rating: "",
+        image: "",
+      });
+      setIsEditOpen(false);
+    }
+  }, [dataUpdateProduct?.data]);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -87,10 +133,65 @@ const AdminProduct = () => {
     });
   };
 
+  const handleOnChangeAvatarDetail = async ({ fileList }) => {
+    const file = fileList[0];
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setStateDetailProduct({
+      ...stateDetailProduct,
+      image: file.preview,
+    });
+  };
+
   const handleOnChange = (e) => {
     setStateProduct({
       ...stateProduct,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleOnChangeDetail = (e) => {
+    setStateDetailProduct({
+      ...stateDetailProduct,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const fetchGetDetailProduct = async () => {
+    const res = await ProductService.getDetailProduct(isRowSelected);
+    if (res?.data) {
+      setStateDetailProduct({
+        name: res?.data?.name,
+        type: res?.data?.type,
+        price: res?.data?.price,
+        countInStock: res?.data?.countInStock,
+        rating: res?.data?.rating,
+        image: res?.data?.image,
+      });
+    }
+    return res;
+  };
+
+  useEffect(() => {
+    if (isRowSelected) {
+      fetchGetDetailProduct();
+    }
+  }, [isRowSelected]);
+
+  useEffect(() => {
+    form.setFieldsValue(stateDetailProduct);
+  }, [form, stateDetailProduct]);
+
+  const handleGetDetailProduct = () => {
+    setIsEditOpen(true);
+  };
+
+  const handleUpdateProduct = () => {
+    mutationUpdate.mutate({
+      id: isRowSelected,
+      data: stateDetailProduct,
+      access_token: user?.access_token,
     });
   };
 
@@ -107,6 +208,7 @@ const AdminProduct = () => {
         />
         <EditOutlined
           style={{ fontSize: "26px", color: "orange", cursor: "pointer" }}
+          onClick={handleGetDetailProduct}
         />
       </div>
     );
@@ -116,7 +218,6 @@ const AdminProduct = () => {
     {
       title: "Name",
       dataIndex: "name",
-      render: (text) => <a>{text}</a>,
     },
     {
       title: "Type",
@@ -298,11 +399,174 @@ const AdminProduct = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      <DrawerComponent
+        open={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        width="50%"
+      >
+        <LoadingComponent isLoading={isLoadingUpdate}>
+          <Form
+            name="basic"
+            labelCol={{
+              span: 6,
+            }}
+            wrapperCol={{
+              span: 20,
+            }}
+            style={{
+              maxWidth: 600,
+            }}
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={handleUpdateProduct}
+            autoComplete="off"
+            form={form}
+          >
+            <Form.Item
+              label="Name"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your name!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateDetailProduct.name}
+                onChange={handleOnChangeDetail}
+                name="name"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Type"
+              name="type"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your type!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateDetailProduct.type}
+                onChange={handleOnChangeDetail}
+                name="type"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Price"
+              name="price"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your price!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateDetailProduct.price}
+                onChange={handleOnChangeDetail}
+                name="price"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Count In Stock"
+              name="countInStock"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your count in stock!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateDetailProduct.countInStock}
+                onChange={handleOnChangeDetail}
+                name="countInStock"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Rating"
+              name="rating"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your rating!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateDetailProduct.rating}
+                onChange={handleOnChangeDetail}
+                name="rating"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Image"
+              name="image"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your image!",
+                },
+              ]}
+            >
+              <WrapperUpload onChange={handleOnChangeAvatarDetail} maxCount={1}>
+                <Button
+                  className={stateDetailProduct.image ? "btn-upload" : null}
+                >
+                  Upload
+                </Button>
+                {stateDetailProduct.image && (
+                  <img
+                    src={stateDetailProduct.image}
+                    alt="avatar"
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      marginLeft: "20px",
+                    }}
+                  />
+                )}
+              </WrapperUpload>
+            </Form.Item>
+
+            <Form.Item
+              wrapperCol={{
+                offset: 21,
+                span: 16,
+              }}
+            >
+              <Button type="primary" htmlType="submit">
+                Update
+              </Button>
+            </Form.Item>
+          </Form>
+        </LoadingComponent>
+      </DrawerComponent>
+
       <div style={{ marginTop: "20px" }}>
         <TableComponent
           isLoading={isLoadingProducts}
           columns={columns}
           data={dataProducts}
+          onRow={(record) => {
+            return {
+              onClick: (event) => {
+                setIsRowSelected(record._id);
+              },
+            };
+          }}
         />
       </div>
     </div>
