@@ -32,7 +32,7 @@ const CardProduct = (props) => {
       cover={
         <img
           alt="example"
-          src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+          src={image}
         />
       }
     >
