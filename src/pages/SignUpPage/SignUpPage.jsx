@@ -25,19 +25,19 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
   const mutation = useMutationHook((data) => UserService.signupUser(data));
+
   console.log("mutation sign up: ", mutation);
 
   const { data, isLoading, isSuccess, isError } = mutation;
 
   useEffect(() => {
-    if (isSuccess) {
-      console.log("isSuccess: ", isSuccess);
-      Message.success();
+    if (isSuccess && data?.status === "OK") {
+      Message.success("Sign up success!");
       handleNavigateLogin();
     } else if (isError) {
-      Message.error();
+      Message.error(data?.message);
     }
-  }, [isSuccess, isError]);
+  }, [data]);
 
   const handleNavigateLogin = () => {
     navigate("/sign-in");
