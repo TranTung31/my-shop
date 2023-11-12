@@ -1,5 +1,10 @@
 import { WrapperButton, WrapperHeader, WrapperUpload } from "./styles";
-import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
 import { Button, Form, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
@@ -21,8 +26,8 @@ const AdminProduct = () => {
   const [isRowSelected, setIsRowSelected] = useState("");
   const [isNameProduct, setIsNameProduct] = useState("");
 
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -31,7 +36,7 @@ const AdminProduct = () => {
   };
   const handleReset = (clearFilters) => {
     clearFilters();
-    setSearchText('');
+    setSearchText("");
   };
 
   const user = useSelector((state) => state.user);
@@ -66,6 +71,11 @@ const AdminProduct = () => {
     return res;
   });
 
+  const mutationDeleteMany = useMutationHook(({ ids, access_token }) => {
+    const res = ProductService.deleteManyProduct(ids, access_token);
+    return res;
+  });
+
   const mutation = useMutationHook((data) =>
     ProductService.createProduct(data)
   );
@@ -85,6 +95,13 @@ const AdminProduct = () => {
     isSuccess: isSuccessDeleteProduct,
     isLoading: isLoadingDeleteProduct,
   } = mutationDelete;
+
+  const {
+    data: dataDeleteManyProduct,
+    isError: isErrorDeleteManyProduct,
+    isSuccess: isSuccessDeleteManyProduct,
+    isLoading: isLoadingDeleteManyProduct,
+  } = mutationDeleteMany;
 
   const getAllProduct = async () => {
     const res = await ProductService.getAllProduct();
@@ -116,7 +133,7 @@ const AdminProduct = () => {
       form.resetFields();
       setIsOpenModalCreate(false);
     } else if (data?.status === "ERROR") {
-      Message.error("Create product error!");
+      Message.error(data?.message);
       setStateProduct({
         name: "",
         type: "",
@@ -135,7 +152,7 @@ const AdminProduct = () => {
       Message.success("Update product success!");
       setIsOpenModalEdit(false);
     } else if (isErrorUpdateProduct) {
-      Message.error("Update product error!");
+      Message.error(data?.message);
       setIsOpenModalEdit(false);
     }
   }, [isSuccessUpdateProduct]);
@@ -149,6 +166,14 @@ const AdminProduct = () => {
       setIsOpenModalDelete(false);
     }
   }, [isSuccessDeleteProduct]);
+
+  useEffect(() => {
+    if (isSuccessDeleteManyProduct && dataDeleteManyProduct?.status === "OK") {
+      Message.success("Delete many product success!");
+    } else if (dataDeleteProduct?.status === "ERROR") {
+      Message.success("Delete many product error!");
+    }
+  }, [isSuccessDeleteManyProduct]);
 
   const showModal = () => {
     setIsOpenModalCreate(true);
@@ -279,7 +304,13 @@ const AdminProduct = () => {
   };
 
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
       <div
         style={{
           padding: 8,
@@ -290,11 +321,13 @@ const AdminProduct = () => {
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
-            display: 'block',
+            display: "block",
           }}
         />
         <Space>
@@ -333,7 +366,7 @@ const AdminProduct = () => {
     filterIcon: (filtered) => (
       <SearchOutlined
         style={{
-          color: filtered ? '#1677ff' : undefined,
+          color: filtered ? "#1677ff" : undefined,
         }}
       />
     ),
@@ -343,7 +376,7 @@ const AdminProduct = () => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
       }
-    }
+    },
   });
 
   const columns = [
@@ -351,7 +384,7 @@ const AdminProduct = () => {
       title: "Name",
       dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,
-      ...getColumnSearchProps('name'),
+      ...getColumnSearchProps("name"),
     },
     {
       title: "Type",
@@ -373,9 +406,9 @@ const AdminProduct = () => {
       ],
       onFilter: (value, record) => {
         if (value === ">=") {
-          return record?.price >= 300000
+          return record?.price >= 300000;
         }
-        return record?.price < 300000
+        return record?.price < 300000;
       },
     },
     {
@@ -394,9 +427,9 @@ const AdminProduct = () => {
       ],
       onFilter: (value, record) => {
         if (value === ">=") {
-          return record?.rating >= 3
+          return record?.rating >= 3;
         }
-        return record?.rating < 3
+        return record?.rating < 3;
       },
     },
     {
@@ -405,6 +438,17 @@ const AdminProduct = () => {
       render: renderIcons,
     },
   ];
+
+  const handleDeleteManyProduct = (ids) => {
+    mutationDeleteMany.mutate(
+      { ids: ids, access_token: user?.access_token },
+      {
+        onSettled: () => {
+          queryGetAllProduct.refetch();
+        },
+      }
+    );
+  };
 
   return (
     <div>
@@ -737,6 +781,7 @@ const AdminProduct = () => {
           isLoading={isLoadingProducts}
           columns={columns}
           data={dataProducts}
+          handleDelete={handleDeleteManyProduct}
           onRow={(record) => {
             return {
               onClick: (event) => {

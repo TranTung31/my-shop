@@ -60,19 +60,31 @@ const AdminUser = () => {
     return res;
   });
 
+  const mutationDeleteMany = useMutationHook(({ ids, access_token }) => {
+    const res = UserService.deleteManyUser(ids, access_token);
+    return res;
+  });
+
   const {
-    data: dataUpdateProduct,
-    isError: isErrorUpdateProduct,
-    isSuccess: isSuccessUpdateProduct,
-    isLoading: isLoadingUpdateProduct,
+    data: dataUpdateUser,
+    isError: isErrorUpdateUser,
+    isSuccess: isSuccessUpdateUser,
+    isLoading: isLoadingUpdateUser,
   } = mutationUpdate;
 
   const {
-    data: dataDeleteProduct,
-    isError: isErrorDeleteProduct,
-    isSuccess: isSuccessDeleteProduct,
-    isLoading: isLoadingDeleteProduct,
+    data: dataDeleteUser,
+    isError: isErrorDeleteUser,
+    isSuccess: isSuccessDeleteUser,
+    isLoading: isLoadingDeleteUser,
   } = mutationDelete;
+
+  const {
+    data: dataDeleteManyUser,
+    isError: isErrorDeleteManyUser,
+    isSuccess: isSuccessDeleteManyUser,
+    isLoading: isLoadingDeleteManyUser,
+  } = mutationDeleteMany;
 
   const getAllUser = async () => {
     const res = await UserService.getAllUser(user?.access_token);
@@ -91,24 +103,32 @@ const AdminUser = () => {
   });
 
   useEffect(() => {
-    if (isSuccessUpdateProduct && dataUpdateProduct?.status === "OK") {
+    if (isSuccessUpdateUser && dataUpdateUser?.status === "OK") {
       Message.success("Update user success!");
       setIsOpenModalEdit(false);
-    } else if (isErrorUpdateProduct) {
+    } else if (isErrorUpdateUser) {
       Message.error("Update user error!");
       setIsOpenModalEdit(false);
     }
-  }, [isSuccessUpdateProduct]);
+  }, [isSuccessUpdateUser]);
 
   useEffect(() => {
-    if (isSuccessDeleteProduct && dataDeleteProduct?.status === "OK") {
+    if (isSuccessDeleteUser && dataDeleteUser?.status === "OK") {
       Message.success("Delete user success!");
       setIsOpenModalDelete(false);
-    } else if (dataDeleteProduct?.status === "ERROR") {
+    } else if (dataDeleteUser?.status === "ERROR") {
       Message.success("Delete user error!");
       setIsOpenModalDelete(false);
     }
-  }, [isSuccessDeleteProduct]);
+  }, [isSuccessDeleteUser]);
+
+  useEffect(() => {
+    if (isSuccessDeleteManyUser && dataDeleteManyUser?.status === "OK") {
+      Message.success("Delete many user success!");
+    } else if (dataDeleteManyUser?.status === "ERROR") {
+      Message.success("Delete many user error!");
+    }
+  }, [isSuccessDeleteManyUser]);
 
   const handleOnChangeAvatarDetail = async ({ fileList }) => {
     const file = fileList[0];
@@ -331,6 +351,17 @@ const AdminUser = () => {
     },
   ];
 
+  const handleDeleteManyUser = (ids) => {
+    mutationDeleteMany.mutate(
+      { ids: ids, access_token: user?.access_token },
+      {
+        onSettled: () => {
+          queryGetAllUser.refetch();
+        },
+      }
+    );
+  };
+
   return (
     <div>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
@@ -341,7 +372,7 @@ const AdminUser = () => {
         onCancel={() => setIsOpenModalDelete(false)}
         onOk={handleDelete}
       >
-        <LoadingComponent isLoading={isLoadingDeleteProduct}>
+        <LoadingComponent isLoading={isLoadingDeleteUser}>
           <div
             style={{ marginTop: "12px", fontWeight: 600, height: "50px" }}
           >{`Bạn có chắc chắn muốn xóa người dùng có name "${isNameUser}" này không?`}</div>
@@ -353,7 +384,7 @@ const AdminUser = () => {
         onClose={() => setIsOpenModalEdit(false)}
         width="50%"
       >
-        <LoadingComponent isLoading={isLoadingUpdateProduct}>
+        <LoadingComponent isLoading={isLoadingUpdateUser}>
           <Form
             name="basic"
             labelCol={{
@@ -491,6 +522,7 @@ const AdminUser = () => {
           isLoading={isLoadingProducts}
           columns={columns}
           data={dataUsers}
+          handleDelete={handleDeleteManyUser}
           onRow={(record) => {
             return {
               onClick: (event) => {
