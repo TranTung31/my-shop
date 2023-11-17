@@ -21,6 +21,7 @@ import { useDispatch } from "react-redux";
 import { resetUser } from "../../redux/slides/userSlide";
 import { useEffect, useState } from "react";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
+import { searchProduct } from "../../redux/slides/productSlice";
 
 const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const navigate = useNavigate();
@@ -69,6 +70,10 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     </div>
   );
 
+  const handleProductSearch = (e) => {
+    dispatch(searchProduct({ search: e.target.value }));
+  };
+
   return (
     <>
       <div
@@ -88,15 +93,18 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           <Col span={6}>
             <WrapperLogo onClick={() => navigate("/")}>My Shop</WrapperLogo>
           </Col>
+
           {!isHiddenSearch && (
             <Col span={12}>
               <ButtonInputSearch
                 size="large"
                 buttonText="Tìm kiếm"
                 inputText="Vui lòng nhập"
+                onChange={handleProductSearch}
               />
             </Col>
           )}
+
           <Col span={6}>
             <WrapperUserAll>
               <WrapperUser>

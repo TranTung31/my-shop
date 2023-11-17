@@ -9,6 +9,7 @@ const ButtonInputSearch = (props) => {
     buttonText,
     backGroundInput = "#fff",
     backGroundButton = "#0d5bb5",
+    ...rests
   } = props;
   return (
     <div style={{ display: "flex" }}>
@@ -16,6 +17,7 @@ const ButtonInputSearch = (props) => {
         placeholder={inputText}
         size={size}
         style={{ backgroundColor: backGroundInput, borderRadius: "inherit" }}
+        { ...rests }
       />
       <ButtonComponent
         icon={<SearchOutlined />}

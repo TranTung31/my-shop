@@ -6,18 +6,47 @@ import slider2 from "../../assets/images/slider2.webp";
 import slider3 from "../../assets/images/slider3.webp";
 import CardProduct from "../../components/CardProduct/CardProduct";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
-import { useQuery } from "@tanstack/react-query";
 import * as ProductService from "../../services/ProductService";
+import { useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import { useDebounceHook } from "../../hooks/useDebounceHook";
 
 const HomePage = () => {
   const arr = ["TV", "Iphone", "SamSung"];
+  const [isLoading, setIsLoading] = useState(false);
+  const [dataProduct, setDataProduct] = useState([]);
+  const isFirstRender = useRef(true);
+
+  const valueSearchInput = useSelector((state) => state.product.search);
+  const valueSearch = useDebounceHook(valueSearchInput, 800);
+
+  // Delay lần đầu tiên gọi API
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    const fetchProduct = async () => {
+      setIsLoading(true);
+      const res = await ProductService.getAllProduct(valueSearch);
+      setDataProduct(res.data);
+      setIsLoading(false);
+    };
+
+    fetchProduct();
+  }, [valueSearch]);
 
   const getAllProduct = async () => {
     const res = await ProductService.getAllProduct();
+    setDataProduct(res.data);
     return res;
   };
 
-  const { data: products } = useQuery(["products"], getAllProduct);
+  useEffect(() => {
+    getAllProduct();
+  }, []);
 
   return (
     <>
@@ -38,22 +67,24 @@ const HomePage = () => {
       >
         <div style={{ width: "1285px", margin: "0 auto" }}>
           <SlitherComponent arrImages={[slider1, slider2, slider3]} />
-          <WrapperProducts>
-            {products?.data?.map((product, index) => (
-              <CardProduct
-                key={product._id}
-                name={product.name}
-                price={product.price}
-                image={product.image}
-                rating={product.rating}
-                description={product.description}
-                countInStock={product.countInStock}
-                type={product.type}
-                discount={product.discount}
-                selled={product.selled}
-              />
-            ))}
-          </WrapperProducts>
+          <LoadingComponent isLoading={isLoading}>
+            <WrapperProducts>
+              {dataProduct?.map((product, index) => (
+                <CardProduct
+                  key={product._id}
+                  name={product.name}
+                  price={product.price}
+                  image={product.image}
+                  rating={product.rating}
+                  description={product.description}
+                  countInStock={product.countInStock}
+                  type={product.type}
+                  discount={product.discount}
+                  selled={product.selled}
+                />
+              ))}
+            </WrapperProducts>
+          </LoadingComponent>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <ButtonComponent
               buttonText={"Xem thêm"}
