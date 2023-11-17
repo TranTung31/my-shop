@@ -29,12 +29,7 @@ const CardProduct = (props) => {
         width: 200,
       }}
       bodyStyle={{ padding: "10px" }}
-      cover={
-        <img
-          alt="example"
-          src={image}
-        />
-      }
+      cover={<img alt="example" src={image} />}
     >
       <img
         src={logo}
@@ -56,7 +51,8 @@ const CardProduct = (props) => {
         <WrapperStyleTextSell> | Đã bán {selled || 100}+</WrapperStyleTextSell>
       </WrapperReportProduct>
       <WrapperPriceProduct>
-        {price} <WrapperPriceDiscount>- {discount || 5} %</WrapperPriceDiscount>
+        {price.toLocaleString()}{" "}
+        <WrapperPriceDiscount>- {discount || 5} %</WrapperPriceDiscount>
       </WrapperPriceProduct>
     </WrapperCardStyle>
   );

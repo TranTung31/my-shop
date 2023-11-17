@@ -1,52 +1,52 @@
 import SlitherComponent from "../../components/SliderComponent/SliderComponent";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
-import { WrapperProducts, WrapperTypeProduct } from "./styles";
+import {
+  WrapperButtonComponent,
+  WrapperProducts,
+  WrapperTypeProduct,
+} from "./styles";
 import slider1 from "../../assets/images/slider1.webp";
 import slider2 from "../../assets/images/slider2.webp";
 import slider3 from "../../assets/images/slider3.webp";
 import CardProduct from "../../components/CardProduct/CardProduct";
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import * as ProductService from "../../services/ProductService";
 import { useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import { useDebounceHook } from "../../hooks/useDebounceHook";
+import { useQuery } from "@tanstack/react-query";
 
 const HomePage = () => {
   const arr = ["TV", "Iphone", "SamSung"];
   const [isLoading, setIsLoading] = useState(false);
-  const [dataProduct, setDataProduct] = useState([]);
-  const isFirstRender = useRef(true);
+  const [limitProduct, setLimitProduct] = useState(6);
 
   const valueSearchInput = useSelector((state) => state.product.search);
-  const valueSearch = useDebounceHook(valueSearchInput, 800);
+  const valueDebounce = useDebounceHook(valueSearchInput, 800);
 
-  // Delay lần đầu tiên gọi API
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
-    const fetchProduct = async () => {
-      setIsLoading(true);
-      const res = await ProductService.getAllProduct(valueSearch);
-      setDataProduct(res.data);
-      setIsLoading(false);
-    };
-
-    fetchProduct();
-  }, [valueSearch]);
-
-  const getAllProduct = async () => {
-    const res = await ProductService.getAllProduct();
-    setDataProduct(res.data);
+  const fetchProduct = async (context) => {
+    const valueSearch = context?.queryKey ? context?.queryKey[2] : "";
+    const limit = context?.queryKey ? context?.queryKey[1] : null;
+    setIsLoading(true);
+    const res = await ProductService.getAllProduct(limit, valueSearch);
+    setIsLoading(false);
     return res;
   };
 
-  useEffect(() => {
-    getAllProduct();
-  }, []);
+  const { data: products } = useQuery(
+    ["products", limitProduct, valueDebounce],
+    fetchProduct,
+    {
+      retry: 3,
+      retryDelay: 1000,
+      keepPreviousData: true,
+    }
+  );
+
+  const handleLoadMore = () => {
+    console.log("abc");
+    setLimitProduct((prev) => prev + 6);
+  };
 
   return (
     <>
@@ -69,7 +69,7 @@ const HomePage = () => {
           <SlitherComponent arrImages={[slider1, slider2, slider3]} />
           <LoadingComponent isLoading={isLoading}>
             <WrapperProducts>
-              {dataProduct?.map((product, index) => (
+              {products?.data?.map((product, index) => (
                 <CardProduct
                   key={product._id}
                   name={product.name}
@@ -86,18 +86,13 @@ const HomePage = () => {
             </WrapperProducts>
           </LoadingComponent>
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <ButtonComponent
+            <WrapperButtonComponent
               buttonText={"Xem thêm"}
-              styleButton={{
-                width: "240px",
-                height: "38px",
-                border: "1px solid #0060ff",
-                borderRadius: "6px",
-                color: "rgb(0, 96, 255)",
-                fontSize: "1.6rem",
-                fontWeight: 600,
-                marginTop: "20px",
-              }}
+              disabled={
+                products?.totalProduct === products?.data?.length ||
+                products?.totalPage === 1
+              }
+              onClick={handleLoadMore}
             />
           </div>
         </div>
