@@ -15,9 +15,10 @@ import { useState } from "react";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import { useDebounceHook } from "../../hooks/useDebounceHook";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 const HomePage = () => {
-  const arr = ["TV", "Iphone", "SamSung"];
+  const [typeProduct, setTypeProduct] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [limitProduct, setLimitProduct] = useState(6);
 
@@ -44,15 +45,26 @@ const HomePage = () => {
   );
 
   const handleLoadMore = () => {
-    console.log("abc");
     setLimitProduct((prev) => prev + 6);
   };
+
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllType();
+    if (res?.status === "OK") {
+      setTypeProduct(res?.data);
+    }
+    return res.data;
+  };
+
+  useEffect(() => {
+    fetchAllTypeProduct();
+  }, []);
 
   return (
     <>
       <div style={{ width: "1285px", margin: "0 auto" }}>
         <WrapperTypeProduct>
-          {arr.map((item, index) => (
+          {typeProduct.map((item, index) => (
             <TypeProduct name={item} key={index} />
           ))}
         </WrapperTypeProduct>

@@ -6,7 +6,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
-import { Button, Form, Space } from "antd";
+import { Button, Form, Select, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import InputComponent from "../InputComponent/InputComponent";
 import { getBase64 } from "../../utils";
@@ -25,6 +25,7 @@ const AdminProduct = () => {
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
   const [isNameProduct, setIsNameProduct] = useState("");
+  const [typeProduct, setTypeProduct] = useState([]);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -48,6 +49,7 @@ const AdminProduct = () => {
     countInStock: "",
     rating: "",
     image: "",
+    newType: "",
   });
 
   const [stateDetailProduct, setStateDetailProduct] = useState({
@@ -184,8 +186,17 @@ const AdminProduct = () => {
     setIsOpenModalCreate(false);
   };
 
+  const newStateProduct = {
+    name: stateProduct.name,
+    type: stateProduct?.type === "add-type" ? stateProduct?.newType : stateProduct?.type,
+    price: stateProduct.price,
+    countInStock: stateProduct.countInStock,
+    rating: stateProduct.rating,
+    image: stateProduct.image,
+  }
+
   const onFinish = () => {
-    mutation.mutate(stateProduct, {
+    mutation.mutate(newStateProduct, {
       onSettled: () => {
         queryGetAllProduct.refetch();
       },
@@ -450,6 +461,39 @@ const AdminProduct = () => {
     );
   };
 
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllType();
+    if (res?.status === "OK") {
+      setTypeProduct(res?.data);
+    }
+    return res.data;
+  };
+
+  useEffect(() => {
+    fetchAllTypeProduct();
+  }, [typeProduct]);
+
+  const handleOnChangeType = (e) => {
+    setStateProduct({
+      ...stateProduct,
+      type: e,
+    });
+  };
+
+  const renderTypeProduct = () => {
+    let result = typeProduct.map((type) => {
+      return {
+        value: type,
+        label: type,
+      };
+    });
+    result.push({
+      value: "add-type",
+      label: "Thêm type",
+    });
+    return result;
+  };
+
   return (
     <div>
       <WrapperHeader>Quản lý sản phẩm</WrapperHeader>
@@ -507,12 +551,36 @@ const AdminProduct = () => {
               },
             ]}
           >
-            <InputComponent
-              value={stateProduct.type}
-              onChange={handleOnChange}
+            <Select
+              // mode="multiple"
               name="type"
+              value={stateProduct.type}
+              onChange={handleOnChangeType}
+              style={{
+                width: "100%",
+              }}
+              options={renderTypeProduct()}
             />
           </Form.Item>
+
+          {stateProduct.type === "add-type" && (
+            <Form.Item
+              label="New Type"
+              name="newType"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your new type!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateProduct.newType}
+                onChange={handleOnChange}
+                name="newType"
+              />
+            </Form.Item>
+          )}
 
           <Form.Item
             label="Price"

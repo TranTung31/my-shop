@@ -4,10 +4,10 @@ const SlitherComponent = ({ arrImages }) => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 8000,
     autoplay: true,
   };
   return (
