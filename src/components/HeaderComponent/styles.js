@@ -48,4 +48,5 @@ export const WrapperCart = styled.div`
   display: flex;
   align-items: center;
   margin-left: 30px;
+  cursor: pointer;
 `;

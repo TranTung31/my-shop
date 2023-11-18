@@ -65,7 +65,7 @@ const HomePage = () => {
       <div style={{ width: "1285px", margin: "0 auto" }}>
         <WrapperTypeProduct>
           {typeProduct.map((item, index) => (
-            <TypeProduct name={item} key={index} />
+            <TypeProduct type={item} key={index} />
           ))}
         </WrapperTypeProduct>
       </div>

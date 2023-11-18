@@ -49,8 +49,13 @@ export const WrapperTextQuantity = styled.span`
 `;
 
 export const WrapperInputNumber = styled(InputNumber)`
-  &.ant-input-number-handler-wrap {
+  & .ant-input-number-handler-wrap {
     display: none;
+  }
+
+  &.ant-input-number.css-dev-only-do-not-override-fpg3f5 {
+    width: 32px;
+    margin: 0 10px 0;
   }
 `;
 

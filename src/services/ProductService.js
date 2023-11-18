@@ -74,3 +74,10 @@ export const getAllType = async () => {
   );
   return res.data;
 };
+
+export const getAllProductType = async (type) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/product/get-all?filter=type&filter=${type}`
+  );
+  return res.data;
+};

@@ -150,7 +150,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 )}
               </WrapperUser>
               {!isHiddenCart && (
-                <WrapperCart>
+                <WrapperCart onClick={() => navigate("/order")}>
                   <Badge count={5} size="small">
                     <div style={{ fontSize: "30px", color: "#fff" }}>
                       <ShoppingCartOutlined />
