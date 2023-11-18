@@ -1,5 +1,4 @@
-import { Col, Image, InputNumber, Row } from "antd";
-import imageProduct from "../../assets/images/imageProduct.webp";
+import { Col, Image, Rate, Row } from "antd";
 import imageProductSmall from "../../assets/images/imageProductSmall.webp";
 import {
   WrapperCurrentAddress,
@@ -11,16 +10,48 @@ import {
   WrapperStyleTextSell,
   WrapperTextQuantity,
 } from "./styles";
-import { PlusOutlined, MinusOutlined, StarFilled } from "@ant-design/icons";
+import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
+import { useState } from "react";
+import * as ProductService from "../../services/ProductService";
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
-const ProductDetailComponent = () => {
-  const onChange = () => {};
+const ProductDetailComponent = ({ id }) => {
+  const [numberProduct, setNumberProduct] = useState(1);
+  const user = useSelector((state) => state.user);
+
+  const onChangeQuantityProduct = () => {
+  };
+
+  const fetchProductDetail = async () => {
+    const res = await ProductService.getDetailProduct(id);
+    return res.data;
+  };
+
+  const { data: product } = useQuery(["product-detail"], fetchProductDetail, {
+    retry: 3,
+    retryDelay: 1000,
+    keepPreviousData: true,
+  });
+
+  const handleChangeNumberProduct = (type) => {
+    if (type === "increase") {
+      setNumberProduct((prev) => prev + 1);
+    } else {
+      if (numberProduct > 1) {
+        setNumberProduct((prev) => prev - 1);
+      } else {
+        setNumberProduct(1);
+      }
+    }
+  };
+
   return (
-    <Row style={{ padding: "10px", backgroundColor: "#fff" }}>
+    <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
       <Col span={10}>
         <Image
-          src={imageProduct}
+          src={product?.image}
           alt="image product"
           style={{ width: "526px" }}
           preview={false}
@@ -70,29 +101,22 @@ const ProductDetailComponent = () => {
           </Col>
         </Row>
       </Col>
-      <Col span={14} style={{ padding: "16px" }}>
-        <WrapperStyleTextHeader>
-          Điện thoại Samsung Galaxy A54 5G (8GB/256gb) - Hàng chính hãng
-        </WrapperStyleTextHeader>
-        <div>
-          <StarFilled style={{ color: "#FFC400" }} />{" "}
-          <StarFilled style={{ color: "#FFC400" }} />{" "}
-          <StarFilled style={{ color: "#FFC400" }} />{" "}
-          <StarFilled style={{ color: "#FFC400" }} />{" "}
-          <StarFilled style={{ color: "#FFC400" }} />{" "}
+      <Col span={14} style={{ padding: "0 16px 16px" }}>
+        <WrapperStyleTextHeader>{product?.name}</WrapperStyleTextHeader>
+        <div style={{ padding: "10px 0" }}>
+          <Rate allowHalf defaultValue={product?.rating} value={product?.rating}/>
+          {/* {renderStart(product?.rating)} */}
           <WrapperStyleTextSell> | Đã bán 10+</WrapperStyleTextSell>
         </div>
         <div>
           <WrapperCurrentPrice>
-            8.990.000 <sup>₫</sup>
+            {product?.price?.toLocaleString()} <sup>₫</sup>
           </WrapperCurrentPrice>
         </div>
         <WrapperCurrentAddress>
           <span>Giao đến </span>
-          <span className="address">
-            Q. Hoàn Kiếm, P. Hàng Trống, Hà Nội{" "}
-          </span>{" "}
-          -<span className="change-address"> Đổi địa chỉ</span>
+          <span className="address">{user?.address} </span> -
+          <span className="change-address"> Đổi địa chỉ</span>
         </WrapperCurrentAddress>
         <div style={{ marginTop: "20px" }}>
           <WrapperTextQuantity>Số Lượng</WrapperTextQuantity>
@@ -103,14 +127,20 @@ const ProductDetailComponent = () => {
                   <MinusOutlined />
                 </WrapperIcon>
               }
+              onClick={() => handleChangeNumberProduct("decrease")}
             />
-            <WrapperInputNumber defaultValue={1} onChange={onChange} />
+            <WrapperInputNumber
+              defaultValue={numberProduct}
+              onChange={onChangeQuantityProduct}
+              value={numberProduct}
+            />
             <ButtonComponent
               icon={
                 <WrapperIcon>
                   <PlusOutlined />
                 </WrapperIcon>
               }
+              onClick={() => handleChangeNumberProduct("increase")}
             />
           </div>
         </div>

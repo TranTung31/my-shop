@@ -16,7 +16,7 @@ export const WrapperStyleTextHeader = styled.h1`
 `;
 
 export const WrapperStyleTextSell = styled.span`
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   line-height: 24px;
   color: rgb(120, 120, 120);
 `;

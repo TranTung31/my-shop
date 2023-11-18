@@ -81,6 +81,7 @@ const HomePage = () => {
                   type={product.type}
                   discount={product.discount}
                   selled={product.selled}
+                  id={product._id}
                 />
               ))}
             </WrapperProducts>
