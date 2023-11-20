@@ -471,7 +471,7 @@ const AdminProduct = () => {
 
   useEffect(() => {
     fetchAllTypeProduct();
-  }, [typeProduct]);
+  }, [stateProduct]);
 
   const handleOnChangeType = (e) => {
     setStateProduct({
