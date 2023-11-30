@@ -17,34 +17,60 @@ import {
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { WrapperInputNumber } from "../../components/ProductDetailComponent/styles";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeProduct } from "../../redux/slides/orderSlice";
+import {
+  removeProduct,
+  removeMoreProduct,
+  increaseProduct,
+  decreaseProduct,
+} from "../../redux/slides/orderSlice";
+import { useState } from "react";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
+  const [checkedList, setCheckedList] = useState([]);
 
   const dispatch = useDispatch();
 
-  const [numberProduct, setNumberProduct] = useState(1);
-
-  const onCheckBox = () => {};
-
-  const handleOnChangeNumberProduct = (type) => {
-    if (type === "decrease") {
-      if (numberProduct > 1) {
-        setNumberProduct((prev) => prev - 1);
-      }
+  const onChangeCheckBox = (e) => {
+    if (e.target.checked) {
+      const newCheckedList = [...checkedList, e.target.value];
+      setCheckedList(newCheckedList);
     } else {
-      setNumberProduct((prev) => prev + 1);
+      const newCheckedList = checkedList.filter(
+        (item) => item !== e.target.value
+      );
+      setCheckedList(newCheckedList);
+    }
+  };
+
+  const onChangeCheckBoxAll = (e) => {
+    if (e.target.checked) {
+      let newCheckedList = [];
+      order?.orderItems?.forEach((item) => newCheckedList.push(item.product));
+      setCheckedList(newCheckedList);
+    } else {
+      setCheckedList([]);
+    }
+  };
+
+  const handleOnChangeNumberProduct = (type, productId) => {
+    if (type === "increase") {
+      dispatch(increaseProduct({ productId }));
+    } else {
+      dispatch(decreaseProduct({ productId }));
     }
   };
 
   const handleDeleteProduct = (productId) => {
-    dispatch(removeProduct({productId}))
+    dispatch(removeProduct({ productId }));
+    setCheckedList([]);
   };
 
-  const handleOnChangeProduct = () => {};
+  const handleDeleteMoreProduct = () => {
+    dispatch(removeMoreProduct({ checkedList }));
+    setCheckedList([]);
+  };
   return (
     <div style={{ backgroundColor: "#f5f5fa" }}>
       <WrapperOrderPage>
@@ -57,13 +83,21 @@ const OrderPage = () => {
               </span>
               <WrapperAllProduct>
                 <div style={{ width: "300px" }}>
-                  <Checkbox onChange={onCheckBox}>Tất cả (0 sản phẩm)</Checkbox>
+                  <Checkbox
+                    onChange={onChangeCheckBoxAll}
+                    checked={checkedList.length === order?.orderItems?.length}
+                  >
+                    Tất cả ({order?.orderItems?.length} sản phẩm)
+                  </Checkbox>
                 </div>
                 <span>Đơn giá</span>
                 <span>Số lượng</span>
                 <span>Thành tiền</span>
-                <div>
-                  <DeleteOutlined />
+                <div
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleDeleteMoreProduct()}
+                >
+                  {checkedList.length > 0 && <DeleteOutlined />}
                 </div>
               </WrapperAllProduct>
             </WrapperLeft>
@@ -72,7 +106,11 @@ const OrderPage = () => {
               <WrapperLeftProduct>
                 <WrapperAllProduct>
                   <WrapperProduct>
-                    <Checkbox onChange={onCheckBox}></Checkbox>
+                    <Checkbox
+                      onChange={onChangeCheckBox}
+                      checked={checkedList.includes(item.product)}
+                      value={item.product}
+                    ></Checkbox>
                     <div style={{ paddingLeft: "8px" }}>
                       <Image
                         src={item.image}
@@ -88,18 +126,21 @@ const OrderPage = () => {
 
                   <div style={{ border: "1px solid #ccc" }}>
                     <WrapperProductLeftButton
-                      onClick={() => handleOnChangeNumberProduct("decrease")}
+                      onClick={() =>
+                        handleOnChangeNumberProduct("decrease", item.product)
+                      }
                     >
                       <MinusOutlined />
                     </WrapperProductLeftButton>
                     <WrapperInputNumber
                       defaultValue={item.amount}
                       value={item.amount}
-                      onChange={handleOnChangeProduct}
                       style={{ border: "none", margin: "auto", top: "1px" }}
                     />
                     <WrapperProductRightButton
-                      onClick={() => handleOnChangeNumberProduct("increase")}
+                      onClick={() =>
+                        handleOnChangeNumberProduct("increase", item.product)
+                      }
                     >
                       <PlusOutlined />
                     </WrapperProductRightButton>

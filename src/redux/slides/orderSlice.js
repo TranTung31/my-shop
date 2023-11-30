@@ -28,18 +28,53 @@ export const orderSlice = createSlice({
         state.orderItems.push(action.payload);
       }
     },
+    removeMoreProduct: (state, action) => {
+      const { checkedList } = action.payload;
+      const newCheckedList = state.orderItems.filter((item) => !checkedList.includes(item.product));
+      state.orderItems = newCheckedList;
+    },
     removeProduct: (state, action) => {
       const { productId } = action.payload;
-      const findProduct = state.orderItems.find((item) => item.product === productId);
+      const findProduct = state.orderItems.find(
+        (item) => item.product === productId
+      );
       if (findProduct) {
-        const newOrderItems = state.orderItems.filter((item) => item.product !== productId);
+        const newOrderItems = state.orderItems.filter(
+          (item) => item.product !== productId
+        );
         state.orderItems = newOrderItems;
       }
-    }
+    },
+    increaseProduct: (state, action) => {
+      const { productId } = action.payload;
+      const findProduct = state.orderItems.find(
+        (item) => item.product === productId
+      );
+      if (findProduct) {
+        findProduct.amount++;
+      }
+    },
+    decreaseProduct: (state, action) => {
+      const { productId } = action.payload;
+      const findProduct = state.orderItems.find(
+        (item) => item.product === productId
+      );
+      if (findProduct) {
+        if (findProduct.amount > 1) {
+          findProduct.amount--;
+        }
+      }
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addProductToCart, removeProduct } = orderSlice.actions;
+export const {
+  addProductToCart,
+  removeProduct,
+  removeMoreProduct,
+  increaseProduct,
+  decreaseProduct,
+} = orderSlice.actions;
 
 export default orderSlice.reducer;
