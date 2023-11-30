@@ -15,10 +15,16 @@ import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import { useState } from "react";
 import * as ProductService from "../../services/ProductService";
 import { useQuery } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { addProductToCart } from "../../redux/slides/orderSlice";
 
 const ProductDetailComponent = ({ id }) => {
   const [numberProduct, setNumberProduct] = useState(1);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const user = useSelector((state) => state.user);
 
   const onChangeQuantityProduct = () => {
@@ -46,6 +52,20 @@ const ProductDetailComponent = ({ id }) => {
       }
     }
   };
+
+  const handleAddProductToCart = () => {
+    if (user?.id === "") {
+      navigate("/sign-in", { state: location?.pathname });
+    } else {
+      dispatch(addProductToCart({
+        name: product?.name,
+        amount: numberProduct,
+        image: product?.image,
+        price: product?.price,
+        product: product?._id,
+      }));
+    }
+  }
 
   return (
     <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
@@ -146,7 +166,7 @@ const ProductDetailComponent = ({ id }) => {
         </div>
         <div style={{ marginTop: "20px", display: "flex", gap: "20px" }}>
           <ButtonComponent
-            buttonText="Chọn mua"
+            buttonText="Thêm vào giỏ"
             styleButton={{
               backgroundColor: "rgb(255, 66, 78)",
               width: "220px",
@@ -158,9 +178,10 @@ const ProductDetailComponent = ({ id }) => {
               fontSize: "15px",
               fontWeight: "700",
             }}
+            onClick={handleAddProductToCart}
           />
           <ButtonComponent
-            buttonText="Mua trả sau"
+            buttonText="Mua ngay"
             styleButton={{
               backgroundColor: "#fff",
               width: "220px",

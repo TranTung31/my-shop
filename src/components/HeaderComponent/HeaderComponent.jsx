@@ -35,6 +35,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   };
 
   const user = useSelector((state) => state.user);
+  const order = useSelector((state) => state.order);
 
   const dispatch = useDispatch();
 
@@ -151,7 +152,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               </WrapperUser>
               {!isHiddenCart && (
                 <WrapperCart onClick={() => navigate("/order")}>
-                  <Badge count={5} size="small">
+                  <Badge count={order.orderItems?.length} size="small">
                     <div style={{ fontSize: "30px", color: "#fff" }}>
                       <ShoppingCartOutlined />
                     </div>

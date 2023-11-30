@@ -10,7 +10,7 @@ import {
 import imageForm from "../../assets/images/logo-signin.png";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as UserService from "../../services/UserService";
 import useMutationHook from "../../hooks/useMutationHook";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
@@ -25,6 +25,10 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { state: pathProductDetail } = useLocation();
+
+  // console.log("pathProductDetail: ", !!pathProductDetail);
 
   const handleNavigateSignUp = () => {
     navigate("/sign-up");
@@ -44,9 +48,30 @@ const SignInPage = () => {
 
   useEffect(() => {
     if (data?.status === "OK") {
+      if (!!pathProductDetail) {
+        navigate(`${pathProductDetail}`);
+        Message.success("Login Successfully");
+        localStorage.setItem(
+          "access_token",
+          JSON.stringify(data?.access_token)
+        );
+
+        if (data?.access_token) {
+          // Giải mã access_token bằng JWT decoded
+          const decoded = jwt_decode(data?.access_token);
+          if (decoded?.id) {
+            handleGetDetailUser(decoded?.id, data?.access_token);
+          }
+        }
+        return;
+      }
+
       navigate("/");
       Message.success("Login Successfully");
-      localStorage.setItem("access_token", JSON.stringify(data?.access_token));
+      localStorage.setItem(
+        "access_token",
+        JSON.stringify(data?.access_token)
+      );
 
       if (data?.access_token) {
         // Giải mã access_token bằng JWT decoded
