@@ -18,7 +18,7 @@ export const orderSlice = createSlice({
   initialState,
   reducers: {
     addProductToCart: (state, action) => {
-      const { amount, image, name, price, product } = action.payload;
+      const { amount, image, name, price, discount, product } = action.payload;
       const findProduct = state.orderItems.find(
         (item) => item.product === product
       );

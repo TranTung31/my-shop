@@ -9,6 +9,7 @@ import {
 import { StarFilled } from "@ant-design/icons";
 import logo from "../../assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
+import { convertPrice } from "../../utils";
 
 const CardProduct = (props) => {
   const {
@@ -61,7 +62,7 @@ const CardProduct = (props) => {
         <WrapperStyleTextSell> | Đã bán {selled || 100}+</WrapperStyleTextSell>
       </WrapperReportProduct>
       <WrapperPriceProduct>
-        {price.toLocaleString()}{" "}
+        {convertPrice(price)}{" "}
         <WrapperPriceDiscount>- {discount || 5} %</WrapperPriceDiscount>
       </WrapperPriceProduct>
     </WrapperCardStyle>

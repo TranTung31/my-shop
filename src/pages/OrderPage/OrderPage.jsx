@@ -24,11 +24,12 @@ import {
   increaseProduct,
   decreaseProduct,
 } from "../../redux/slides/orderSlice";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { convertPrice } from "../../utils";
 
 const OrderPage = () => {
-  const order = useSelector((state) => state.order);
   const [checkedList, setCheckedList] = useState([]);
+  const order = useSelector((state) => state.order);
 
   const dispatch = useDispatch();
 
@@ -71,6 +72,33 @@ const OrderPage = () => {
     dispatch(removeMoreProduct({ checkedList }));
     setCheckedList([]);
   };
+
+  const priceMemo = useMemo(() => {
+    const result = order.orderItems.reduce((total, item) => {
+      return total + (item.price * item.amount);
+    }, 0);
+    return result;
+  }, [order]);
+
+  const priceDiscountMemo = useMemo(() => {
+    const result = order.orderItems.reduce((total, item) => {
+      return total + ((item.price * item.amount) * ((item.discount) / 100));
+    }, 0);
+    return result;
+  }, [order]);
+
+  const priceDeliveryMemo = useMemo(() => {
+    if (priceMemo > 200000) {
+      return 10000;
+    } else {
+      return 20000;
+    }
+  }, [priceMemo]);
+
+  const priceTotalMemo = useMemo(() => {
+    return priceMemo - priceDiscountMemo + priceDeliveryMemo;
+  }, [priceMemo, priceDiscountMemo, priceDeliveryMemo]);
+
   return (
     <div style={{ backgroundColor: "#f5f5fa" }}>
       <WrapperOrderPage>
@@ -122,7 +150,7 @@ const OrderPage = () => {
                     <WrapperProductName>{item.name}</WrapperProductName>
                   </WrapperProduct>
 
-                  <span>{item.price.toLocaleString()}</span>
+                  <span>{convertPrice(item.price)}</span>
 
                   <div style={{ border: "1px solid #ccc" }}>
                     <WrapperProductLeftButton
@@ -146,7 +174,7 @@ const OrderPage = () => {
                     </WrapperProductRightButton>
                   </div>
 
-                  <span>{(item.price * item.amount).toLocaleString()}</span>
+                  <span>{convertPrice(item.price * item.amount)}</span>
 
                   <div
                     style={{ cursor: "pointer" }}
@@ -169,22 +197,22 @@ const OrderPage = () => {
               <div style={{ padding: "20px 0 30px" }}>
                 <WrapperCaculator>
                   <label>Tạm tính</label>
-                  <div>0 VND</div>
+                  <div>{`${convertPrice(priceMemo)} VND`}</div>
                 </WrapperCaculator>
                 <WrapperCaculator>
                   <label>Giảm giá</label>
-                  <div>0 VND</div>
+                  <div>{`${convertPrice(priceDiscountMemo)} VND`}</div>
                 </WrapperCaculator>
                 <WrapperCaculator>
                   <label>Phí giao hàng</label>
-                  <div>0 VND</div>
+                  <div>{`${convertPrice(priceDeliveryMemo)} VND`}</div>
                 </WrapperCaculator>
               </div>
 
               <WrapperTotalPrice>
                 <span>Tổng tiền</span>
                 <div>
-                  <WrapperTotal>0 VND</WrapperTotal>{" "}
+                  <WrapperTotal>{`${convertPrice(priceTotalMemo)} VND`}</WrapperTotal>{" "}
                   <div>(Đã bao gồm VAT nếu có)</div>
                 </div>
               </WrapperTotalPrice>

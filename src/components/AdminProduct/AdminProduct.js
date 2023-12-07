@@ -9,7 +9,7 @@ import TableComponent from "../TableComponent/TableComponent";
 import { Button, Form, Select, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import InputComponent from "../InputComponent/InputComponent";
-import { getBase64 } from "../../utils";
+import { convertPrice, getBase64 } from "../../utils";
 import * as ProductService from "../../services/ProductService";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as Message from "../../components/Message/Message";
@@ -47,6 +47,7 @@ const AdminProduct = () => {
     type: "",
     price: "",
     countInStock: "",
+    discount: "",
     rating: "",
     image: "",
     newType: "",
@@ -57,6 +58,7 @@ const AdminProduct = () => {
     type: "",
     price: "",
     countInStock: "",
+    discount: "",
     rating: "",
     image: "",
   });
@@ -118,7 +120,7 @@ const AdminProduct = () => {
   const { isLoading: isLoadingProducts, data: products } = queryGetAllProduct;
 
   const dataProducts = products?.data?.map((product) => {
-    return { ...product, key: product._id };
+    return { ...product, key: product._id, price: convertPrice(product.price) };
   });
 
   useEffect(() => {
@@ -188,12 +190,16 @@ const AdminProduct = () => {
 
   const newStateProduct = {
     name: stateProduct.name,
-    type: stateProduct?.type === "add-type" ? stateProduct?.newType : stateProduct?.type,
+    type:
+      stateProduct?.type === "add-type"
+        ? stateProduct?.newType
+        : stateProduct?.type,
     price: stateProduct.price,
     countInStock: stateProduct.countInStock,
+    discount: stateProduct.discount,
     rating: stateProduct.rating,
     image: stateProduct.image,
-  }
+  };
 
   const onFinish = () => {
     mutation.mutate(newStateProduct, {
@@ -247,6 +253,7 @@ const AdminProduct = () => {
         type: res?.data?.type,
         price: res?.data?.price,
         countInStock: res?.data?.countInStock,
+        discount: res?.data?.discount,
         rating: res?.data?.rating,
         image: res?.data?.image,
       });
@@ -420,6 +427,27 @@ const AdminProduct = () => {
           return record?.price >= 300000;
         }
         return record?.price < 300000;
+      },
+    },
+    {
+      title: "Discount",
+      dataIndex: "discount",
+      sorter: (a, b) => a.discount - b.discount,
+      filters: [
+        {
+          text: ">= 5",
+          value: ">=",
+        },
+        {
+          text: "< 5",
+          value: "<",
+        },
+      ],
+      onFilter: (value, record) => {
+        if (value === ">=") {
+          return record?.discount >= 5;
+        }
+        return record?.discount < 5;
       },
     },
     {
@@ -617,6 +645,23 @@ const AdminProduct = () => {
           </Form.Item>
 
           <Form.Item
+            label="Discount"
+            name="discount"
+            rules={[
+              {
+                required: true,
+                message: "Please input your discount!",
+              },
+            ]}
+          >
+            <InputComponent
+              value={stateProduct.discount}
+              onChange={handleOnChange}
+              name="discount"
+            />
+          </Form.Item>
+
+          <Form.Item
             label="Rating"
             name="rating"
             rules={[
@@ -778,6 +823,23 @@ const AdminProduct = () => {
                 value={stateDetailProduct.countInStock}
                 onChange={handleOnChangeDetail}
                 name="countInStock"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Discount"
+              name="discount"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your discount!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateDetailProduct.discount}
+                onChange={handleOnChangeDetail}
+                name="discount"
               />
             </Form.Item>
 

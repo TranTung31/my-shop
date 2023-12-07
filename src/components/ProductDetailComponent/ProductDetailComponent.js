@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addProductToCart } from "../../redux/slides/orderSlice";
+import { convertPrice } from "../../utils";
 
 const ProductDetailComponent = ({ id }) => {
   const [numberProduct, setNumberProduct] = useState(1);
@@ -62,6 +63,7 @@ const ProductDetailComponent = ({ id }) => {
         amount: numberProduct,
         image: product?.image,
         price: product?.price,
+        discount: product?.discount,
         product: product?._id,
       }));
     }
@@ -130,7 +132,7 @@ const ProductDetailComponent = ({ id }) => {
         </div>
         <div>
           <WrapperCurrentPrice>
-            {product?.price?.toLocaleString()} <sup>₫</sup>
+            {convertPrice(product?.price)} <sup>₫</sup>
           </WrapperCurrentPrice>
         </div>
         <WrapperCurrentAddress>

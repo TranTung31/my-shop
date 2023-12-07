@@ -24,3 +24,13 @@ export function getItem(label, key, icon, children, type) {
     type,
   };
 }
+
+export function convertPrice(price) {
+  try {
+    if (price) {
+      return price.toLocaleString().replaceAll(",", ".");
+    }
+  } catch (error) {
+    return error;
+  }
+}
