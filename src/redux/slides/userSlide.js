@@ -5,6 +5,7 @@ const initialState = {
   email: "",
   phone: "",
   address: "",
+  city: "",
   avatar: "",
   id: "",
   access_token: "",
@@ -21,6 +22,7 @@ export const userSlide = createSlice({
         email = "",
         phone = "",
         address = "",
+        city = "",
         avatar = "",
         _id = "",
         access_token = "",
@@ -30,6 +32,7 @@ export const userSlide = createSlice({
       state.email = email;
       state.phone = phone;
       state.address = address;
+      state.city = city;
       state.avatar = avatar;
       state.id = _id;
       state.access_token = access_token;
@@ -40,6 +43,7 @@ export const userSlide = createSlice({
       state.email = "";
       state.phone = "";
       state.address = "";
+      state.city = "";
       state.avatar = "";
       state.id = "";
       state.access_token = "";

@@ -180,7 +180,7 @@ const AdminUser = () => {
     setIsOpenModalEdit(true);
   };
 
-  const handleUpdateProduct = () => {
+  const handleUpdateUser = () => {
     mutationUpdate.mutate(
       {
         id: isRowSelected,
@@ -380,6 +380,7 @@ const AdminUser = () => {
       </ModalComponent>
 
       <DrawerComponent
+        title="Thông tin người dùng"
         open={isOpenModalEdit}
         onClose={() => setIsOpenModalEdit(false)}
         width="50%"
@@ -399,7 +400,7 @@ const AdminUser = () => {
             initialValues={{
               remember: true,
             }}
-            onFinish={handleUpdateProduct}
+            onFinish={handleUpdateUser}
             autoComplete="off"
             form={form}
           >

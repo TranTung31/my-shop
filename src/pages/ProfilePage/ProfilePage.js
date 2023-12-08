@@ -24,6 +24,7 @@ const ProfilePage = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
   const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const ProfilePage = () => {
     setEmail(user?.email);
     setPhone(user?.phone);
     setAddress(user?.address);
+    setCity(user?.city);
     setAvatar(user?.avatar);
   }, [user]);
 
@@ -50,6 +52,10 @@ const ProfilePage = () => {
     setAddress(e.target.value);
   };
 
+  const handleOnChangeCity = (e) => {
+    setCity(e.target.value);
+  };
+
   const handleOnChangeAvatar = async ({ fileList }) => {
     const file = fileList[0];
     if (!file.url && !file.preview) {
@@ -63,8 +69,6 @@ const ProfilePage = () => {
   );
 
   const { isSuccess, isError } = mutation;
-
-  console.log("isSuccess: ", isSuccess);
 
   useEffect(() => {
     if (isSuccess) {
@@ -89,6 +93,7 @@ const ProfilePage = () => {
       email,
       phone,
       address,
+      city,
       avatar,
       access_token: user?.access_token,
     });
@@ -144,6 +149,20 @@ const ProfilePage = () => {
           <InputForm
             value={address}
             onChange={handleOnChangeAddress}
+            style={{ width: "300px", border: "1px solid #ccc" }}
+          ></InputForm>
+          <WrapperButtonComponent
+            buttonText="Cập nhật"
+            disabled={false}
+            onClick={handleUpdate}
+          ></WrapperButtonComponent>
+        </WrapperInput>
+
+        <WrapperInput>
+          <WrapperLable>City</WrapperLable>
+          <InputForm
+            value={city}
+            onChange={handleOnChangeCity}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
           <WrapperButtonComponent
