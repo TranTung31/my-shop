@@ -1,14 +1,17 @@
-import { Button, Checkbox, Form, Image } from "antd";
+import { Button, Checkbox, Form, Image, Radio, Space } from "antd";
 import {
   WrapperAllProduct,
   WrapperCaculator,
   WrapperLeft,
   WrapperLeftProduct,
+  WrapperMethodDelivery,
   WrapperOrderPage,
   WrapperProduct,
   WrapperProductLeftButton,
   WrapperProductName,
   WrapperProductRightButton,
+  WrapperRadioContent,
+  WrapperRadioText,
   WrapperRight,
   WrapperTitle,
   WrapperTotal,
@@ -32,12 +35,15 @@ import ModalComponent from "../../components/ModalComponent/ModalComponent";
 import InputComponent from "../../components/InputComponent/InputComponent";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as UserService from "../../services/UserService";
+import * as OrderService from "../../services/OrderService";
 import { updateUser } from "../../redux/slides/userSlide";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const OrderPage = () => {
+const PaymentPage = () => {
   const [checkedList, setCheckedList] = useState([]);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
+  const [value, setValue] = useState(1);
+  const [valuePayment, setValuePayment] = useState(1);
   const [stateUserDetail, setStateUserDetail] = useState({
     name: "",
     phone: "",
@@ -54,82 +60,26 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log("location: ", location.pathname);
-
-  const onChangeCheckBox = (e) => {
-    if (e.target.checked) {
-      const newCheckedList = [...checkedList, e.target.value];
-      setCheckedList(newCheckedList);
-    } else {
-      const newCheckedList = checkedList.filter(
-        (item) => item !== e.target.value
-      );
-      setCheckedList(newCheckedList);
-    }
-  };
-
-  const onChangeCheckBoxAll = (e) => {
-    if (e.target.checked) {
-      let newCheckedList = [];
-      order?.orderItems?.forEach((item) => newCheckedList.push(item.product));
-      setCheckedList(newCheckedList);
-    } else {
-      setCheckedList([]);
-    }
-  };
-
-  const handleOnChangeNumberProduct = (type, productId) => {
-    if (type === "increase") {
-      dispatch(increaseProduct({ productId }));
-    } else {
-      dispatch(decreaseProduct({ productId }));
-    }
-  };
-
-  const handleDeleteProduct = (productId) => {
-    dispatch(removeProduct({ productId }));
-    setCheckedList([]);
-  };
-
-  const handleDeleteMoreProduct = () => {
-    dispatch(removeMoreProduct({ checkedList }));
-    setCheckedList([]);
-  };
-
-  const priceMemo = useMemo(() => {
-    const result = order.orderItemsSelected.reduce((total, item) => {
-      return total + item.price * item.amount;
-    }, 0);
-    return result;
-  }, [order]);
-
-  const priceDiscountMemo = useMemo(() => {
-    const result = order.orderItemsSelected.reduce((total, item) => {
-      return total + item.price * item.amount * (item.discount / 100);
-    }, 0);
-    return result;
-  }, [order]);
-
-  const priceDeliveryMemo = useMemo(() => {
-    if (priceMemo > 200000) {
-      return 10000;
-    } else if (priceMemo === 0) {
-      return 0;
-    } else {
-      return 20000;
-    }
-  }, [priceMemo]);
-
-  const priceTotalMemo = useMemo(() => {
-    return priceMemo - priceDiscountMemo + priceDeliveryMemo;
-  }, [priceMemo, priceDiscountMemo, priceDeliveryMemo]);
+  const {
+    priceMemo,
+    priceDiscountMemo,
+    priceDeliveryMemo,
+    priceTotalMemo,
+    orderItemsSelected,
+  } = location.state;
 
   const mutationUpdate = useMutationHook(({ id, data, access_token }) => {
     const res = UserService.updateUser(id, data, access_token);
     return res;
   });
 
+  const mutationPayment = useMutationHook(({ data, access_token }) => {
+    const res = OrderService.createOrder(data, access_token);
+    return res;
+  });
+
   const { isSuccess, data } = mutationUpdate;
+  const { isSuccess: isSuccessPayment, data: dataPayment } = mutationPayment;
 
   useEffect(() => {
     setStateUserDetail({
@@ -141,9 +91,7 @@ const OrderPage = () => {
   }, [user]);
 
   useEffect(() => {
-    if (location.pathname === "/order") {
-      dispatch(addOrderItemsSelected({ checkedList }));
-    }
+    dispatch(addOrderItemsSelected({ checkedList }));
   }, [checkedList]);
 
   useEffect(() => {
@@ -176,22 +124,30 @@ const OrderPage = () => {
     }
   }, [isSuccess]);
 
-  const handleBuyProduct = () => {
-    if (checkedList.length === 0) {
-      Message.error("Vui lòng chọn ít nhất một sản phẩm!");
-    } else if (!user.name || !user.address || !user.phone || !user.city) {
-      setIsOpenModalUpdateInfo(true);
-    } else {
-      navigate("/payment", {
-        state: {
-          priceMemo,
-          priceDiscountMemo,
-          priceDeliveryMemo,
-          priceTotalMemo,
-          orderItemsSelected: order?.orderItemsSelected,
-        },
-      });
+  useEffect(() => {
+    if (isSuccessPayment && dataPayment?.status === "OK") {
+      Message.success("Đặt hàng thành công!");
+    } else if (data?.status === "ERROR") {
+      Message.error("Đặt hàng thất bại!");
     }
+  }, [isSuccessPayment]);
+
+  const handleBuyProduct = () => {
+    mutationPayment.mutate({
+      data: {
+        orderItems: orderItemsSelected,
+        fullName: user?.name,
+        address: user?.address,
+        city: user?.city,
+        phone: user?.phone,
+        paymentMethod: "Thanh toán khi nhận hàng",
+        itemsPrice: priceMemo,
+        shippingPrice: priceDeliveryMemo,
+        totalPrice: priceTotalMemo,
+        userId: user?.id,
+      },
+      access_token: user?.access_token,
+    });
   };
 
   const handleOnChangeDetail = (e) => {
@@ -217,92 +173,63 @@ const OrderPage = () => {
     setIsOpenModalUpdateInfo(true);
   };
 
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const onChangePayment = (e) => {
+    setValuePayment(e.target.value);
+  };
+
   return (
     <div style={{ backgroundColor: "#f5f5fa" }}>
       <WrapperOrderPage>
-        <WrapperTitle>Giỏ hàng</WrapperTitle>
+        <WrapperTitle>Thanh toán</WrapperTitle>
         <div style={{ display: "flex" }}>
           <div>
             <WrapperLeft>
-              <span style={{ fontSize: "1.5rem", fontWeight: 500 }}>
-                Phí giao hàng
-              </span>
-              <WrapperAllProduct>
-                <div style={{ width: "300px" }}>
-                  <Checkbox
-                    onChange={onChangeCheckBoxAll}
-                    checked={checkedList.length === order?.orderItems?.length}
+              <div style={{ padding: "20px 10px" }}>
+                <span style={{ fontSize: "1.5rem", fontWeight: 500 }}>
+                  Chọn phương thức giao hàng
+                </span>
+                <WrapperMethodDelivery>
+                  <Radio.Group
+                    onChange={onChange}
+                    value={value}
+                    style={{ height: "100%" }}
                   >
-                    Tất cả ({order?.orderItems?.length} sản phẩm)
-                  </Checkbox>
-                </div>
-                <span>Đơn giá</span>
-                <span>Số lượng</span>
-                <span>Thành tiền</span>
-                <div
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleDeleteMoreProduct()}
-                >
-                  {checkedList.length > 0 && <DeleteOutlined />}
-                </div>
-              </WrapperAllProduct>
+                    <WrapperRadioContent>
+                      <Radio value={1}>
+                        <WrapperRadioText>FAST</WrapperRadioText> Giao hàng tiết
+                        kiệm
+                      </Radio>
+                      <Radio value={2}>
+                        <WrapperRadioText>GO_JEK</WrapperRadioText> Giao hàng
+                        tiết kiệm
+                      </Radio>
+                    </WrapperRadioContent>
+                  </Radio.Group>
+                </WrapperMethodDelivery>
+              </div>
+
+              <div style={{ padding: "20px 10px" }}>
+                <span style={{ fontSize: "1.5rem", fontWeight: 500 }}>
+                  Chọn hình thức thanh toán
+                </span>
+                <WrapperMethodDelivery>
+                  <Radio.Group
+                    onChange={onChangePayment}
+                    value={valuePayment}
+                    style={{ height: "100%" }}
+                  >
+                    <WrapperRadioContent>
+                      <Radio value={1}>Thanh toán khi nhận hàng</Radio>
+                      <Radio value={2}>Thanh toán bằng Paypal</Radio>
+                    </WrapperRadioContent>
+                  </Radio.Group>
+                </WrapperMethodDelivery>
+              </div>
             </WrapperLeft>
-
-            {order?.orderItems?.map((item) => (
-              <WrapperLeftProduct>
-                <WrapperAllProduct>
-                  <WrapperProduct>
-                    <Checkbox
-                      onChange={onChangeCheckBox}
-                      checked={checkedList.includes(item.product)}
-                      value={item.product}
-                    ></Checkbox>
-                    <div style={{ paddingLeft: "8px" }}>
-                      <Image
-                        src={item.image}
-                        alt="image"
-                        width={60}
-                        height={60}
-                      />
-                    </div>
-                    <WrapperProductName>{item.name}</WrapperProductName>
-                  </WrapperProduct>
-
-                  <span>{convertPrice(item.price)}</span>
-
-                  <div style={{ border: "1px solid #ccc" }}>
-                    <WrapperProductLeftButton
-                      onClick={() =>
-                        handleOnChangeNumberProduct("decrease", item.product)
-                      }
-                    >
-                      <MinusOutlined />
-                    </WrapperProductLeftButton>
-                    <WrapperInputNumber
-                      defaultValue={item.amount}
-                      value={item.amount}
-                      style={{ border: "none", margin: "auto", top: "1px" }}
-                    />
-                    <WrapperProductRightButton
-                      onClick={() =>
-                        handleOnChangeNumberProduct("increase", item.product)
-                      }
-                    >
-                      <PlusOutlined />
-                    </WrapperProductRightButton>
-                  </div>
-
-                  <span>{convertPrice(item.price * item.amount)}</span>
-
-                  <div
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleDeleteProduct(item.product)}
-                  >
-                    <DeleteOutlined />
-                  </div>
-                </WrapperAllProduct>
-              </WrapperLeftProduct>
-            ))}
           </div>
 
           <div>
@@ -323,15 +250,15 @@ const OrderPage = () => {
               <div style={{ padding: "20px 0 30px" }}>
                 <WrapperCaculator>
                   <label>Tạm tính</label>
-                  <div>{`${convertPrice(priceMemo) || 0} VND`}</div>
+                  <div>{`${convertPrice(priceMemo || 0)} VND`}</div>
                 </WrapperCaculator>
                 <WrapperCaculator>
                   <label>Giảm giá</label>
-                  <div>{`${convertPrice(priceDiscountMemo) || 0} VND`}</div>
+                  <div>{`${convertPrice(priceDiscountMemo || 0)} VND`}</div>
                 </WrapperCaculator>
                 <WrapperCaculator>
                   <label>Phí giao hàng</label>
-                  <div>{`${convertPrice(priceDeliveryMemo) || 0} VND`}</div>
+                  <div>{`${convertPrice(priceDeliveryMemo || 0)} VND`}</div>
                 </WrapperCaculator>
               </div>
 
@@ -339,7 +266,7 @@ const OrderPage = () => {
                 <span>Tổng tiền</span>
                 <div>
                   <WrapperTotal>{`${
-                    convertPrice(priceTotalMemo) || 0
+                    convertPrice(priceTotalMemo || 0)
                   } VND`}</WrapperTotal>{" "}
                   <div>(Đã bao gồm VAT nếu có)</div>
                 </div>
@@ -347,7 +274,7 @@ const OrderPage = () => {
             </WrapperRight>
             <div style={{ paddingTop: "30px" }}>
               <ButtonComponent
-                buttonText="Mua hàng"
+                buttonText="Đặt hàng"
                 onClick={handleBuyProduct}
                 styleButton={{
                   backgroundColor: "rgb(255, 66, 78)",
@@ -474,4 +401,4 @@ const OrderPage = () => {
   );
 };
 
-export default OrderPage;
+export default PaymentPage;

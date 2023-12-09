@@ -84,7 +84,7 @@ export const orderSlice = createSlice({
     },
     addOrderItemsSelected: (state, action) => {
       const { checkedList } = action.payload;
-      let arrChecked = [];
+      const arrChecked = [];
       state.orderItems.forEach((item) => {
         if (checkedList.includes(item.product)) {
           arrChecked.push(item);
