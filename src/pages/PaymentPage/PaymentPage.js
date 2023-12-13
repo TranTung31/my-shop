@@ -28,7 +28,7 @@ import {
   decreaseProduct,
   addOrderItemsSelected,
 } from "../../redux/slides/orderSlice";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { convertPrice } from "../../utils";
 import * as Message from "../../components/Message/Message";
 import ModalComponent from "../../components/ModalComponent/ModalComponent";
@@ -42,7 +42,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const PaymentPage = () => {
   const [checkedList, setCheckedList] = useState([]);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState("FAST");
   const [valuePayment, setValuePayment] = useState(1);
   const [stateUserDetail, setStateUserDetail] = useState({
     name: "",
@@ -77,6 +77,10 @@ const PaymentPage = () => {
     const res = OrderService.createOrder(data, access_token);
     return res;
   });
+
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
 
   const { isSuccess, data } = mutationUpdate;
   const { isSuccess: isSuccessPayment, data: dataPayment } = mutationPayment;
@@ -126,7 +130,17 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (isSuccessPayment && dataPayment?.status === "OK") {
+      const arrOrdered = [];
+      orderItemsSelected?.forEach((item) => arrOrdered.push(item.product));
+      dispatch(removeMoreProduct({ checkedList: arrOrdered }));
       Message.success("Đặt hàng thành công!");
+      navigate("/order-success", {
+        state: {
+          orderItemsSelected,
+          priceTotalMemo,
+          delivery: value,
+        },
+      });
     } else if (data?.status === "ERROR") {
       Message.error("Đặt hàng thất bại!");
     }
@@ -173,10 +187,6 @@ const PaymentPage = () => {
     setIsOpenModalUpdateInfo(true);
   };
 
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
-
   const onChangePayment = (e) => {
     setValuePayment(e.target.value);
   };
@@ -199,11 +209,11 @@ const PaymentPage = () => {
                     style={{ height: "100%" }}
                   >
                     <WrapperRadioContent>
-                      <Radio value={1}>
+                      <Radio value={`FAST`}>
                         <WrapperRadioText>FAST</WrapperRadioText> Giao hàng tiết
                         kiệm
                       </Radio>
-                      <Radio value={2}>
+                      <Radio value={`GO_JEK`}>
                         <WrapperRadioText>GO_JEK</WrapperRadioText> Giao hàng
                         tiết kiệm
                       </Radio>
@@ -250,24 +260,24 @@ const PaymentPage = () => {
               <div style={{ padding: "20px 0 30px" }}>
                 <WrapperCaculator>
                   <label>Tạm tính</label>
-                  <div>{`${convertPrice(priceMemo || 0)} VND`}</div>
+                  <div>{`${convertPrice(priceMemo) || 0} VND`}</div>
                 </WrapperCaculator>
                 <WrapperCaculator>
                   <label>Giảm giá</label>
-                  <div>{`${convertPrice(priceDiscountMemo || 0)} VND`}</div>
+                  <div>{`${convertPrice(priceDiscountMemo) || 0} VND`}</div>
                 </WrapperCaculator>
                 <WrapperCaculator>
                   <label>Phí giao hàng</label>
-                  <div>{`${convertPrice(priceDeliveryMemo || 0)} VND`}</div>
+                  <div>{`${convertPrice(priceDeliveryMemo) || 0} VND`}</div>
                 </WrapperCaculator>
               </div>
 
               <WrapperTotalPrice>
                 <span>Tổng tiền</span>
                 <div>
-                  <WrapperTotal>{`${
-                    convertPrice(priceTotalMemo || 0)
-                  } VND`}</WrapperTotal>{" "}
+                  <WrapperTotal>{`${convertPrice(
+                    priceTotalMemo || 0
+                  )} VND`}</WrapperTotal>{" "}
                   <div>(Đã bao gồm VAT nếu có)</div>
                 </div>
               </WrapperTotalPrice>

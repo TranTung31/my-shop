@@ -14,19 +14,17 @@ export const WrapperTitle = styled.span`
 `;
 
 export const WrapperLeft = styled.div`
-  width: 910px;
-  height: 60px;
+  width: 100%;
   padding: 10px;
   background-color: #fff;
-  margin: 0 30px 10px 0;
+  margin: 0 30px 0 0;
 `;
 
 export const WrapperLeftProduct = styled.div`
-  width: 910px;
-  height: 80px;
-  padding: 10px;
+  width: 100%;
+  padding: 10px 10px 20px;
   background-color: #fff;
-  margin: 0 30px 10px 0;
+  margin: 0 30px 0 0;
 `;
 
 export const WrapperRight = styled.div`
@@ -39,13 +37,16 @@ export const WrapperAllProduct = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 700px;
   height: 100%;
+  padding-top: 10px;
+  margin: 30px 0;
 `;
 
 export const WrapperProduct = styled.div`
   display: flex;
   align-items: center;
-  width: 296px;
+  width: 200px;
   height: fit-content;
 `;
 
@@ -90,8 +91,22 @@ export const WrapperProductRightButton = styled.button`
   cursor: pointer;
 `;
 
-export const WrapperStep = styled.div`
-  margin-right: 30px;
-  padding: 30px 10px;
-  background-color: #fff;
+export const WrapperMethodDelivery = styled.div`
+  width: fit-content;
+  padding: 14px;
+  margin-top: 10px;
+  background-color: rgb(240, 248, 255);
+  border: 1px solid rgb(194, 225, 255);
+  border-radius: 8px;
+`;
+
+export const WrapperRadioContent = styled.div`
+  display: flex;
+  height: 100%;
+`;
+
+export const WrapperRadioText = styled.span`
+  color: rgb(234, 133, 0);
+  font-weight: bold;
+  padding-right: 8px;
 `;

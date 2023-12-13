@@ -32,7 +32,7 @@ export const orderSlice = createSlice({
     removeMoreProduct: (state, action) => {
       const { checkedList } = action.payload;
       const newCheckedList = state.orderItems.filter(
-        (item) => !checkedList.includes(item.product)
+        (item) => !checkedList?.includes(item.product)
       );
       state.orderItems = newCheckedList;
     },

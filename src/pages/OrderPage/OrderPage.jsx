@@ -10,6 +10,7 @@ import {
   WrapperProductName,
   WrapperProductRightButton,
   WrapperRight,
+  WrapperStep,
   WrapperTitle,
   WrapperTotal,
   WrapperTotalPrice,
@@ -34,6 +35,7 @@ import useMutationHook from "../../hooks/useMutationHook";
 import * as UserService from "../../services/UserService";
 import { updateUser } from "../../redux/slides/userSlide";
 import { useLocation, useNavigate } from "react-router-dom";
+import StepsComponent from "../../components/StepsComponent/StepsComponent";
 
 const OrderPage = () => {
   const [checkedList, setCheckedList] = useState([]);
@@ -52,9 +54,6 @@ const OrderPage = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  console.log("location: ", location.pathname);
 
   const onChangeCheckBox = (e) => {
     if (e.target.checked) {
@@ -111,9 +110,9 @@ const OrderPage = () => {
   }, [order]);
 
   const priceDeliveryMemo = useMemo(() => {
-    if (priceMemo > 200000) {
+    if (priceMemo >= 200000 && priceMemo <= 500000) {
       return 10000;
-    } else if (priceMemo === 0) {
+    } else if (priceMemo === 0 || priceMemo > 500000) {
       return 0;
     } else {
       return 20000;
@@ -141,9 +140,7 @@ const OrderPage = () => {
   }, [user]);
 
   useEffect(() => {
-    if (location.pathname === "/order") {
-      dispatch(addOrderItemsSelected({ checkedList }));
-    }
+    dispatch(addOrderItemsSelected({ checkedList }));
   }, [checkedList]);
 
   useEffect(() => {
@@ -217,12 +214,41 @@ const OrderPage = () => {
     setIsOpenModalUpdateInfo(true);
   };
 
+  const itemss = [
+    {
+      title: "20.000 VND",
+      description: "Dưới 200.000 VND",
+    },
+    {
+      title: "10.000 VND",
+      description: "Từ 200.000 VND đến 500.000 VND",
+    },
+    {
+      title: "Free ship",
+      description: "Trên 500.000 VND",
+    },
+  ];
+
   return (
     <div style={{ backgroundColor: "#f5f5fa" }}>
       <WrapperOrderPage>
         <WrapperTitle>Giỏ hàng</WrapperTitle>
+
         <div style={{ display: "flex" }}>
           <div>
+            <WrapperStep>
+              <StepsComponent
+                current={
+                  priceDeliveryMemo === 20000 ||
+                  order?.orderItemsSelected.length === 0
+                    ? 0
+                    : priceDeliveryMemo === 10000
+                    ? 1
+                    : 2
+                }
+                items={itemss}
+              />
+            </WrapperStep>
             <WrapperLeft>
               <span style={{ fontSize: "1.5rem", fontWeight: 500 }}>
                 Phí giao hàng
