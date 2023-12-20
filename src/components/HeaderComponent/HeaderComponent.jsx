@@ -55,17 +55,36 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     setIsLoading(false);
   };
 
+  const handleClickNavigate = (type) => {
+    switch (type) {
+      case "profile":
+        navigate("/user-detail");
+        break;
+      case "admin":
+        navigate("/system/admin");
+        break;
+      case "order":
+        navigate("/my-order");
+        break;
+      default:
+        handleLogout();
+    }
+  };
+
   const content = (
     <div>
-      <WrapperContentPopover onClick={() => navigate("/user-detail")}>
+      <WrapperContentPopover onClick={() => handleClickNavigate("profile")}>
         Thông tin người dùng
       </WrapperContentPopover>
       {user?.isAdmin === true && (
-        <WrapperContentPopover onClick={() => navigate("/system/admin")}>
+        <WrapperContentPopover onClick={() => handleClickNavigate("admin")}>
           Quản lý hệ thống
         </WrapperContentPopover>
       )}
-      <WrapperContentPopover onClick={handleLogout}>
+      <WrapperContentPopover onClick={() => handleClickNavigate("order")}>
+        Đơn hàng của tôi
+      </WrapperContentPopover>
+      <WrapperContentPopover onClick={() => handleClickNavigate()}>
         Đăng xuất
       </WrapperContentPopover>
     </div>

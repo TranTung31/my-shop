@@ -40,7 +40,8 @@ const CardProduct = (props) => {
       }}
       bodyStyle={{ padding: "10px" }}
       cover={<img alt="example" src={image} />}
-      onClick={() => handleProductDetail(id)}
+      onClick={() => countInStock !== 0 && handleProductDetail(id)}
+      disabled={countInStock === 0}
     >
       <img
         src={logo}
