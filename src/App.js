@@ -6,7 +6,7 @@ import { isJsonString } from "./utils";
 import jwt_decode from "jwt-decode";
 import * as UserService from "./services/UserService";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "./redux/slides/userSlide";
+import { updateUser } from "./redux/slides/userSlice";
 import LoadingComponent from "./components/LoadingComponent/LoadingComponent";
 
 function App() {

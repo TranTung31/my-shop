@@ -33,7 +33,7 @@ import ModalComponent from "../../components/ModalComponent/ModalComponent";
 import InputComponent from "../../components/InputComponent/InputComponent";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as UserService from "../../services/UserService";
-import { updateUser } from "../../redux/slides/userSlide";
+import { updateUser } from "../../redux/slides/userSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import StepsComponent from "../../components/StepsComponent/StepsComponent";
 

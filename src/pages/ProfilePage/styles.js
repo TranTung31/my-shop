@@ -2,8 +2,10 @@ import { Upload } from "antd";
 import styled from "styled-components";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 
-export const WrapperHeader = styled.h1`
-  color: #000;
+export const WrapperHeader = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  padding: 20px 0;
 `;
 
 export const WrapperContent = styled.div`

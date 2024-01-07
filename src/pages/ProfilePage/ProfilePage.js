@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as Message from "../../components/Message/Message";
-import { updateUser } from "../../redux/slides/userSlide";
+import { updateUser } from "../../redux/slides/userSlice";
 import { Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { getBase64 } from "../../utils";

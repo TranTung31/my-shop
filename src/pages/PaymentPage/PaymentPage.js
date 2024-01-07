@@ -1,15 +1,9 @@
-import { Button, Checkbox, Form, Image, Radio, Space } from "antd";
+import { Button, Form, Radio } from "antd";
 import {
-  WrapperAllProduct,
   WrapperCaculator,
   WrapperLeft,
-  WrapperLeftProduct,
   WrapperMethodDelivery,
   WrapperOrderPage,
-  WrapperProduct,
-  WrapperProductLeftButton,
-  WrapperProductName,
-  WrapperProductRightButton,
   WrapperRadioContent,
   WrapperRadioText,
   WrapperRight,
@@ -17,15 +11,10 @@ import {
   WrapperTotal,
   WrapperTotalPrice,
 } from "./styles";
-import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
-import { WrapperInputNumber } from "../../components/ProductDetailComponent/styles";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  removeProduct,
   removeMoreProduct,
-  increaseProduct,
-  decreaseProduct,
   addOrderItemsSelected,
 } from "../../redux/slides/orderSlice";
 import { useEffect, useState } from "react";
@@ -36,14 +25,14 @@ import InputComponent from "../../components/InputComponent/InputComponent";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as UserService from "../../services/UserService";
 import * as OrderService from "../../services/OrderService";
-import { updateUser } from "../../redux/slides/userSlide";
+import { updateUser } from "../../redux/slides/userSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const PaymentPage = () => {
   const [checkedList, setCheckedList] = useState([]);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   const [value, setValue] = useState("FAST");
-  const [valuePayment, setValuePayment] = useState(1);
+  const [valuePayment, setValuePayment] = useState("Thanh toán khi nhận hàng");
   const [stateUserDetail, setStateUserDetail] = useState({
     name: "",
     phone: "",
@@ -154,7 +143,7 @@ const PaymentPage = () => {
         address: user?.address,
         city: user?.city,
         phone: user?.phone,
-        paymentMethod: "Thanh toán khi nhận hàng",
+        paymentMethod: valuePayment,
         itemsPrice: priceMemo,
         shippingPrice: priceDeliveryMemo,
         totalPrice: priceTotalMemo,
@@ -233,8 +222,8 @@ const PaymentPage = () => {
                     style={{ height: "100%" }}
                   >
                     <WrapperRadioContent>
-                      <Radio value={1}>Thanh toán khi nhận hàng</Radio>
-                      <Radio value={2}>Thanh toán bằng Paypal</Radio>
+                      <Radio value={"Thanh toán khi nhận hàng"}>Thanh toán khi nhận hàng</Radio>
+                      <Radio value={"Thanh toán bằng Paypal"}>Thanh toán bằng Paypal</Radio>
                     </WrapperRadioContent>
                   </Radio.Group>
                 </WrapperMethodDelivery>

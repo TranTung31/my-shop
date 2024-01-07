@@ -17,7 +17,7 @@ import LoadingComponent from "../../components/LoadingComponent/LoadingComponent
 import * as Message from "../../components/Message/Message";
 import jwt_decode from "jwt-decode";
 import { useDispatch } from "react-redux";
-import { updateUser } from "../../redux/slides/userSlide";
+import { updateUser } from "../../redux/slides/userSlice";
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -27,8 +27,6 @@ const SignInPage = () => {
   const dispatch = useDispatch();
 
   const { state: pathProductDetail } = useLocation();
-
-  // console.log("pathProductDetail: ", !!pathProductDetail);
 
   const handleNavigateSignUp = () => {
     navigate("/sign-up");

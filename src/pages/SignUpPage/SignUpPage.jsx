@@ -26,8 +26,6 @@ const SignUpPage = () => {
 
   const mutation = useMutationHook((data) => UserService.signupUser(data));
 
-  console.log("mutation sign up: ", mutation);
-
   const { data, isLoading, isSuccess, isError } = mutation;
 
   useEffect(() => {
@@ -57,7 +55,6 @@ const SignUpPage = () => {
 
   const handleSignUp = () => {
     mutation.mutate({ email, password, confirmPassword });
-    console.log("sign up: ", email, password, confirmPassword);
   };
 
   return (

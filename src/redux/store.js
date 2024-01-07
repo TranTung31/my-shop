@@ -12,7 +12,7 @@ import {
 import storage from "redux-persist/lib/storage";
 import counterReducer from "./slides/counterSlice";
 import productReducer from "./slides/productSlice";
-import userReducer from "./slides/userSlide";
+import userReducer from "./slides/userSlice";
 import orderReducer from "./slides/orderSlice";
 
 const persistConfig = {

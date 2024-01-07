@@ -42,26 +42,36 @@ const AdminProduct = () => {
 
   const user = useSelector((state) => state.user);
 
-  const [stateProduct, setStateProduct] = useState({
-    name: "",
-    type: "",
-    price: "",
-    countInStock: "",
-    discount: "",
-    rating: "",
-    image: "",
-    newType: "",
-  });
+  const initialStateProduct = () => {
+    return {
+      name: "",
+      type: "",
+      price: "",
+      countInStock: "",
+      discount: "",
+      rating: "",
+      image: "",
+      newType: "",
+    };
+  };
 
-  const [stateDetailProduct, setStateDetailProduct] = useState({
-    name: "",
-    type: "",
-    price: "",
-    countInStock: "",
-    discount: "",
-    rating: "",
-    image: "",
-  });
+  const initialStateDetailProduct = () => {
+    return {
+      name: "",
+      type: "",
+      price: "",
+      countInStock: "",
+      discount: "",
+      rating: "",
+      image: "",
+    };
+  };
+
+  const [stateProduct, setStateProduct] = useState(initialStateProduct());
+
+  const [stateDetailProduct, setStateDetailProduct] = useState(
+    initialStateDetailProduct()
+  );
 
   const [form] = Form.useForm();
 
@@ -268,8 +278,12 @@ const AdminProduct = () => {
   }, [isRowSelected]);
 
   useEffect(() => {
-    form.setFieldsValue(stateDetailProduct);
-  }, [form, stateDetailProduct]);
+    if (!isOpenModalCreate) {
+      form.setFieldsValue(stateDetailProduct);
+    } else {
+      form.resetFields();
+    }
+  }, [form, stateDetailProduct, isOpenModalCreate]);
 
   const handleGetDetailProduct = () => {
     setIsOpenModalEdit(true);

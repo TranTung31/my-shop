@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import { useDispatch } from "react-redux";
-import { resetUser } from "../../redux/slides/userSlide";
+import { resetUser } from "../../redux/slides/userSlice";
 import { useEffect, useState } from "react";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import { searchProduct } from "../../redux/slides/productSlice";
@@ -64,7 +64,12 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         navigate("/system/admin");
         break;
       case "order":
-        navigate("/my-order");
+        navigate("/my-order", {
+          state: {
+            id: user?.id,
+            token: user?.access_token,
+          },
+        });
         break;
       default:
         handleLogout();
