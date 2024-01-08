@@ -12,9 +12,7 @@ import {
   WrapperTitle,
 } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addOrderItemsSelected,
-} from "../../redux/slides/orderSlice";
+import { addOrderItemsSelected } from "../../redux/slides/orderSlice";
 import { useEffect, useState } from "react";
 import { convertPrice } from "../../utils";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -37,7 +35,8 @@ const OrderSuccessPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { orderItemsSelected, delivery, priceTotalMemo } = location.state;
+  const { orderItemsSelected, delivery, priceTotalMemo, paymentMethod } =
+    location.state;
 
   useEffect(() => {
     setStateUserDetail({
@@ -69,8 +68,8 @@ const OrderSuccessPage = () => {
                 </span>
                 <WrapperMethodDelivery>
                   <WrapperRadioContent>
-                    <WrapperRadioText>{delivery}</WrapperRadioText> Giao
-                    hàng tiết kiệm
+                    <WrapperRadioText>{delivery}</WrapperRadioText> Giao hàng
+                    tiết kiệm
                   </WrapperRadioContent>
                 </WrapperMethodDelivery>
               </div>
@@ -81,7 +80,7 @@ const OrderSuccessPage = () => {
                 </span>
                 <WrapperMethodDelivery>
                   <WrapperRadioContent>
-                    <span>Thanh toán khi nhận hàng</span>
+                    <span>{paymentMethod}</span>
                   </WrapperRadioContent>
                 </WrapperMethodDelivery>
               </div>

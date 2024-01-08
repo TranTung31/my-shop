@@ -150,7 +150,7 @@ const OrderDetailPage = () => {
                   <WrapperItem>
                     {item?.discount
                       ? `${convertPrice(
-                          item?.price * (item?.discount / 100)
+                          item?.price * item?.amount * (item?.discount / 100)
                         )} VND`
                       : "0 VND"}
                   </WrapperItem>
