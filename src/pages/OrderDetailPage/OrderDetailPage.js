@@ -143,10 +143,16 @@ const OrderDetailPage = () => {
                       {item?.name}
                     </div>
                   </WrapperNameProduct>
-                  <WrapperItem>{convertPrice(item?.price)}</WrapperItem>
+                  <WrapperItem>{`${convertPrice(
+                    item?.price
+                  )} VND`}</WrapperItem>
                   <WrapperItem>{item?.amount}</WrapperItem>
                   <WrapperItem>
-                    {/* {order?.discount ? convertPrice(order?.discount) : "0 VND"} */}
+                    {item?.discount
+                      ? `${convertPrice(
+                          item?.price * (item?.discount / 100)
+                        )} VND`
+                      : "0 VND"}
                   </WrapperItem>
                 </WrapperProduct>
               );
@@ -165,7 +171,9 @@ const OrderDetailPage = () => {
             <WrapperAllPrice>
               <WrapperItemLabel>Tổng cộng</WrapperItemLabel>
               <WrapperItem>
-                <WrapperItem>{`${convertPrice(data?.totalPrice)} VND`}</WrapperItem>
+                <WrapperItem>{`${convertPrice(
+                  data?.totalPrice
+                )} VND`}</WrapperItem>
               </WrapperItem>
             </WrapperAllPrice>
           </WrapperStyleContent>

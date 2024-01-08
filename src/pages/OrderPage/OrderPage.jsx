@@ -77,9 +77,13 @@ const OrderPage = () => {
     }
   };
 
-  const handleOnChangeNumberProduct = (type, productId) => {
+  const handleOnChangeNumberProduct = (type, productId, check) => {
     if (type === "increase") {
-      dispatch(increaseProduct({ productId }));
+      if (!check) {
+        dispatch(increaseProduct({ productId }));
+      } else {
+        alert("Số lượng sản phẩm trong kho đã hết!");
+      }
     } else {
       dispatch(decreaseProduct({ productId }));
     }
@@ -308,10 +312,16 @@ const OrderPage = () => {
                       defaultValue={item.amount}
                       value={item.amount}
                       style={{ border: "none", margin: "auto", top: "1px" }}
+                      min={1}
+                      max={item.countInStock}
                     />
                     <WrapperProductRightButton
                       onClick={() =>
-                        handleOnChangeNumberProduct("increase", item.product)
+                        handleOnChangeNumberProduct(
+                          "increase",
+                          item.product,
+                          item.amount === item.countInStock || item.amount > item.countInStock
+                        )
                       }
                     >
                       <PlusOutlined />

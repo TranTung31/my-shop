@@ -9,6 +9,7 @@ import {
   WrapperStyleTextHeader,
   WrapperStyleTextSell,
   WrapperTextQuantity,
+  WrapperButtonComponent,
 } from "./styles";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
@@ -28,8 +29,7 @@ const ProductDetailComponent = ({ id }) => {
 
   const user = useSelector((state) => state.user);
 
-  const onChangeQuantityProduct = () => {
-  };
+  const onChangeQuantityProduct = () => {};
 
   const fetchProductDetail = async () => {
     const res = await ProductService.getDetailProduct(id);
@@ -42,9 +42,13 @@ const ProductDetailComponent = ({ id }) => {
     keepPreviousData: true,
   });
 
-  const handleChangeNumberProduct = (type) => {
+  const handleChangeNumberProduct = (type, check) => {
     if (type === "increase") {
-      setNumberProduct((prev) => prev + 1);
+      if (!check) {
+        setNumberProduct((prev) => prev + 1);
+      } else {
+        alert("Số lượng sản phẩm trong kho đã hết!");
+      }
     } else {
       if (numberProduct > 1) {
         setNumberProduct((prev) => prev - 1);
@@ -58,16 +62,19 @@ const ProductDetailComponent = ({ id }) => {
     if (user?.id === "") {
       navigate("/sign-in", { state: location?.pathname });
     } else {
-      dispatch(addProductToCart({
-        name: product?.name,
-        amount: numberProduct,
-        image: product?.image,
-        price: product?.price,
-        discount: product?.discount,
-        product: product?._id,
-      }));
+      dispatch(
+        addProductToCart({
+          name: product?.name,
+          amount: numberProduct,
+          image: product?.image,
+          price: product?.price,
+          discount: product?.discount,
+          product: product?._id,
+          countInStock: product?.countInStock,
+        })
+      );
     }
-  }
+  };
 
   return (
     <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
@@ -126,7 +133,11 @@ const ProductDetailComponent = ({ id }) => {
       <Col span={14} style={{ padding: "0 16px 16px" }}>
         <WrapperStyleTextHeader>{product?.name}</WrapperStyleTextHeader>
         <div style={{ padding: "10px 0" }}>
-          <Rate allowHalf defaultValue={product?.rating} value={product?.rating}/>
+          <Rate
+            allowHalf
+            defaultValue={product?.rating}
+            value={product?.rating}
+          />
           {/* {renderStart(product?.rating)} */}
           <WrapperStyleTextSell> | Đã bán 10+</WrapperStyleTextSell>
         </div>
@@ -143,7 +154,7 @@ const ProductDetailComponent = ({ id }) => {
         <div style={{ marginTop: "20px" }}>
           <WrapperTextQuantity>Số Lượng</WrapperTextQuantity>
           <div style={{ marginTop: "10px" }}>
-            <ButtonComponent
+            <WrapperButtonComponent
               icon={
                 <WrapperIcon>
                   <MinusOutlined />
@@ -155,14 +166,21 @@ const ProductDetailComponent = ({ id }) => {
               defaultValue={numberProduct}
               onChange={onChangeQuantityProduct}
               value={numberProduct}
+              min={1}
+              max={product?.countInStock}
             />
-            <ButtonComponent
+            <WrapperButtonComponent
               icon={
                 <WrapperIcon>
                   <PlusOutlined />
                 </WrapperIcon>
               }
-              onClick={() => handleChangeNumberProduct("increase")}
+              onClick={() =>
+                handleChangeNumberProduct(
+                  "increase",
+                  numberProduct === product?.countInStock
+                )
+              }
             />
           </div>
         </div>

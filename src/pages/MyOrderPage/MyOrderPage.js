@@ -87,8 +87,8 @@ const MyOrderPage = () => {
     });
   };
 
-  const mutationDelete = useMutationHook(({ id, access_token }) => {
-    const res = OrderService.deleteOrder(id, access_token);
+  const mutationDelete = useMutationHook(({ id, access_token, orderItems }) => {
+    const res = OrderService.deleteOrder(id, access_token, orderItems);
     return res;
   });
 
@@ -107,9 +107,10 @@ const MyOrderPage = () => {
     }
   }, [isSuccessDelete]);
 
-  const handleDeleteOrder = (orderId) => {
+  const handleDeleteOrder = (order) => {
+    const orderId = order?._id;
     mutationDelete.mutate(
-      { id: orderId, access_token: user?.access_token },
+      { id: orderId, access_token: user?.access_token, orderItems: order?.orderItems },
       {
         onSuccess: () => {
           queryOrder.refetch();
@@ -196,7 +197,7 @@ const MyOrderPage = () => {
                     </div>
                     <div style={{ display: "flex", gap: "10px" }}>
                       <ButtonComponent
-                        onClick={() => handleDeleteOrder(item?._id)}
+                        onClick={() => handleDeleteOrder(item)}
                         size={40}
                         styleButton={{
                           height: "36px",
