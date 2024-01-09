@@ -19,8 +19,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addProductToCart, resetOrder } from "../../redux/slides/orderSlice";
-import { convertPrice } from "../../utils";
+import { convertPrice, initFacebookSDK } from "../../utils";
 import * as Message from "../../components/Message/Message";
+import LikeButtonComponent from "../LikeButtonComponent/LikeButtonComponent";
+import CommentComponent from "../CommentComponent/CommentComponent";
 
 const ProductDetailComponent = ({ id }) => {
   const [numberProduct, setNumberProduct] = useState(1);
@@ -77,7 +79,10 @@ const ProductDetailComponent = ({ id }) => {
     if (user?.id === "") {
       navigate("/sign-in", { state: location?.pathname });
     } else {
-      if (orderRedux?.amount + numberProduct <= orderRedux?.countInStock || !orderRedux) {
+      if (
+        orderRedux?.amount + numberProduct <= orderRedux?.countInStock ||
+        !orderRedux
+      ) {
         dispatch(
           addProductToCart({
             name: product?.name,
@@ -94,6 +99,10 @@ const ProductDetailComponent = ({ id }) => {
       }
     }
   };
+
+  useEffect(() => {
+    initFacebookSDK();
+  }, []);
 
   return (
     <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
@@ -170,6 +179,9 @@ const ProductDetailComponent = ({ id }) => {
           <span className="address">{user?.address} </span> -
           <span className="change-address"> Đổi địa chỉ</span>
         </WrapperCurrentAddress>
+        <LikeButtonComponent
+          dataHref={"https://developers.facebook.com/docs/plugins/"}
+        />
         <div style={{ marginTop: "20px" }}>
           <WrapperTextQuantity>Số Lượng</WrapperTextQuantity>
           <div style={{ marginTop: "10px" }}>
@@ -235,6 +247,12 @@ const ProductDetailComponent = ({ id }) => {
           />
         </div>
       </Col>
+      <CommentComponent
+        dataHref={
+          "https://developers.facebook.com/docs/plugins/comments#configurator"
+        }
+        width={1270}
+      />
     </Row>
   );
 };
