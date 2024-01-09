@@ -81,8 +81,8 @@ const OrderDetailPage = () => {
               <WrapperLabel>Hình thức giao hàng</WrapperLabel>
               <WrapperContentInfo>
                 <div style={{ fontSize: "1.5rem", marginTop: 0 }}>
-                  <span className="name-delivery">FAST </span>Giao hàng tiết
-                  kiệm
+                  <span className="name-delivery">{data?.deliveryMethod} </span>
+                  Giao hàng tiết kiệm
                 </div>
                 <div className="delivery-fee" style={{ fontSize: "1.5rem" }}>
                   <span>Phí giao hàng: </span>
@@ -110,14 +110,14 @@ const OrderDetailPage = () => {
                 justifyContent: "space-between",
               }}
             >
-              <div style={{ width: "670px" }}>Sản phẩm</div>
+              <div style={{ width: "662px" }}>Sản phẩm</div>
               <WrapperItemLabel>Giá</WrapperItemLabel>
               <WrapperItemLabel>Số lượng</WrapperItemLabel>
               <WrapperItemLabel>Giảm giá</WrapperItemLabel>
             </div>
             {data?.orderItems?.map((item, index) => {
               return (
-                <WrapperProduct>
+                <WrapperProduct key={index}>
                   <WrapperNameProduct>
                     <img
                       src={item?.image}
@@ -146,8 +146,10 @@ const OrderDetailPage = () => {
                   <WrapperItem>{`${convertPrice(
                     item?.price
                   )} VND`}</WrapperItem>
-                  <WrapperItem>{item?.amount}</WrapperItem>
-                  <WrapperItem>
+                  <WrapperItem style={{ paddingLeft: "6px" }}>
+                    {item?.amount}
+                  </WrapperItem>
+                  <WrapperItem style={{ paddingLeft: "8px" }}>
                     {item?.discount
                       ? `${convertPrice(
                           item?.price * item?.amount * (item?.discount / 100)

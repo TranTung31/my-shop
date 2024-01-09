@@ -97,7 +97,7 @@ const OrderSuccessPage = () => {
                 Sản phẩm đã đặt
               </span>
               {orderItemsSelected?.map((item, index) => (
-                <WrapperAllProduct>
+                <WrapperAllProduct key={index}>
                   <WrapperProduct>
                     <div style={{ paddingLeft: "8px" }}>
                       <Image

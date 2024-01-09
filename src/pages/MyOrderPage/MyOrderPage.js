@@ -46,9 +46,9 @@ const MyOrderPage = () => {
   };
 
   const renderOrder = (orderItems) => {
-    return orderItems?.map((order) => {
+    return orderItems?.map((order, index) => {
       return (
-        <WrapperHeaderItem>
+        <WrapperHeaderItem key={index}>
           <img
             src={order?.image}
             alt=""
@@ -100,7 +100,7 @@ const MyOrderPage = () => {
   } = mutationDelete;
 
   useEffect(() => {
-    if (isSuccessDelete && dataDelete?.status === "OK") {
+    if (isSuccessDelete) {
       Message.success("Delete order success!");
     } else if (isErrorDelete && dataDelete?.status === "ERROR") {
       Message.error("Delete order error!");

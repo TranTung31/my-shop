@@ -180,7 +180,11 @@ const ProductDetailComponent = ({ id }) => {
           <span className="change-address"> Đổi địa chỉ</span>
         </WrapperCurrentAddress>
         <LikeButtonComponent
-          dataHref={"https://developers.facebook.com/docs/plugins/"}
+          dataHref={
+            process.env.REACT_APP_CHECK_LOCAL
+              ? "https://developers.facebook.com/docs/plugins/"
+              : window.location.href
+          }
         />
         <div style={{ marginTop: "20px" }}>
           <WrapperTextQuantity>Số Lượng</WrapperTextQuantity>
@@ -249,7 +253,9 @@ const ProductDetailComponent = ({ id }) => {
       </Col>
       <CommentComponent
         dataHref={
-          "https://developers.facebook.com/docs/plugins/comments#configurator"
+          process.env.REACT_APP_CHECK_LOCAL || true
+            ? "https://developers.facebook.com/docs/plugins/comments#configurator"
+            : window.location.href
         }
         width={1270}
       />

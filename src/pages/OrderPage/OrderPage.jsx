@@ -278,8 +278,8 @@ const OrderPage = () => {
               </WrapperAllProduct>
             </WrapperLeft>
 
-            {order?.orderItems?.map((item) => (
-              <WrapperLeftProduct>
+            {order?.orderItems?.map((item, index) => (
+              <WrapperLeftProduct key={index}>
                 <WrapperAllProduct>
                   <WrapperProduct>
                     <Checkbox
