@@ -12,6 +12,7 @@ const initialState = {
   paidAt: "",
   isDelivered: false,
   delivered: "",
+  isSuccessOrder: false,
 };
 
 export const orderSlice = createSlice({
@@ -19,15 +20,23 @@ export const orderSlice = createSlice({
   initialState,
   reducers: {
     addProductToCart: (state, action) => {
-      const { amount, image, name, price, discount, product } = action.payload;
+      const { amount, image, name, price, discount, product, countInStock } =
+        action.payload;
       const findProduct = state.orderItems.find(
         (item) => item.product === product
       );
       if (findProduct) {
-        findProduct.amount += amount;
+        if (findProduct.amount <= findProduct.countInStock) {
+          findProduct.amount += amount;
+          state.isSuccessOrder = true;
+        }
       } else {
         state.orderItems.push(action.payload);
+        state.isSuccessOrder = true;
       }
+    },
+    resetOrder: (state) => {
+      state.isSuccessOrder = false;
     },
     removeMoreProduct: (state, action) => {
       const { checkedList } = action.payload;
@@ -103,6 +112,7 @@ export const {
   increaseProduct,
   decreaseProduct,
   addOrderItemsSelected,
+  resetOrder,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

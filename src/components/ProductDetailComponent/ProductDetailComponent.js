@@ -13,13 +13,14 @@ import {
 } from "./styles";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as ProductService from "../../services/ProductService";
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { addProductToCart } from "../../redux/slides/orderSlice";
+import { addProductToCart, resetOrder } from "../../redux/slides/orderSlice";
 import { convertPrice } from "../../utils";
+import * as Message from "../../components/Message/Message";
 
 const ProductDetailComponent = ({ id }) => {
   const [numberProduct, setNumberProduct] = useState(1);
@@ -28,6 +29,16 @@ const ProductDetailComponent = ({ id }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
+  const order = useSelector((state) => state.order);
+
+  useEffect(() => {
+    if (order?.isSuccessOrder) {
+      Message.success("Thêm vào giỏ hàng thành công!");
+    }
+    return () => {
+      dispatch(resetOrder());
+    };
+  }, [order?.isSuccessOrder]);
 
   const onChangeQuantityProduct = () => {};
 
@@ -58,21 +69,29 @@ const ProductDetailComponent = ({ id }) => {
     }
   };
 
+  const orderRedux = order?.orderItems?.find(
+    (item) => item.product === product?._id
+  );
+
   const handleAddProductToCart = () => {
     if (user?.id === "") {
       navigate("/sign-in", { state: location?.pathname });
     } else {
-      dispatch(
-        addProductToCart({
-          name: product?.name,
-          amount: numberProduct,
-          image: product?.image,
-          price: product?.price,
-          discount: product?.discount,
-          product: product?._id,
-          countInStock: product?.countInStock,
-        })
-      );
+      if (orderRedux?.amount + numberProduct <= orderRedux?.countInStock || !orderRedux) {
+        dispatch(
+          addProductToCart({
+            name: product?.name,
+            amount: numberProduct,
+            image: product?.image,
+            price: product?.price,
+            discount: product?.discount,
+            product: product?._id,
+            countInStock: product?.countInStock,
+          })
+        );
+      } else {
+        Message.error("Số lượng sản phẩm trong kho đã hết!");
+      }
     }
   };
 

@@ -152,6 +152,7 @@ const PaymentPage = () => {
         shippingPrice: priceDeliveryMemo,
         totalPrice: priceTotalMemo,
         userId: user?.id,
+        email: user?.email,
       },
       access_token: user?.access_token,
     });
