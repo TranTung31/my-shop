@@ -5,6 +5,7 @@ import {
   WrapperPriceProduct,
   WrapperReportProduct,
   WrapperStyleTextSell,
+  WrapperStyleDiscount,
 } from "./styles";
 import { StarFilled } from "@ant-design/icons";
 import logo from "../../assets/images/logo.png";
@@ -55,6 +56,7 @@ const CardProduct = (props) => {
           borderTopLeftRadius: "8px",
         }}
       />
+      <WrapperStyleDiscount>{`-${discount}%`}</WrapperStyleDiscount>
       <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportProduct>
         <span style={{ marginRight: "5px" }}>
@@ -63,8 +65,9 @@ const CardProduct = (props) => {
         <WrapperStyleTextSell> | Đã bán {selled || 100}+</WrapperStyleTextSell>
       </WrapperReportProduct>
       <WrapperPriceProduct>
-        {convertPrice(price)}{" "}
-        <WrapperPriceDiscount>- {discount || 5} %</WrapperPriceDiscount>
+        <div>{`${convertPrice(price - price * (discount / 100))}₫`}</div>
+        <s style={{ color: "#ccc" }}>{`${convertPrice(price)}₫`}</s>
+        {/* <WrapperPriceDiscount>- {discount || 5} %</WrapperPriceDiscount> */}
       </WrapperPriceProduct>
     </WrapperCardStyle>
   );

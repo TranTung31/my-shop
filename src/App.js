@@ -14,6 +14,14 @@ function App() {
   const user = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleGetDetailUser = async (id, token) => {
+    const res = await UserService.getDetailUser(id, token);
+    if (res?.status === "OK") {
+      dispatch(updateUser({ ...res?.data, access_token: token }));
+    }
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     setIsLoading(true);
     const { storageData, decoded } = handleDecoded();
@@ -50,11 +58,6 @@ function App() {
     }
   );
 
-  const handleGetDetailUser = async (id, token) => {
-    const res = await UserService.getDetailUser(id, token);
-    dispatch(updateUser({ ...res?.data, access_token: token }));
-    setIsLoading(false);
-  };
   return (
     <div>
       <LoadingComponent isLoading={isLoading}>

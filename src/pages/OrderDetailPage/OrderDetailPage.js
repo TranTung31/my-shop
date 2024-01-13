@@ -10,6 +10,7 @@ import {
   WrapperNameProduct,
   WrapperOrderDetailPage,
   WrapperProduct,
+  WrapperShippingPrice,
   WrapperStyleContent,
   WrapperStyleTitle,
 } from "./styles";
@@ -18,7 +19,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import * as OrderService from "../../services/OrderService";
 import { useQuery } from "@tanstack/react-query";
-import { convertPrice } from "../../utils";
+import { convertDate, convertPrice } from "../../utils";
 import Loading from "../../components/LoadingComponent/LoadingComponent";
 
 const OrderDetailPage = () => {
@@ -61,19 +62,28 @@ const OrderDetailPage = () => {
               <WrapperLabel>Địa chỉ người nhận</WrapperLabel>
               <WrapperContentInfo>
                 <div className="name-info">
-                  {data?.shippingAddress?.fullName}
+                  <span>Tên người nhận: </span>
+                  <span>{data?.shippingAddress?.fullName}</span>
+                </div>
+                <div className="order-inf">
+                  <span>Địa chỉ: </span>
+                  <span>
+                    {`${data?.shippingAddress?.address}, ${data?.shippingAddress?.city}`}
+                  </span>
                 </div>
                 <div
-                  className="address-info"
+                  className="order-inf"
                   style={{ fontSize: "1.5rem", padding: "5px 0" }}
                 >
-                  <span>Địa chỉ: </span>{" "}
-                  {`${data?.shippingAddress?.address} ${" "} ${
-                    data?.shippingAddress?.city
-                  }`}
+                  <span>Điện thoại: </span>
+                  <span>{`+84 ${data?.shippingAddress?.phone}`}</span>
                 </div>
-                <div style={{ fontSize: "1.5rem", padding: "5px 0" }}>
-                  <span>Điện thoại: </span> {data?.shippingAddress?.phone}
+                <div
+                  className="order-inf"
+                  style={{ fontSize: "1.5rem", padding: "5px 0" }}
+                >
+                  <span>Ngày đặt: </span>
+                  <span>{convertDate(data?.createdAt)}</span>
                 </div>
               </WrapperContentInfo>
             </WrapperInfoUser>
@@ -86,7 +96,7 @@ const OrderDetailPage = () => {
                 </div>
                 <div className="delivery-fee" style={{ fontSize: "1.5rem" }}>
                   <span>Phí giao hàng: </span>
-                  {data?.shippingPrice}
+                  <WrapperShippingPrice>{`${data?.shippingPrice} VND`}</WrapperShippingPrice>
                 </div>
               </WrapperContentInfo>
             </WrapperInfoUser>

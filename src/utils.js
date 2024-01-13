@@ -81,3 +81,17 @@ export const convertDataChart = (dataChart, type) => {
     });
   return result;
 };
+
+export const convertDate = (inputDateRaw) => {
+  // Tạo một đối tượng ngày từ chuỗi
+  const inputDate = new Date(inputDateRaw);
+
+  // Lấy các thành phần ngày tháng
+  const day = inputDate.getUTCDate();
+  const month = inputDate.getUTCMonth() + 1; // Tháng bắt đầu từ 0 nên cộng thêm 1
+  const year = inputDate.getUTCFullYear();
+
+  // Tạo chuỗi ngày tháng mới
+  const outputDateString = day + "-" + month + "-" + year;
+  return outputDateString;
+};

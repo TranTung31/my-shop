@@ -13,7 +13,6 @@ export const WrapperProducts = styled.div`
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
-  margin-top: 30px;
 `;
 
 export const WrapperButtonComponent = styled(ButtonComponent)`

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const WrapperMyOrderPage = styled.div`
   width: 1285px;
-  height: 1000px;
+  height: auto;
   margin: 0 auto;
 `;
 
@@ -30,11 +30,13 @@ export const WrapperStyleHeaderDilivery = styled.div`
   border-radius: 4px;
   display: flex;
   align-items: center;
+
   span {
     color: rgb(36, 36, 36);
     font-weight: 400;
     font-size: 13px;
   }
+
   margin-bottom: 4px;
 `;
 
@@ -52,6 +54,7 @@ export const WrapperListOrder = styled.div`
   flex-direction: column;
   gap: 20px;
 `;
+
 export const WrapperFooterItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -93,3 +96,18 @@ export const WrapperStatus = styled.div`
   border-bottom: 1px solid rgb(235, 235, 240);
   flex-direction: column;
 `;
+
+export const WrapperStatusTitle = styled.div`
+  font-size: 1.6rem;
+  font-weight: 600;
+  padding: 5px 0;
+`;
+
+export const WrapperStatusContent = styled.div`
+  font-size: 1.6rem;
+  padding: 5px 0;
+
+  span:last-child {
+    color: rgb(255, 66, 78);
+  }
+`

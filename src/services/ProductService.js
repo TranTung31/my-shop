@@ -12,9 +12,7 @@ export const getAllProduct = async (limit, search) => {
       `${process.env.REACT_APP_API}/product/get-all?limit=${limit}`
     );
   } else {
-    res = await axios.get(
-      `${process.env.REACT_APP_API}/product/get-all`
-    );
+    res = await axios.get(`${process.env.REACT_APP_API}/product/get-all`);
   }
   return res.data;
 };
@@ -82,6 +80,18 @@ export const getAllType = async () => {
 export const getAllProductType = async (type, limit, page) => {
   const res = await axios.get(
     `${process.env.REACT_APP_API}/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}`
+  );
+  return res.data;
+};
+
+export const getCountProduct = async (access_token) => {
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API}/product/get-count-product`,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
   );
   return res.data;
 };

@@ -266,7 +266,7 @@ const OrderPage = () => {
                     Tất cả ({order?.orderItems?.length} sản phẩm)
                   </Checkbox>
                 </div>
-                <span>Đơn giá</span>
+                <span>Đơn giá gốc</span>
                 <span>Số lượng</span>
                 <span>Thành tiền</span>
                 <div

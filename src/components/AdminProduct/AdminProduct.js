@@ -52,6 +52,9 @@ const AdminProduct = () => {
       rating: "",
       image: "",
       newType: "",
+      author: "",
+      numberOfBook: "",
+      formatBook: "",
     };
   };
 
@@ -64,6 +67,9 @@ const AdminProduct = () => {
       discount: "",
       rating: "",
       image: "",
+      author: "",
+      numberOfBook: "",
+      formatBook: "",
     };
   };
 
@@ -90,9 +96,10 @@ const AdminProduct = () => {
     return res;
   });
 
-  const mutation = useMutationHook((data) =>
-    ProductService.createProduct(data)
-  );
+  const mutation = useMutationHook((data) => {
+    const res = ProductService.createProduct(data);
+    return res;
+  });
 
   const { data, isSuccess } = mutation;
 
@@ -143,11 +150,14 @@ const AdminProduct = () => {
         countInStock: "",
         rating: "",
         image: "",
+        author: "",
+        numberOfBook: "",
+        formatBook: "",
       });
       form.resetFields();
       setIsOpenModalCreate(false);
     } else if (data?.status === "ERROR") {
-      Message.error(data?.message);
+      Message.error("Create product error!");
       setStateProduct({
         name: "",
         type: "",
@@ -155,6 +165,9 @@ const AdminProduct = () => {
         countInStock: "",
         rating: "",
         image: "",
+        author: "",
+        numberOfBook: "",
+        formatBook: "",
       });
       form.resetFields();
       setIsOpenModalCreate(false);
@@ -166,7 +179,7 @@ const AdminProduct = () => {
       Message.success("Update product success!");
       setIsOpenModalEdit(false);
     } else if (isErrorUpdateProduct) {
-      Message.error(data?.message);
+      Message.error("Update product error!");
       setIsOpenModalEdit(false);
     }
   }, [isSuccessUpdateProduct]);
@@ -193,7 +206,7 @@ const AdminProduct = () => {
     setIsOpenModalCreate(true);
   };
 
-  const handleCancel = () => {
+  const handleCancelModalCreate = () => {
     form.resetFields();
     setIsOpenModalCreate(false);
   };
@@ -209,9 +222,12 @@ const AdminProduct = () => {
     discount: stateProduct.discount,
     rating: stateProduct.rating,
     image: stateProduct.image,
+    author: stateProduct.author,
+    numberOfBook: stateProduct.numberOfBook,
+    formatBook: stateProduct.formatBook,
   };
 
-  const onFinish = () => {
+  const handleCreateProduct = () => {
     mutation.mutate(newStateProduct, {
       onSettled: () => {
         queryGetAllProduct.refetch();
@@ -266,6 +282,9 @@ const AdminProduct = () => {
         discount: res?.data?.discount,
         rating: res?.data?.rating,
         image: res?.data?.image,
+        author: res?.data?.author,
+        numberOfBook: res?.data?.numberOfBook,
+        formatBook: res?.data?.formatBook,
       });
     }
     return res;
@@ -419,6 +438,18 @@ const AdminProduct = () => {
       ...getColumnSearchProps("name"),
     },
     {
+      title: "Author",
+      dataIndex: "author",
+    },
+    {
+      title: "Number of book",
+      dataIndex: "numberOfBook",
+    },
+    {
+      title: "Format book",
+      dataIndex: "formatBook",
+    },
+    {
       title: "Type",
       dataIndex: "type",
     },
@@ -542,10 +573,11 @@ const AdminProduct = () => {
       <WrapperButton type="dashed" onClick={showModal}>
         Thêm <PlusOutlined />
       </WrapperButton>
+
       <ModalComponent
         title="Tạo sản phẩm mới"
         open={isOpenModalCreate}
-        onCancel={handleCancel}
+        onCancel={handleCancelModalCreate}
         footer={null}
       >
         <Form
@@ -562,7 +594,7 @@ const AdminProduct = () => {
           initialValues={{
             remember: true,
           }}
-          onFinish={onFinish}
+          onFinish={handleCreateProduct}
           autoComplete="off"
           form={form}
         >
@@ -572,7 +604,7 @@ const AdminProduct = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your name!",
+                message: "Please input book name!",
               },
             ]}
           >
@@ -584,12 +616,63 @@ const AdminProduct = () => {
           </Form.Item>
 
           <Form.Item
+            label="Author"
+            name="author"
+            rules={[
+              {
+                required: true,
+                message: "Please input book author!",
+              },
+            ]}
+          >
+            <InputComponent
+              value={stateProduct.author}
+              onChange={handleOnChange}
+              name="author"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Number of book"
+            name="numberOfBook"
+            rules={[
+              {
+                required: true,
+                message: "Please input number of book!",
+              },
+            ]}
+          >
+            <InputComponent
+              value={stateProduct.numberOfBook}
+              onChange={handleOnChange}
+              name="numberOfBook"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Format book"
+            name="formatBook"
+            rules={[
+              {
+                required: true,
+                message: "Please input format book!",
+              },
+            ]}
+          >
+            <InputComponent
+              value={stateProduct.formatBook}
+              onChange={handleOnChange}
+              name="formatBook"
+            />
+          </Form.Item>
+
+          <Form.Item
             label="Type"
             name="type"
             rules={[
               {
                 required: true,
-                message: "Please input your type!",
+                message: "Please input book type!",
               },
             ]}
           >
@@ -778,7 +861,7 @@ const AdminProduct = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your name!",
+                  message: "Please input book name!",
                 },
               ]}
             >
@@ -790,12 +873,64 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
+              label="Author"
+              name="author"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input book author!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateDetailProduct.author}
+                onChange={handleOnChangeDetail}
+                name="author"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Number of book"
+              name="numberOfBook"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input number of book!",
+                },
+              ]}
+            >
+              <InputComponent
+                type="number"
+                value={stateDetailProduct.numberOfBook}
+                onChange={handleOnChangeDetail}
+                name="numberOfBook"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Format book"
+              name="formatBook"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input format book!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateDetailProduct.formatBook}
+                onChange={handleOnChangeDetail}
+                name="formatBook"
+              />
+            </Form.Item>
+
+            <Form.Item
               label="Type"
               name="type"
               rules={[
                 {
                   required: true,
-                  message: "Please input your type!",
+                  message: "Please input book type!",
                 },
               ]}
             >

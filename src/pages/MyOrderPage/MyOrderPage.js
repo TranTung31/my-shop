@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Loading from "../../components/LoadingComponent/LoadingComponent";
 import { useQuery } from "@tanstack/react-query";
 import * as OrderService from "../../services/OrderService";
-import { convertPrice } from "../../utils";
+import { convertDate, convertPrice } from "../../utils";
 import {
   WrapperItemOrder,
   WrapperListOrder,
@@ -12,6 +12,8 @@ import {
   WrapperStatus,
   WrapperMyOrderPage,
   WrapperStyleTitle,
+  WrapperStatusTitle,
+  WrapperStatusContent,
 } from "./styles";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -80,7 +82,7 @@ const MyOrderPage = () => {
               marginLeft: "auto",
             }}
           >
-            {convertPrice(order?.price)}
+            {`${convertPrice(order?.price)}₫`}
           </span>
         </WrapperHeaderItem>
       );
@@ -96,7 +98,7 @@ const MyOrderPage = () => {
     data: dataDelete,
     isSuccess: isSuccessDelete,
     isError: isErrorDelete,
-    isLoading: isLoadingDelete
+    isLoading: isLoadingDelete,
   } = mutationDelete;
 
   useEffect(() => {
@@ -110,7 +112,11 @@ const MyOrderPage = () => {
   const handleDeleteOrder = (order) => {
     const orderId = order?._id;
     mutationDelete.mutate(
-      { id: orderId, access_token: user?.access_token, orderItems: order?.orderItems },
+      {
+        id: orderId,
+        access_token: user?.access_token,
+        orderItems: order?.orderItems,
+      },
       {
         onSuccess: () => {
           queryOrder.refetch();
@@ -129,49 +135,27 @@ const MyOrderPage = () => {
               return (
                 <WrapperItemOrder key={item?._id}>
                   <WrapperStatus>
-                    <span
-                      style={{
-                        fontSize: "1.6rem",
-                        fontWeight: "bold",
-                        padding: "5px 0",
-                      }}
-                    >
-                      Trạng thái
-                    </span>
-                    <div style={{ padding: "5px 0" }}>
-                      <span
-                        style={{
-                          fontSize: "1.6rem",
-                          color: "rgb(255, 66, 78)",
-                        }}
-                      >
-                        Giao hàng:{" "}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "1.6rem",
-                        }}
-                      >
+                    <WrapperStatusTitle>Trạng thái</WrapperStatusTitle>
+                    <WrapperStatusContent>
+                      <span>Giao hàng: </span>
+                      <span>
                         {`${
                           item?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"
                         }`}
                       </span>
-                    </div>
-                    <div style={{ padding: "5px 0" }}>
-                      <span
-                        style={{
-                          fontSize: "1.6rem",
-                          color: "rgb(255, 66, 78)",
-                        }}
-                      >
-                        Thanh toán:{" "}
-                      </span>
-                      <span style={{ fontSize: "1.6rem" }}>
+                    </WrapperStatusContent>
+                    <WrapperStatusContent>
+                      <span>Thanh toán: </span>
+                      <span>
                         {`${
                           item?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"
                         }`}
                       </span>
-                    </div>
+                    </WrapperStatusContent>
+                    <WrapperStatusContent>
+                      <span>Ngày đặt: </span>
+                      <span>{convertDate(item?.createdAt)}</span>
+                    </WrapperStatusContent>
                   </WrapperStatus>
                   {renderOrder(item?.orderItems)}
                   <WrapperFooterItem>
@@ -192,7 +176,7 @@ const MyOrderPage = () => {
                           fontWeight: 700,
                         }}
                       >
-                        {convertPrice(item?.totalPrice)}
+                        {`${convertPrice(item?.totalPrice)}₫`}
                       </span>
                     </div>
                     <div style={{ display: "flex", gap: "10px" }}>

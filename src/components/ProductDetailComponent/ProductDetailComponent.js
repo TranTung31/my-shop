@@ -10,6 +10,7 @@ import {
   WrapperStyleTextSell,
   WrapperTextQuantity,
   WrapperButtonComponent,
+  WrapperDetailBook,
 } from "./styles";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
@@ -104,59 +105,93 @@ const ProductDetailComponent = ({ id }) => {
     initFacebookSDK();
   }, []);
 
+  const handleBuyProduct = () => {
+    if (user?.id === "") {
+      navigate("/sign-in", { state: location?.pathname });
+    } else {
+      if (
+        orderRedux?.amount + numberProduct <= orderRedux?.countInStock ||
+        !orderRedux
+      ) {
+        dispatch(
+          addProductToCart({
+            name: product?.name,
+            amount: numberProduct,
+            image: product?.image,
+            price: product?.price,
+            discount: product?.discount,
+            product: product?._id,
+            countInStock: product?.countInStock,
+          })
+        );
+        navigate("/order");
+      } else {
+        Message.error("Số lượng sản phẩm trong kho đã hết!");
+      }
+    }
+  };
+
   return (
     <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
       <Col span={10}>
         <Image
           src={product?.image}
           alt="image product"
-          style={{ width: "526px" }}
+          style={{ width: "526px", height: "600px" }}
           preview={false}
         />
-        <Row>
-          <Col span={4}>
-            <WrapperImageProductSmall
-              src={imageProductSmall}
-              alt="image product small"
-              preview={false}
-            />
-          </Col>
-          <Col span={4}>
-            <WrapperImageProductSmall
-              src={imageProductSmall}
-              alt="image product small"
-              preview={false}
-            ></WrapperImageProductSmall>
-          </Col>
-          <Col span={4}>
-            <WrapperImageProductSmall
-              src={imageProductSmall}
-              alt="image product small"
-              preview={false}
-            ></WrapperImageProductSmall>
-          </Col>
-          <Col span={4}>
-            <WrapperImageProductSmall
-              src={imageProductSmall}
-              alt="image product small"
-              preview={false}
-            ></WrapperImageProductSmall>
-          </Col>
-          <Col span={4}>
-            <WrapperImageProductSmall
-              src={imageProductSmall}
-              alt="image product small"
-              preview={false}
-            ></WrapperImageProductSmall>
-          </Col>
-          <Col span={4}>
-            <WrapperImageProductSmall
-              src={imageProductSmall}
-              alt="image product small"
-              preview={false}
-            ></WrapperImageProductSmall>
-          </Col>
-        </Row>
+        <div style={{ marginTop: "20px" }}>
+          <Row style={{ display: "flex", justifyContent: "space-between" }}>
+            <Col span={4} style={{ flex: "none" }}>
+              <WrapperImageProductSmall
+                style={{ width: "70px", height: "88px" }}
+                src={product?.image}
+                alt="image product small"
+                preview={true}
+              />
+            </Col>
+            <Col span={4} style={{ flex: "none" }}>
+              <WrapperImageProductSmall
+                style={{ width: "70px", height: "88px" }}
+                src={product?.image}
+                alt="image product small"
+                preview={true}
+              ></WrapperImageProductSmall>
+            </Col>
+            <Col span={4} style={{ flex: "none" }}>
+              <WrapperImageProductSmall
+                style={{ width: "70px", height: "88px" }}
+                src={product?.image}
+                alt="image product small"
+                preview={true}
+              ></WrapperImageProductSmall>
+            </Col>
+            <Col span={4} style={{ flex: "none" }}>
+              <WrapperImageProductSmall
+                style={{ width: "70px", height: "88px" }}
+                src={product?.image}
+                alt="image product small"
+                preview={true}
+              ></WrapperImageProductSmall>
+            </Col>
+            <Col span={4} style={{ flex: "none" }}>
+              <WrapperImageProductSmall
+                style={{ width: "70px", height: "88px" }}
+                src={product?.image}
+                alt="image product small"
+                preview={true}
+              ></WrapperImageProductSmall>
+            </Col>
+            <Col span={4} style={{ flex: "none" }}>
+              <WrapperImageProductSmall
+                style={{ width: "70px", height: "88px" }}
+                src={product?.image}
+                alt="image product small"
+                preview={true}
+              ></WrapperImageProductSmall>
+            </Col>
+          </Row>
+        </div>
       </Col>
       <Col span={14} style={{ padding: "0 16px 16px" }}>
         <WrapperStyleTextHeader>{product?.name}</WrapperStyleTextHeader>
@@ -167,17 +202,48 @@ const ProductDetailComponent = ({ id }) => {
             value={product?.rating}
           />
           {/* {renderStart(product?.rating)} */}
-          <WrapperStyleTextSell> | Đã bán 10+</WrapperStyleTextSell>
+          <WrapperStyleTextSell>
+            {" "}
+            | Đã bán {`${product?.selled || 10}+`}
+          </WrapperStyleTextSell>
         </div>
         <div>
           <WrapperCurrentPrice>
-            {convertPrice(product?.price)} <sup>₫</sup>
+            {convertPrice(
+              product?.price - product?.price * (product?.discount / 100)
+            )}{" "}
+            <sup>₫</sup> &nbsp;
+            <s style={{ color: "#ccc" }}>
+              {convertPrice(product?.price)} <sup>₫</sup>
+            </s>{" "}
+            &nbsp;
+            <span style={{ color: "#000", fontSize: "1.6rem" }}>
+              (Bạn đã tiết kiệm được {product?.discount}%)
+            </span>
           </WrapperCurrentPrice>
         </div>
+        <WrapperDetailBook>
+          <span>Tác giả: {product?.author}</span>
+        </WrapperDetailBook>
+        <WrapperDetailBook>
+          <span>Số trang: {product?.numberOfBook}</span>
+        </WrapperDetailBook>
+        <WrapperDetailBook>
+          <span>Định dạng: {product?.formatBook}</span>
+        </WrapperDetailBook>
         <WrapperCurrentAddress>
-          <span>Giao đến </span>
-          <span className="address">{user?.address} </span> -
-          <span className="change-address"> Đổi địa chỉ</span>
+          <span>Giao đến: </span>
+          <span className="address">
+            {user?.address}, {user?.city}{" "}
+          </span>{" "}
+          -
+          <span
+            className="change-address"
+            onClick={() => navigate("/user-detail")}
+          >
+            {" "}
+            Đổi địa chỉ
+          </span>
         </WrapperCurrentAddress>
         <LikeButtonComponent
           dataHref={
@@ -236,6 +302,7 @@ const ProductDetailComponent = ({ id }) => {
             onClick={handleAddProductToCart}
           />
           <ButtonComponent
+            onClick={handleBuyProduct}
             buttonText="Mua ngay"
             styleButton={{
               backgroundColor: "#fff",

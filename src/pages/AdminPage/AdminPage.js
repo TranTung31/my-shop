@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import { AppstoreOutlined, UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  UserOutlined,
+  ShoppingCartOutlined,
+  HomeOutlined,
+} from "@ant-design/icons";
 import { Menu } from "antd";
 import { getItem } from "../../utils";
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
+import AdminHome from "../../components/AdminHome/AdminHome";
 import AdminUser from "../../components/AdminUser/AdminUser";
 import AdminOrder from "../../components/AdminOrder/AdminOrder";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
@@ -11,6 +17,8 @@ import { WrapperContent } from "./styles";
 const AdminPage = () => {
   const renderKey = (key) => {
     switch (key) {
+      case "home":
+        return <AdminHome />;
       case "user":
         return <AdminUser />;
       case "product":
@@ -22,6 +30,7 @@ const AdminPage = () => {
     }
   };
   const items = [
+    getItem("Trang chủ", "home", <HomeOutlined />),
     getItem("Người dùng", "user", <UserOutlined />),
     getItem("Sản phẩm", "product", <AppstoreOutlined />),
     getItem("Đơn hàng", "order", <ShoppingCartOutlined />),

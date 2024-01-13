@@ -1,8 +1,14 @@
 import { Input } from "antd";
 
-const InputComponent = ({ placeholder, size, style, ...rests }) => {
+const InputComponent = ({ placeholder, type, size, style, ...rests }) => {
   return (
-    <Input placeholder={placeholder} size={size} style={style} {...rests} />
+    <Input
+      placeholder={placeholder}
+      size={size}
+      style={style}
+      type={type}
+      {...rests}
+    />
   );
 };
 

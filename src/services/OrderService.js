@@ -87,3 +87,15 @@ export const updateOrder = async (id, data, access_token) => {
   );
   return res.data;
 };
+
+export const getCountOrder = async (access_token) => {
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API}/order/get-count-order`,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};

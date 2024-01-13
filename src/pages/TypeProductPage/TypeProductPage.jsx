@@ -22,7 +22,7 @@ const TypeProductPage = () => {
     limit: 10,
     page: 0,
   });
-
+  
   const fetchAllProductType = async (type, limit, page) => {
     setIsLoading(true);
     const res = await ProductService.getAllProductType(type, limit, page);

@@ -21,20 +21,32 @@ export const WrapperStyleTitle = styled.div`
 export const WrapperInfoUser = styled.div`
   .name-info {
     font-size: 1.5rem;
-    font-weight: bold;
-    text-transform: uppercase;
     padding: 0 0 5px;
+    span:last-child {
+      color: rgb(255, 66, 78);
+    }
   }
+
+  .order-inf {
+    font-size: 1.5rem;
+    padding: 5px 0;
+    span:last-child {
+      color: rgb(255, 66, 78);
+    }
+  }
+
   .address,
   .delivery-fee {
     font-size: 1.5rem;
     margin-top: 8px;
   }
+
   .name-delivery {
     color: rgb(234, 133, 0);
     font-weight: bold;
     text-transform: uppercase;
   }
+
   .status-payment {
     font-size: 1.5rem;
     margin-top: 8px;
@@ -49,8 +61,8 @@ export const WrapperLabel = styled.div`
   margin-bottom: 15px;
 `;
 export const WrapperContentInfo = styled.div`
-  height: 118px;
   width: 320px;
+  height: 118px;
   background-color: #fff;
   border-radius: 6px;
   padding: 10px;
@@ -67,6 +79,7 @@ export const WrapperProduct = styled.div`
   display: flex;
   align-items: flex-start;
   margin-top: 10px;
+  font-size: 1.5rem;
 `;
 
 export const WrapperNameProduct = styled.div`
@@ -92,4 +105,9 @@ export const WrapperAllPrice = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+`;
+
+export const WrapperShippingPrice = styled.span`
+  color: rgb(255, 66, 78);
+  font-weight: 500;
 `;
