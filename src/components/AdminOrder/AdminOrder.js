@@ -100,7 +100,7 @@ const AdminOrder = () => {
   } = mutationDeleteMany;
 
   const getAll = async () => {
-    const res = await OrderService.getAll(user?.access_token);
+    const res = await OrderService.getAllOrder(user?.access_token);
     return res;
   };
 

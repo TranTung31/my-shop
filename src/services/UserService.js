@@ -60,7 +60,7 @@ export const refreshToken = async () => {
 
 export const getAllUser = async (access_token) => {
   const res = await axiosJWT.get(
-    `${process.env.REACT_APP_API}/user/getAllUser`,
+    `${process.env.REACT_APP_API}/user/get-all-user`,
     {
       headers: {
         token: `Bearer ${access_token}`,

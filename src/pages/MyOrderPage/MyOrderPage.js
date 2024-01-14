@@ -27,7 +27,7 @@ const MyOrderPage = () => {
   const navigate = useNavigate();
   const { id, token } = location.state;
   const fetchAllOrder = async () => {
-    const res = await OrderService.getAllOrder(id, token);
+    const res = await OrderService.getOrder(id, token);
     return res.data;
   };
 

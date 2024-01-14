@@ -14,9 +14,9 @@ export const createOrder = async (data, access_token) => {
   return res.data;
 };
 
-export const getAllOrder = async (id, access_token) => {
+export const getOrder = async (id, access_token) => {
   const res = await axiosJWT.get(
-    `${process.env.REACT_APP_API}/order/get-all-order/${id}`,
+    `${process.env.REACT_APP_API}/order/get-order/${id}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
@@ -53,12 +53,15 @@ export const deleteOrder = async (id, access_token, orderItems) => {
   return res.data;
 };
 
-export const getAll = async (access_token) => {
-  const res = await axiosJWT.get(`${process.env.REACT_APP_API}/order/get-all`, {
-    headers: {
-      token: `Bearer ${access_token}`,
-    },
-  });
+export const getAllOrder = async (access_token) => {
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API}/order/get-all-order`,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
   return res.data;
 };
 
@@ -91,6 +94,18 @@ export const updateOrder = async (id, data, access_token) => {
 export const getCountOrder = async (access_token) => {
   const res = await axiosJWT.get(
     `${process.env.REACT_APP_API}/order/get-count-order`,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const getTotalPrice = async (access_token) => {
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API}/order/get-total-price`,
     {
       headers: {
         token: `Bearer ${access_token}`,

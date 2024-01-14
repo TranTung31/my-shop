@@ -85,7 +85,7 @@ const NavbarComponent = () => {
 
   useEffect(() => {
     fetchAllTypeProduct();
-  });
+  }, []);
 
   return (
     <WrapperNavbar>

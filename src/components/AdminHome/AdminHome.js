@@ -20,6 +20,7 @@ const AdminHome = () => {
   const [countUser, setCountUser] = useState(0);
   const [countProduct, setCountProduct] = useState(0);
   const [orderAll, setOrderAll] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [isLoadingOrder, setIsLoadingOrder] = useState(false);
   const getCountUser = async (access_token) => {
     const res = await UserService.getCountUser(access_token);
@@ -32,7 +33,7 @@ const AdminHome = () => {
     setCountProduct(res?.data);
     return res;
   };
-  
+
   const getCountOrder = async (access_token) => {
     const res = await OrderService.getCountOrder(access_token);
     setCountOrder(res?.data);
@@ -41,9 +42,15 @@ const AdminHome = () => {
 
   const getOrderAll = async (access_token) => {
     setIsLoadingOrder(true);
-    const res = await OrderService.getAll(access_token);
+    const res = await OrderService.getAllOrder(access_token);
     setOrderAll(res?.data);
     setIsLoadingOrder(false);
+    return res;
+  };
+
+  const getTotalPrice = async (access_token) => {
+    const res = await OrderService.getTotalPrice(access_token);
+    setTotalPrice(res?.data);
     return res;
   };
 
@@ -52,15 +59,8 @@ const AdminHome = () => {
     getCountProduct(user?.access_token);
     getCountOrder(user?.access_token);
     getOrderAll(user?.access_token);
+    getTotalPrice(user?.access_token);
   }, []);
-
-  const totalPrice = orderAll?.reduce((total, item) => {
-    return (total =
-      total +
-      (item?.isPaid === true && item?.isDelivered === true
-        ? item?.totalPrice
-        : 0));
-  }, 0);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
