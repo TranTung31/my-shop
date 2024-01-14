@@ -24,6 +24,7 @@ export const WrapperItemCategory = styled.span`
   font-size: 1.4rem;
   font-weight: 500;
   line-height: 14px;
+  padding: 5px 0;
   color: #38383d;
 `;
 

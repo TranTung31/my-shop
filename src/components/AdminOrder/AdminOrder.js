@@ -1,4 +1,4 @@
-import { WrapperHeader, WrapperUpload } from "./styles";
+import { WrapperHeader } from "./styles";
 import TableComponent from "../TableComponent/TableComponent";
 import { Button, Form, Select, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
@@ -7,7 +7,6 @@ import InputComponent from "../InputComponent/InputComponent";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import { useSelector } from "react-redux";
-import * as UserService from "../../services/UserService";
 import * as OrderService from "../../services/OrderService";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as Message from "../../components/Message/Message";
@@ -17,7 +16,7 @@ import {
   EditOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { convertPrice, getBase64 } from "../../utils";
+import { convertPrice } from "../../utils";
 import PieChartComponent from "./PieChartComponent";
 
 const AdminOrder = () => {
@@ -25,7 +24,7 @@ const AdminOrder = () => {
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
   const [typeDelivered, setTypeDelivered] = useState(["true", "false"]);
-  const [isTotalPrice, setIsTotalPrice] = useState("");
+  const [isCodeOrder, setIsCodeOrder] = useState("");
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -116,6 +115,7 @@ const AdminOrder = () => {
     return {
       ...order,
       key: order._id,
+      codeOrder: `DH${order._id}`,
       userName: order.shippingAddress.fullName,
       phone: order.shippingAddress.phone,
       address: order.shippingAddress.address,
@@ -328,6 +328,10 @@ const AdminOrder = () => {
 
   const columns = [
     {
+      title: "Code order",
+      dataIndex: "codeOrder",
+    },
+    {
       title: "User name",
       dataIndex: "userName",
     },
@@ -358,10 +362,6 @@ const AdminOrder = () => {
     {
       title: "Delivery method",
       dataIndex: "deliveryMethod",
-    },
-    {
-      title: "Number buy",
-      dataIndex: "orderItemsLength",
     },
     {
       title: "Total price",
@@ -419,7 +419,7 @@ const AdminOrder = () => {
         <LoadingComponent isLoading={isLoadingDeleteOrder}>
           <div
             style={{ marginTop: "12px", fontWeight: 600, height: "50px" }}
-          >{`Bạn có chắc chắn muốn xóa đơn hàng có giá "${isTotalPrice}" này không?`}</div>
+          >{`Bạn có chắc chắn muốn xóa đơn hàng có mã "${isCodeOrder}" này không?`}</div>
         </LoadingComponent>
       </ModalComponent>
 
@@ -579,7 +579,7 @@ const AdminOrder = () => {
               return {
                 onClick: (event) => {
                   setIsRowSelected(record._id);
-                  setIsTotalPrice(record.totalPrice);
+                  setIsCodeOrder(record.codeOrder);
                 },
               };
             }}

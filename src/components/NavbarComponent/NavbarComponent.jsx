@@ -6,14 +6,35 @@ import {
   WrapperPriceText,
   WrapperTitleText,
 } from "./styles";
+import * as ProductService from "../../services/ProductService";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NavbarComponent = () => {
+  const [typeProduct, setTypeProduct] = useState([]);
   const onChange = () => {};
+  const navigate = useNavigate();
   const renderContent = (type, option) => {
     switch (type) {
       case "text":
         return option.map((item, index) => {
-          return <WrapperItemCategory key={index}>{item}</WrapperItemCategory>;
+          return (
+            <WrapperItemCategory
+              key={index}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                navigate(
+                  `/product/${item
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    ?.replace(/ /g, "_")}`,
+                  { state: item }
+                );
+              }}
+            >
+              {item}
+            </WrapperItemCategory>
+          );
         });
       case "checkbox":
         return option.map((item, index) => {
@@ -54,12 +75,22 @@ const NavbarComponent = () => {
     }
   };
 
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllType();
+    if (res?.status === "OK") {
+      setTypeProduct(res?.data);
+    }
+    return res.data;
+  };
+
+  useEffect(() => {
+    fetchAllTypeProduct();
+  });
+
   return (
     <WrapperNavbar>
-      <WrapperTitleText>Danh mục sản phẩm</WrapperTitleText>
-      <WrapperContent>
-        {renderContent("text", ["Máy tính bảng", "Iphone", "Máy tính để bàn"])}
-      </WrapperContent>
+      <WrapperTitleText>Danh mục sách</WrapperTitleText>
+      <WrapperContent>{renderContent("text", typeProduct)}</WrapperContent>
       <WrapperTitleText>Dịch vụ</WrapperTitleText>
       <WrapperContent>
         {renderContent("checkbox", [

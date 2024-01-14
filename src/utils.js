@@ -95,3 +95,27 @@ export const convertDate = (inputDateRaw) => {
   const outputDateString = day + "-" + month + "-" + year;
   return outputDateString;
 };
+
+export const convertMonth = (inputDateRaw) => {
+  // Tạo một đối tượng ngày từ chuỗi
+  const inputDate = new Date(inputDateRaw);
+
+  // Lấy các thành phần tháng
+  const month = inputDate.getUTCMonth() + 1; // Tháng bắt đầu từ 0 nên cộng thêm 1
+
+  return month;
+};
+
+export const convertDataContentOfTooltip = (dataContent, month) => {
+  const totalPriceOfMonth = dataContent?.reduce((total, item) => {
+    return (total =
+      total +
+      (item?.isPaid === true &&
+      item?.isDelivered === true &&
+      convertMonth(item?.createdAt) === month
+        ? item?.totalPrice
+        : 0));
+  }, 0);
+
+  return totalPriceOfMonth;
+};
