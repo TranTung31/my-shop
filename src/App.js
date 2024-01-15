@@ -6,7 +6,7 @@ import { isJsonString } from "./utils";
 import jwt_decode from "jwt-decode";
 import * as UserService from "./services/UserService";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "./redux/slides/userSlice";
+import { resetUser, updateUser } from "./redux/slides/userSlice";
 import LoadingComponent from "./components/LoadingComponent/LoadingComponent";
 
 function App() {
@@ -15,10 +15,16 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGetDetailUser = async (id, token) => {
+    const storage = localStorage.getItem("refresh_token");
+    const refresh_token = JSON.parse(storage);
     const res = await UserService.getDetailUser(id, token);
-    if (res?.status === "OK") {
-      dispatch(updateUser({ ...res?.data, access_token: token }));
-    }
+    dispatch(
+      updateUser({
+        ...res?.data,
+        access_token: token,
+        refresh_token: refresh_token,
+      })
+    );
     setIsLoading(false);
   };
 
@@ -46,9 +52,16 @@ function App() {
     async (config) => {
       const { decoded } = handleDecoded();
       const currentTime = new Date();
+      const storage = localStorage.getItem("refresh_token");
+      const refresh_token = JSON.parse(storage);
+      const decodedRefreshToken = jwt_decode(refresh_token);
       if (decoded?.exp < currentTime.getTime() / 1000) {
-        const data = await UserService.refreshToken();
-        config.headers["token"] = `Bearer ${data?.access_token}`;
+        if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
+          const data = await UserService.refreshToken(refresh_token);
+          config.headers["token"] = `Bearer ${data?.access_token}`;
+        } else {
+          dispatch(resetUser());
+        }
       }
       return config;
     },

@@ -53,6 +53,10 @@ const SignInPage = () => {
           "access_token",
           JSON.stringify(data?.access_token)
         );
+        localStorage.setItem(
+          "refresh_token",
+          JSON.stringify(data?.refresh_token)
+        );
 
         if (data?.access_token) {
           // Giải mã access_token bằng JWT decoded
@@ -66,9 +70,10 @@ const SignInPage = () => {
 
       navigate("/");
       Message.success("Login Successfully");
+      localStorage.setItem("access_token", JSON.stringify(data?.access_token));
       localStorage.setItem(
-        "access_token",
-        JSON.stringify(data?.access_token)
+        "refresh_token",
+        JSON.stringify(data?.refresh_token)
       );
 
       if (data?.access_token) {
@@ -85,9 +90,19 @@ const SignInPage = () => {
     }
   }, [data?.status]);
 
+  console.log("data: ", data);
+
   const handleGetDetailUser = async (id, token) => {
+    const storage = localStorage.getItem("refresh_token");
+    const refresh_token = JSON.parse(storage);
     const res = await UserService.getDetailUser(id, token);
-    dispatch(updateUser({ ...res?.data, access_token: token }));
+    dispatch(
+      updateUser({
+        ...res?.data,
+        access_token: token,
+        refresh_token: refresh_token,
+      })
+    );
   };
 
   const handleSignIn = () => {

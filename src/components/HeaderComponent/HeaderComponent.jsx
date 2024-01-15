@@ -50,6 +50,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     setIsLoading(true);
     navigate("/");
     localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
     await UserService.logOutUser();
     dispatch(resetUser());
     setIsLoading(false);
