@@ -1,18 +1,17 @@
-import { Col, Image, Rate, Row } from "antd";
-import imageProductSmall from "../../assets/images/imageProductSmall.webp";
+import { Button, Col, Image, InputNumber, Rate, Row } from "antd";
 import {
   WrapperCurrentAddress,
   WrapperCurrentPrice,
-  WrapperIcon,
   WrapperImageProductSmall,
-  WrapperInputNumber,
   WrapperStyleTextHeader,
   WrapperStyleTextSell,
   WrapperTextQuantity,
-  WrapperButtonComponent,
   WrapperDetailBook,
 } from "./styles";
-import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  MinusOutlined,
+} from "@ant-design/icons";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import { useEffect, useState } from "react";
 import * as ProductService from "../../services/ProductService";
@@ -255,33 +254,26 @@ const ProductDetailComponent = ({ id }) => {
         <div style={{ marginTop: "20px" }}>
           <WrapperTextQuantity>Số Lượng</WrapperTextQuantity>
           <div style={{ marginTop: "10px" }}>
-            <WrapperButtonComponent
-              icon={
-                <WrapperIcon>
-                  <MinusOutlined />
-                </WrapperIcon>
-              }
+            <Button
               onClick={() => handleChangeNumberProduct("decrease")}
+              icon={<MinusOutlined />}
             />
-            <WrapperInputNumber
+            <InputNumber
               defaultValue={numberProduct}
               onChange={onChangeQuantityProduct}
               value={numberProduct}
               min={1}
               max={product?.countInStock}
+              style={{ width: "40px", margin: "0px 5px" }}
             />
-            <WrapperButtonComponent
-              icon={
-                <WrapperIcon>
-                  <PlusOutlined />
-                </WrapperIcon>
-              }
+            <Button
               onClick={() =>
                 handleChangeNumberProduct(
                   "increase",
                   numberProduct === product?.countInStock
                 )
               }
+              icon={<PlusOutlined />}
             />
           </div>
         </div>

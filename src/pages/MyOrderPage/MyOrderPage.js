@@ -137,6 +137,10 @@ const MyOrderPage = () => {
                   <WrapperStatus>
                     <WrapperStatusTitle>Trạng thái</WrapperStatusTitle>
                     <WrapperStatusContent>
+                      <span>Mã đơn hàng: </span>
+                      <span>{`DH${item?._id}`}</span>
+                    </WrapperStatusContent>
+                    <WrapperStatusContent>
                       <span>Giao hàng: </span>
                       <span>
                         {`${

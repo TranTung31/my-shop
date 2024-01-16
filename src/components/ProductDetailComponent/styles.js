@@ -2,8 +2,7 @@ import { Image, InputNumber } from "antd";
 import { styled } from "styled-components";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 
-export const WrapperImageProductSmall = styled(Image)`
-`;
+export const WrapperImageProductSmall = styled(Image)``;
 
 export const WrapperStyleTextHeader = styled.h1`
   margin: 0;
@@ -52,23 +51,6 @@ export const WrapperTextQuantity = styled.span`
   font-size: 1.6rem;
   font-weight: 600;
   line-height: 150%;
-`;
-
-export const WrapperButtonComponent = styled(ButtonComponent)`
-  &.ant-btn.css-dev-only-do-not-override-fpg3f5 {
-    padding: 4px 4px;
-  }
-`;
-
-export const WrapperInputNumber = styled(InputNumber)`
-  & .ant-input-number-handler-wrap {
-    display: none;
-  }
-
-  &.ant-input-number.css-dev-only-do-not-override-fpg3f5 {
-    width: 40px;
-    margin: 0 10px 0;
-  }
 `;
 
 export const WrapperIcon = styled.div`

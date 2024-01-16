@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Image } from "antd";
+import { Button, Checkbox, Form, Image, InputNumber } from "antd";
 import {
   WrapperAllProduct,
   WrapperCaculator,
@@ -17,7 +17,6 @@ import {
 } from "./styles";
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
-import { WrapperInputNumber } from "../../components/ProductDetailComponent/styles";
 import { useDispatch, useSelector } from "react-redux";
 import {
   removeProduct,
@@ -308,10 +307,10 @@ const OrderPage = () => {
                     >
                       <MinusOutlined />
                     </WrapperProductLeftButton>
-                    <WrapperInputNumber
+                    <InputNumber
                       defaultValue={item.amount}
                       value={item.amount}
-                      style={{ border: "none", margin: "auto", top: "1px" }}
+                      style={{ width: "40px", border: "none", margin: "auto", top: "1px" }}
                       min={1}
                       max={item.countInStock}
                     />

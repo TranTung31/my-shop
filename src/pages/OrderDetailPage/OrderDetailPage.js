@@ -56,7 +56,12 @@ const OrderDetailPage = () => {
     <Loading isLoading={isLoading}>
       <div style={{ width: "100%", height: "100vh", background: "#f5f5fa" }}>
         <WrapperOrderDetailPage>
-          <WrapperStyleTitle>Chi tiết đơn hàng</WrapperStyleTitle>
+          <WrapperStyleTitle>
+            Chi tiết đơn hàng{" "}
+            <span
+              style={{ color: "rgb(255, 66, 78)" }}
+            >{`DH${data?._id}`}</span>
+          </WrapperStyleTitle>
           <WrapperHeaderUser>
             <WrapperInfoUser>
               <WrapperLabel>Địa chỉ người nhận</WrapperLabel>

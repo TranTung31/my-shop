@@ -48,7 +48,11 @@ const NavbarComponent = () => {
         });
       case "price":
         return option.map((item, index) => {
-          return <WrapperPriceText key={index}>{item}</WrapperPriceText>;
+          return (
+            <WrapperPriceText key={index} style={{ cursor: "pointer" }}>
+              {item}
+            </WrapperPriceText>
+          );
         });
       case "review":
         return option.map((item, index) => {
@@ -91,19 +95,24 @@ const NavbarComponent = () => {
     <WrapperNavbar>
       <WrapperTitleText>Danh mục sách</WrapperTitleText>
       <WrapperContent>{renderContent("text", typeProduct)}</WrapperContent>
-      <WrapperTitleText>Dịch vụ</WrapperTitleText>
+      <WrapperTitleText>Nhà cung cấp</WrapperTitleText>
       <WrapperContent>
         {renderContent("checkbox", [
-          { value: "Trả góp 0%", text: "Trả góp 0%" },
-          { value: "Vận chuyển", text: "Vận chuyển" },
-          { value: "Giảm mạnh", text: "Giảm mạnh" },
+          { value: "Nhà sách Fahasa", text: "Nhà sách Fahasa" },
+          { value: "Bamboo Books", text: "Bamboo Books" },
+          { value: "Times Books", text: "Times Books" },
         ])}
       </WrapperContent>
       <WrapperTitleText>Đánh giá</WrapperTitleText>
       <WrapperContent>{renderContent("review", [5, 4, 3])}</WrapperContent>
       <WrapperTitleText>Giá</WrapperTitleText>
       <WrapperContent>
-        {renderContent("price", ["Dưới 2.000.000", "Trên 12.000.000"])}
+        {renderContent("price", [
+          "Dưới 50.000",
+          "Từ 50.000 -> 120.000",
+          "120.000 -> 280.000",
+          "Trên 280.000",
+        ])}
       </WrapperContent>
     </WrapperNavbar>
   );
