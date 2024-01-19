@@ -118,8 +118,9 @@ const HomePage = () => {
 
       <div
         style={{
-          backgroundColor: "#efefef",
           width: "100%",
+          backgroundColor: "#f5f5fa",
+          paddingBottom: "30px",
         }}
         className="body"
       >

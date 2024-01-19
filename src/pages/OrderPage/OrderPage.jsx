@@ -214,7 +214,11 @@ const OrderPage = () => {
   };
 
   const handleChangeAddress = () => {
-    setIsOpenModalUpdateInfo(true);
+    if (user?.email !== "") {
+      setIsOpenModalUpdateInfo(true);
+    } else {
+      navigate("/sign-in");
+    }
   };
 
   const itemss = [
@@ -240,6 +244,15 @@ const OrderPage = () => {
         <div style={{ display: "flex" }}>
           <div>
             <WrapperStep>
+              <div
+                style={{
+                  fontSize: "1.6rem",
+                  fontWeight: 500,
+                  paddingBottom: "20px",
+                }}
+              >
+                Phí giao hàng
+              </div>
               <StepsComponent
                 current={
                   priceDeliveryMemo === 20000 ||
@@ -253,9 +266,6 @@ const OrderPage = () => {
               />
             </WrapperStep>
             <WrapperLeft>
-              <span style={{ fontSize: "1.5rem", fontWeight: 500 }}>
-                Phí giao hàng
-              </span>
               <WrapperAllProduct>
                 <div style={{ width: "300px" }}>
                   <Checkbox
@@ -310,7 +320,12 @@ const OrderPage = () => {
                     <InputNumber
                       defaultValue={item.amount}
                       value={item.amount}
-                      style={{ width: "40px", border: "none", margin: "auto", top: "1px" }}
+                      style={{
+                        width: "40px",
+                        border: "none",
+                        margin: "auto",
+                        top: "1px",
+                      }}
                       min={1}
                       max={item.countInStock}
                     />
@@ -319,7 +334,8 @@ const OrderPage = () => {
                         handleOnChangeNumberProduct(
                           "increase",
                           item.product,
-                          item.amount === item.countInStock || item.amount > item.countInStock
+                          item.amount === item.countInStock ||
+                            item.amount > item.countInStock
                         )
                       }
                     >

@@ -92,6 +92,6 @@ export const WrapperProductRightButton = styled.button`
 
 export const WrapperStep = styled.div`
   margin-right: 30px;
-  padding: 30px 10px;
+  padding: 20px 10px;
   background-color: #fff;
 `;

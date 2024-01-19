@@ -90,8 +90,6 @@ const SignInPage = () => {
     }
   }, [data?.status]);
 
-  console.log("data: ", data);
-
   const handleGetDetailUser = async (id, token) => {
     const storage = localStorage.getItem("refresh_token");
     const refresh_token = JSON.parse(storage);

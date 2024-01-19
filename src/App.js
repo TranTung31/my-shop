@@ -85,9 +85,12 @@ function App() {
                   path={isCheckAuth ? route.path : null}
                   element={
                     <>
-                      <Layout>
+                      <DefaultComponent
+                        isShowHeader={route.isShowHeader}
+                        isShowFooter={route.isShowFooter}
+                      >
                         <Page />
-                      </Layout>
+                      </DefaultComponent>
                     </>
                   }
                   key={index}
