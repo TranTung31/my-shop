@@ -4,6 +4,7 @@ import {
   UserOutlined,
   ShoppingCartOutlined,
   HomeOutlined,
+  FormOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { getItem } from "../../utils";
@@ -13,6 +14,7 @@ import AdminUser from "../../components/AdminUser/AdminUser";
 import AdminOrder from "../../components/AdminOrder/AdminOrder";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
 import { WrapperContent } from "./styles";
+import AdminPublisher from "../../components/AdminPublisher/AdminPublisher";
 
 const AdminPage = () => {
   const renderKey = (key) => {
@@ -25,6 +27,8 @@ const AdminPage = () => {
         return <AdminProduct />;
       case "order":
         return <AdminOrder />;
+      case "publisher":
+        return <AdminPublisher />;
       default:
         return <></>;
     }
@@ -34,6 +38,7 @@ const AdminPage = () => {
     getItem("Người dùng", "user", <UserOutlined />),
     getItem("Sản phẩm", "product", <AppstoreOutlined />),
     getItem("Đơn hàng", "order", <ShoppingCartOutlined />),
+    getItem("Nhà xuất bản", "publisher", <FormOutlined />),
   ];
   const [keySelected, setKeySelected] = useState("");
 

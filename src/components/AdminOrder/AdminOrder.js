@@ -29,6 +29,7 @@ const AdminOrder = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -171,6 +172,7 @@ const AdminOrder = () => {
       isRowSelected,
       user?.access_token
     );
+
     if (res?.data) {
       setStateOrderDetail({
         fullName: res?.data?.shippingAddress?.fullName,
