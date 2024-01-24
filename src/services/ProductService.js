@@ -2,19 +2,20 @@ import axios from "axios";
 import { axiosJWT } from "./UserService";
 
 export const getAllProduct = async (limit, search) => {
-  let res = {};
   if (search) {
-    res = await axios.get(
+    const res = await axios.get(
       `${process.env.REACT_APP_API}/product/get-all?filter=name&filter=${search}&limit=${limit}`
     );
+    return res.data;
   } else if (limit) {
-    res = await axios.get(
+    const res = await axios.get(
       `${process.env.REACT_APP_API}/product/get-all?limit=${limit}`
     );
+    return res.data;
   } else {
-    res = await axios.get(`${process.env.REACT_APP_API}/product/get-all`);
+    const res = await axios.get(`${process.env.REACT_APP_API}/product/get-all`);
+    return res.data;
   }
-  return res.data;
 };
 
 export const createProduct = async (data) => {
@@ -77,9 +78,11 @@ export const getAllType = async () => {
   return res.data;
 };
 
-export const getAllProductType = async (type, limit, page) => {
+export const getAllProductType = async (type, limit, page, publisher) => {
+  const publisherID =
+    publisher?.length > 0 ? `&publisher=${publisher.join(",")}` : "";
   const res = await axios.get(
-    `${process.env.REACT_APP_API}/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}`
+    `${process.env.REACT_APP_API}/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}&publisher=publisherID${publisherID}`
   );
   return res.data;
 };

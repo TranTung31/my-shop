@@ -18,11 +18,13 @@ import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import { useSelector } from "react-redux";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import ModalComponent from "../ModalComponent/ModalComponent";
+import * as PublisherService from "../../services/PublisherService";
 
 const AdminProduct = () => {
   const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
+  const [publisher, setPublisher] = useState([]);
   const [isRowSelected, setIsRowSelected] = useState("");
   const [isNameProduct, setIsNameProduct] = useState("");
   const [typeProduct, setTypeProduct] = useState([]);
@@ -55,6 +57,7 @@ const AdminProduct = () => {
       author: "",
       numberOfBook: "",
       formatBook: "",
+      publisherID: "",
     };
   };
 
@@ -70,6 +73,7 @@ const AdminProduct = () => {
       author: "",
       numberOfBook: "",
       formatBook: "",
+      publisherID: "",
     };
   };
 
@@ -225,6 +229,7 @@ const AdminProduct = () => {
     author: stateProduct.author,
     numberOfBook: stateProduct.numberOfBook,
     formatBook: stateProduct.formatBook,
+    publisherID: stateProduct.publisherID,
   };
 
   const handleCreateProduct = () => {
@@ -285,6 +290,7 @@ const AdminProduct = () => {
         author: res?.data?.author,
         numberOfBook: res?.data?.numberOfBook,
         formatBook: res?.data?.formatBook,
+        publisherID: res?.data?.publisherID,
       });
     }
     return res;
@@ -553,6 +559,31 @@ const AdminProduct = () => {
     });
   };
 
+  const handleOnChangePublisher = (e) => {
+    setStateProduct({
+      ...stateProduct,
+      publisherID: e,
+    });
+  };
+
+  const handleOnChangeDetailPublisher = (e) => {
+    setStateDetailProduct({
+      ...stateDetailProduct,
+      publisherID: e,
+    });
+  };
+
+  const fetchAllPublisher = async () => {
+    const res = await PublisherService.getAllPublisher(user?.access_token);
+    if (res?.status === "OK") {
+      setPublisher(res?.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllPublisher();
+  }, []);
+
   const renderTypeProduct = () => {
     let result = typeProduct.map((type) => {
       return {
@@ -563,6 +594,16 @@ const AdminProduct = () => {
     result.push({
       value: "add-type",
       label: "Thêm type",
+    });
+    return result;
+  };
+
+  const renderPublisher = () => {
+    let result = publisher?.map((item, index) => {
+      return {
+        value: item._id,
+        label: item.name,
+      };
     });
     return result;
   };
@@ -685,6 +726,27 @@ const AdminProduct = () => {
                 width: "100%",
               }}
               options={renderTypeProduct()}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Publisher"
+            name="publisherID"
+            rules={[
+              {
+                required: true,
+                message: "Please input book publisher!",
+              },
+            ]}
+          >
+            <Select
+              name="publisherID"
+              value={stateProduct.publisherID}
+              onChange={handleOnChangeDetailPublisher}
+              style={{
+                width: "100%",
+              }}
+              options={renderPublisher()}
             />
           </Form.Item>
 
@@ -938,6 +1000,27 @@ const AdminProduct = () => {
                 value={stateDetailProduct.type}
                 onChange={handleOnChangeDetail}
                 name="type"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Publisher"
+              name="publisherID"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input book publisher!",
+                },
+              ]}
+            >
+              <Select
+                name="publisherID"
+                value={stateDetailProduct.publisherID}
+                onChange={handleOnChangeDetailPublisher}
+                style={{
+                  width: "100%",
+                }}
+                options={renderPublisher()}
               />
             </Form.Item>
 

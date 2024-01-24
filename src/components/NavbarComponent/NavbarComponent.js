@@ -1,4 +1,9 @@
 import { Checkbox, Rate } from "antd";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import * as ProductService from "../../services/ProductService";
+import * as PublisherService from "../../services/PublisherService";
 import {
   WrapperContent,
   WrapperItemCategory,
@@ -6,13 +11,24 @@ import {
   WrapperPriceText,
   WrapperTitleText,
 } from "./styles";
-import * as ProductService from "../../services/ProductService";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const NavbarComponent = () => {
+const NavbarComponent = ({ onStateChangeCheckPublisher }) => {
   const [typeProduct, setTypeProduct] = useState([]);
-  const onChange = () => {};
+  const [publisher, setPublisher] = useState([]);
+  const [selectedValues, setSelectedValues] = useState([]);
+  const user = useSelector((state) => state.user);
+  const onChangeCheckbox = (e) => {
+    const value = e.target.value;
+    if (e.target.checked) {
+      setSelectedValues((prevValues) => [...prevValues, value]);
+    } else {
+      setSelectedValues((prevValues) =>
+        prevValues.filter((item) => item !== value)
+      );
+    }
+    onStateChangeCheckPublisher(selectedValues);
+  };
+
   const navigate = useNavigate();
   const renderContent = (type, option) => {
     switch (type) {
@@ -39,7 +55,11 @@ const NavbarComponent = () => {
       case "checkbox":
         return option.map((item, index) => {
           return (
-            <Checkbox onChange={onChange} key={index} value={item.value}>
+            <Checkbox
+              onChange={onChangeCheckbox}
+              key={index}
+              value={item.value}
+            >
               <span style={{ fontFamily: "Time New Roman", fontSize: "14px" }}>
                 {item.text}
               </span>
@@ -87,21 +107,32 @@ const NavbarComponent = () => {
     return res.data;
   };
 
+  const fetchAllPublisher = async () => {
+    const res = await PublisherService.getAllPublisher(user?.access_token);
+    if (res?.status === "OK") {
+      setPublisher(res?.data);
+    }
+  };
+
   useEffect(() => {
     fetchAllTypeProduct();
+    fetchAllPublisher();
   }, []);
+
+  const dataCheckBoxPublisher = publisher?.map((item, index) => {
+    return {
+      value: item._id,
+      text: item.name,
+    };
+  });
 
   return (
     <WrapperNavbar>
       <WrapperTitleText>Danh mục sách</WrapperTitleText>
       <WrapperContent>{renderContent("text", typeProduct)}</WrapperContent>
-      <WrapperTitleText>Nhà cung cấp</WrapperTitleText>
+      <WrapperTitleText>Nhà xuất bản</WrapperTitleText>
       <WrapperContent>
-        {renderContent("checkbox", [
-          { value: "Nhà sách Fahasa", text: "Nhà sách Fahasa" },
-          { value: "Bamboo Books", text: "Bamboo Books" },
-          { value: "Times Books", text: "Times Books" },
-        ])}
+        {renderContent("checkbox", dataCheckBoxPublisher)}
       </WrapperContent>
       <WrapperTitleText>Đánh giá</WrapperTitleText>
       <WrapperContent>{renderContent("review", [5, 4, 3])}</WrapperContent>
