@@ -574,7 +574,7 @@ const AdminProduct = () => {
   };
 
   const fetchAllPublisher = async () => {
-    const res = await PublisherService.getAllPublisher(user?.access_token);
+    const res = await PublisherService.getAllPublisher();
     if (res?.status === "OK") {
       setPublisher(res?.data);
     }
@@ -742,7 +742,7 @@ const AdminProduct = () => {
             <Select
               name="publisherID"
               value={stateProduct.publisherID}
-              onChange={handleOnChangeDetailPublisher}
+              onChange={handleOnChangePublisher}
               style={{
                 width: "100%",
               }}

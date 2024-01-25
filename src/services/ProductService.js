@@ -78,11 +78,18 @@ export const getAllType = async () => {
   return res.data;
 };
 
-export const getAllProductType = async (type, limit, page, publisher) => {
+export const getAllProductType = async (
+  type,
+  limit,
+  page,
+  publisher,
+  typeSort
+) => {
   const publisherID =
     publisher?.length > 0 ? `&publisher=${publisher.join(",")}` : "";
+  const sort = typeSort ? `&sort=${typeSort}` : "";
   const res = await axios.get(
-    `${process.env.REACT_APP_API}/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}&publisher=publisherID${publisherID}`
+    `${process.env.REACT_APP_API}/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}&publisher=publisherID${publisherID}${sort}`
   );
   return res.data;
 };

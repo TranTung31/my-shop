@@ -54,13 +54,15 @@ function App() {
       const currentTime = new Date();
       const storage = localStorage.getItem("refresh_token");
       const refresh_token = JSON.parse(storage);
-      const decodedRefreshToken = jwt_decode(refresh_token);
-      if (decoded?.exp < currentTime.getTime() / 1000) {
-        if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
-          const data = await UserService.refreshToken(refresh_token);
-          config.headers["token"] = `Bearer ${data?.access_token}`;
-        } else {
-          dispatch(resetUser());
+      if (refresh_token !== null) {
+        const decodedRefreshToken = jwt_decode(refresh_token);
+        if (decoded?.exp < currentTime.getTime() / 1000) {
+          if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
+            const data = await UserService.refreshToken(refresh_token);
+            config.headers["token"] = `Bearer ${data?.access_token}`;
+          } else {
+            dispatch(resetUser());
+          }
         }
       }
       return config;

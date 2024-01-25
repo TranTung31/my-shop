@@ -1,4 +1,4 @@
-import { Checkbox, Col, Pagination, Rate, Row } from "antd";
+import { Checkbox, Col, Pagination, Rate, Row, Select } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,9 +13,14 @@ import {
   WrapperItemCategory,
   WrapperItemPublisher,
   WrapperNavbar,
+  WrapperNavigation,
+  WrapperNavigationHome,
+  WrapperPagination,
   WrapperPriceText,
   WrapperProducts,
+  WrapperPublisher,
   WrapperTitleText,
+  WrapperTypeProduct,
 } from "./styles";
 
 const TypeProductPage = () => {
@@ -32,6 +37,7 @@ const TypeProductPage = () => {
     limit: 10,
     page: 0,
   });
+  const [sortValue, setSortValue] = useState("");
   const [typeProduct, setTypeProduct] = useState([]);
   const [publisher, setPublisher] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
@@ -53,13 +59,20 @@ const TypeProductPage = () => {
     }
   };
 
-  const fetchAllProductType = async (type, limit, page, selectedValues) => {
+  const fetchAllProductType = async (
+    type,
+    limit,
+    page,
+    selectedValues,
+    sortValue
+  ) => {
     setIsLoading(true);
     const res = await ProductService.getAllProductType(
       type,
       limit,
       page,
-      selectedValues
+      selectedValues,
+      sortValue
     );
     if (res?.status === "OK") {
       setProductType(res?.data);
@@ -81,9 +94,10 @@ const TypeProductPage = () => {
       stateType,
       pageProduct.limit,
       pageProduct.page,
-      selectedValues
+      selectedValues,
+      sortValue
     );
-  }, [stateType, pageProduct, selectedValues]);
+  }, [stateType, pageProduct, selectedValues, sortValue]);
 
   useEffect(() => {
     fetchNewAllProductType(stateType);
@@ -176,7 +190,7 @@ const TypeProductPage = () => {
   };
 
   const fetchAllPublisher = async () => {
-    const res = await PublisherService.getAllPublisher(user?.access_token);
+    const res = await PublisherService.getAllPublisher();
     if (res?.status === "OK") {
       setPublisher(res?.data);
     }
@@ -194,104 +208,131 @@ const TypeProductPage = () => {
     };
   });
 
+  const handleChange = (value) => {
+    setSortValue(value);
+  };
+
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        backgroundColor: "rgb(239, 239, 239)",
-      }}
-    >
+    <WrapperTypeProduct>
       <div style={{ width: "1285px", height: "100%", margin: "0 auto" }}>
-          <Row
-            style={{ flexWrap: "nowrap", padding: "20px 0", height: "100%" }}
-          >
-            <Col span={4}>
-              <WrapperNavbar>
-                <WrapperTitleText>Danh mục sách</WrapperTitleText>
-                <WrapperContent>
-                  {renderContent("text", typeProduct)}
-                </WrapperContent>
-                <WrapperTitleText>Nhà xuất bản</WrapperTitleText>
-                <WrapperContent>
-                  {renderContent("checkbox", dataCheckBoxPublisher)}
-                </WrapperContent>
-                <WrapperTitleText>Đánh giá</WrapperTitleText>
-                <WrapperContent>
-                  {renderContent("review", [5, 4, 3])}
-                </WrapperContent>
-                <WrapperTitleText>Giá</WrapperTitleText>
-                <WrapperContent>
-                  {renderContent("price", [
-                    "Dưới 50.000",
-                    "Từ 50.000 -> 120.000",
-                    "120.000 -> 280.000",
-                    "Trên 280.000",
-                  ])}
-                </WrapperContent>
-              </WrapperNavbar>
-            </Col>
-            <Col span={20}>
-              <LoadingComponent isLoading={isLoading}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "20px",
+        <WrapperNavigation>
+          <WrapperNavigationHome onClick={() => navigate("/")}>
+            Trang chủ
+          </WrapperNavigationHome>
+          <span> -- Xem sản phẩm theo danh mục</span>
+        </WrapperNavigation>
+        <Row
+          style={{ flexWrap: "nowrap", paddingBottom: "20px", height: "100%" }}
+        >
+          <Col span={4}>
+            <WrapperNavbar>
+              <WrapperTitleText>Danh mục sách</WrapperTitleText>
+              <WrapperContent>
+                {renderContent("text", typeProduct)}
+              </WrapperContent>
+              <WrapperTitleText>Nhà xuất bản</WrapperTitleText>
+              <WrapperContent>
+                {renderContent("checkbox", dataCheckBoxPublisher)}
+              </WrapperContent>
+              <WrapperTitleText>Đánh giá</WrapperTitleText>
+              <WrapperContent>
+                {renderContent("review", [5, 4, 3])}
+              </WrapperContent>
+              <WrapperTitleText>Giá</WrapperTitleText>
+              <WrapperContent>
+                {renderContent("price", [
+                  "Dưới 50.000",
+                  "Từ 50.000 -> 120.000",
+                  "120.000 -> 280.000",
+                  "Trên 280.000",
+                ])}
+              </WrapperContent>
+            </WrapperNavbar>
+          </Col>
+          <Col span={20}>
+            <LoadingComponent isLoading={isLoading}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "10px",
+                }}
+              >
+                <ButtonComponent
+                  onClick={() => {
+                    setSelectedValues([]);
+                    setSelectedNames([]);
+                    setSortValue("");
                   }}
+                  buttonText="Xóa bộ lọc"
                 >
-                  {selectedNames.length > 0
-                    ? selectedNames.map((item, index) => (
-                        <WrapperItemPublisher key={index}>
-                          {item}
-                        </WrapperItemPublisher>
-                      ))
-                    : null}
-                  <ButtonComponent
-                    onClick={() => {
-                      setSelectedValues([]);
-                      setSelectedNames([]);
+                  Xóa tất cả
+                </ButtonComponent>
+                <WrapperPagination>
+                  <Pagination
+                    defaultCurrent={1}
+                    total={totalProduct}
+                    pageSize={10}
+                    onChange={onChange}
+                    style={{ textAlign: "center", marginTop: "20px" }}
+                  />
+                  <Select
+                    defaultValue="asc"
+                    style={{
+                      width: 160,
                     }}
-                    buttonText="Xóa bộ lọc"
-                  >
-                    Xóa tất cả
-                  </ButtonComponent>
-                </div>
-                <WrapperProducts>
-                  {productType
-                    ?.filter((product) =>
-                      product.name
-                        .toLowerCase()
-                        .includes(searchDebound.toLowerCase())
-                    )
-                    .map((product, index) => (
-                      <CardProduct
-                        key={product._id}
-                        name={product.name}
-                        price={product.price}
-                        image={product.image}
-                        rating={product.rating}
-                        description={product.description}
-                        countInStock={product.countInStock}
-                        type={product.type}
-                        discount={product.discount}
-                        selled={product.selled}
-                        id={product._id}
-                      />
-                    ))}
-                </WrapperProducts>
-                <Pagination
-                  defaultCurrent={1}
-                  total={totalProduct}
-                  pageSize={10}
-                  onChange={onChange}
-                  style={{ textAlign: "center", marginTop: "20px" }}
-                />
-              </LoadingComponent>
-            </Col>
-          </Row>
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "asc",
+                        label: "Giá thấp đến cao",
+                      },
+                      {
+                        value: "desc",
+                        label: "Giá cao đến thấp",
+                      },
+                    ]}
+                  />
+                </WrapperPagination>
+              </div>
+              <WrapperPublisher>
+                {selectedNames.length > 0
+                  ? selectedNames.map((item, index) => (
+                      <WrapperItemPublisher key={index}>
+                        {item}
+                      </WrapperItemPublisher>
+                    ))
+                  : null}
+              </WrapperPublisher>
+              <WrapperProducts>
+                {productType
+                  ?.filter((product) =>
+                    product.name
+                      .toLowerCase()
+                      .includes(searchDebound.toLowerCase())
+                  )
+                  .map((product, index) => (
+                    <CardProduct
+                      key={product._id}
+                      name={product.name}
+                      price={product.price}
+                      image={product.image}
+                      rating={product.rating}
+                      description={product.description}
+                      countInStock={product.countInStock}
+                      type={product.type}
+                      discount={product.discount}
+                      selled={product.selled}
+                      id={product._id}
+                    />
+                  ))}
+              </WrapperProducts>
+            </LoadingComponent>
+          </Col>
+        </Row>
       </div>
-    </div>
+    </WrapperTypeProduct>
   );
 };
 

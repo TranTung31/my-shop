@@ -1,14 +1,9 @@
 import axios from "axios";
 import { axiosJWT } from "./UserService";
 
-export const getAllPublisher = async (access_token) => {
+export const getAllPublisher = async () => {
   const res = await axiosJWT.get(
-    `${process.env.REACT_APP_API}/publisher/get-all-publisher`,
-    {
-      headers: {
-        token: `Bearer ${access_token}`,
-      },
-    }
+    `${process.env.REACT_APP_API}/publisher/get-all-publisher`
   );
   return res.data;
 };

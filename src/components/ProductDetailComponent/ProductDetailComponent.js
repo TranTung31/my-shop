@@ -23,9 +23,11 @@ import { convertPrice, initFacebookSDK } from "../../utils";
 import * as Message from "../../components/Message/Message";
 import LikeButtonComponent from "../LikeButtonComponent/LikeButtonComponent";
 import CommentComponent from "../CommentComponent/CommentComponent";
+import * as PublisherService from "../../services/PublisherService";
 
 const ProductDetailComponent = ({ id }) => {
   const [numberProduct, setNumberProduct] = useState(1);
+  const [arrPublisher, setArrPublisher] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -130,6 +132,17 @@ const ProductDetailComponent = ({ id }) => {
     }
   };
 
+  const fetchGetAllPublisher = async () => {
+    const res = await PublisherService.getAllPublisher();
+    setArrPublisher(res.data);
+  }
+
+  useEffect(() => {
+    fetchGetAllPublisher();
+  }, []);
+
+  const publisherBook = arrPublisher.find((item) => item._id === product?.publisherID);
+
   return (
     <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
       <Col span={10}>
@@ -222,6 +235,9 @@ const ProductDetailComponent = ({ id }) => {
           </WrapperCurrentPrice>
         </div>
         <WrapperDetailBook>
+          <span>Mã sách: {product?._id}</span>
+        </WrapperDetailBook>
+        <WrapperDetailBook>
           <span>Tác giả: {product?.author}</span>
         </WrapperDetailBook>
         <WrapperDetailBook>
@@ -229,6 +245,9 @@ const ProductDetailComponent = ({ id }) => {
         </WrapperDetailBook>
         <WrapperDetailBook>
           <span>Định dạng: {product?.formatBook}</span>
+        </WrapperDetailBook>
+        <WrapperDetailBook>
+          <span>Nhà xuất bản: {publisherBook?.name}</span>
         </WrapperDetailBook>
         <WrapperCurrentAddress>
           <span>Giao đến: </span>

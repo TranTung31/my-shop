@@ -6,12 +6,32 @@ export const WrapperProducts = styled.div`
   flex-wrap: wrap;
 `;
 
-export const WrapperPublisher = styled.div``;
+export const WrapperTypeProduct = styled.div`
+  width: 100%;
+  height: calc(100% - 80px);
+  background-color: rgb(239, 239, 239);
+`;
+
+export const WrapperNavigation = styled.div`
+  font-size: 1.6rem;
+  padding: 14px 0;
+`;
+
+export const WrapperNavigationHome = styled.span`
+  font-weight: 600;
+  cursor: pointer;
+`;
+
+export const WrapperPublisher = styled.div`
+  display: flex;
+  gap: 10px;
+`;
 
 export const WrapperItemPublisher = styled.div`
-  margin-right: 10px;
-  height: 32px;
+  width: fit-content;
   line-height: 32px;
+  height: 32px;
+  margin-bottom: 10px;
   background-color: rgb(240, 248, 255);
   padding: 0px 12px;
   border: 1px solid rgb(26, 148, 255);
@@ -53,4 +73,14 @@ export const WrapperPriceText = styled.div`
   background-color: rgb(238, 238, 238);
   width: fit-content;
   padding: 6px;
+`;
+
+export const WrapperPagination = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  & ul {
+    margin-top: 0 !important;
+  }
 `;

@@ -93,7 +93,7 @@ const AdminPublisher = () => {
   } = mutationDeleteMany;
 
   const getAllPublisher = async () => {
-    const res = await PublisherService.getAllPublisher(user?.access_token);
+    const res = await PublisherService.getAllPublisher();
     return res;
   };
 
