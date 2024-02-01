@@ -1,21 +1,20 @@
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import slider1 from "../../assets/images/slider1.webp";
+import slider2 from "../../assets/images/slider2.webp";
+import slider3 from "../../assets/images/slider3.webp";
+import CardProduct from "../../components/CardProduct/CardProduct";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import SlitherComponent from "../../components/SliderComponent/SliderComponent";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
+import { useDebounceHook } from "../../hooks/useDebounceHook";
+import * as ProductService from "../../services/ProductService";
 import {
   WrapperButtonComponent,
   WrapperProducts,
   WrapperTypeProduct,
 } from "./styles";
-import slider1 from "../../assets/images/slider1.webp";
-import slider2 from "../../assets/images/slider2.webp";
-import slider3 from "../../assets/images/slider3.webp";
-import CardProduct from "../../components/CardProduct/CardProduct";
-import * as ProductService from "../../services/ProductService";
-import { useSelector } from "react-redux";
-import { useState } from "react";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import { useDebounceHook } from "../../hooks/useDebounceHook";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 
 const HomePage = () => {
   const [typeProduct, setTypeProduct] = useState([]);
@@ -105,6 +104,8 @@ const HomePage = () => {
   useEffect(() => {
     fetchAllTypeProduct();
   }, []);
+
+  console.log("typeProduct: ", typeProduct);
 
   return (
     <>

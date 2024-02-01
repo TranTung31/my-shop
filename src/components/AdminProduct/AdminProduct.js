@@ -1,30 +1,32 @@
-import { WrapperButton, WrapperHeader, WrapperUpload } from "./styles";
 import {
-  PlusOutlined,
   DeleteOutlined,
   EditOutlined,
+  PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import TableComponent from "../TableComponent/TableComponent";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Form, Select, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
-import InputComponent from "../InputComponent/InputComponent";
-import { convertPrice, getBase64 } from "../../utils";
-import * as ProductService from "../../services/ProductService";
-import useMutationHook from "../../hooks/useMutationHook";
-import * as Message from "../../components/Message/Message";
-import { useQuery } from "@tanstack/react-query";
-import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import { useSelector } from "react-redux";
+import * as Message from "../../components/Message/Message";
+import useMutationHook from "../../hooks/useMutationHook";
+import * as ProductService from "../../services/ProductService";
+import * as GenreService from "../../services/GenreService";
+import * as PublisherService from "../../services/PublisherService";
+import { convertPrice, getBase64 } from "../../utils";
+import DrawerComponent from "../DrawerComponent/DrawerComponent";
+import InputComponent from "../InputComponent/InputComponent";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import ModalComponent from "../ModalComponent/ModalComponent";
-import * as PublisherService from "../../services/PublisherService";
+import TableComponent from "../TableComponent/TableComponent";
+import { WrapperButton, WrapperHeader, WrapperUpload } from "./styles";
 
 const AdminProduct = () => {
   const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [publisher, setPublisher] = useState([]);
+  const [genre, setGenre] = useState([]);
   const [isRowSelected, setIsRowSelected] = useState("");
   const [isNameProduct, setIsNameProduct] = useState("");
   const [typeProduct, setTypeProduct] = useState([]);
@@ -58,6 +60,7 @@ const AdminProduct = () => {
       numberOfBook: "",
       formatBook: "",
       publisherID: "",
+      genreID: "",
     };
   };
 
@@ -74,6 +77,7 @@ const AdminProduct = () => {
       numberOfBook: "",
       formatBook: "",
       publisherID: "",
+      genreID: "",
     };
   };
 
@@ -230,6 +234,7 @@ const AdminProduct = () => {
     numberOfBook: stateProduct.numberOfBook,
     formatBook: stateProduct.formatBook,
     publisherID: stateProduct.publisherID,
+    genreID: stateProduct.genreID,
   };
 
   const handleCreateProduct = () => {
@@ -291,6 +296,7 @@ const AdminProduct = () => {
         numberOfBook: res?.data?.numberOfBook,
         formatBook: res?.data?.formatBook,
         publisherID: res?.data?.publisherID,
+        genreID: res?.data?.genreID,
       });
     }
     return res;
@@ -566,10 +572,24 @@ const AdminProduct = () => {
     });
   };
 
+  const handleOnChangeGenre = (e) => {
+    setStateProduct({
+      ...stateProduct,
+      genreID: e,
+    });
+  };
+
   const handleOnChangeDetailPublisher = (e) => {
     setStateDetailProduct({
       ...stateDetailProduct,
       publisherID: e,
+    });
+  };
+
+  const handleOnChangeDetailGenre = (e) => {
+    setStateDetailProduct({
+      ...stateDetailProduct,
+      genreID: e,
     });
   };
 
@@ -580,8 +600,19 @@ const AdminProduct = () => {
     }
   };
 
+  const fetchAllGenre = async () => {
+    const res = await GenreService.getAllGenre();
+    if (res?.status === "OK") {
+      setGenre(res?.data);
+    }
+  };
+
   useEffect(() => {
     fetchAllPublisher();
+  }, []);
+
+  useEffect(() => {
+    fetchAllGenre();
   }, []);
 
   const renderTypeProduct = () => {
@@ -600,6 +631,16 @@ const AdminProduct = () => {
 
   const renderPublisher = () => {
     let result = publisher?.map((item, index) => {
+      return {
+        value: item._id,
+        label: item.name,
+      };
+    });
+    return result;
+  };
+
+  const renderGenre = () => {
+    let result = genre?.map((item, index) => {
       return {
         value: item._id,
         label: item.name,
@@ -747,6 +788,27 @@ const AdminProduct = () => {
                 width: "100%",
               }}
               options={renderPublisher()}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Genre"
+            name="genreID"
+            rules={[
+              {
+                required: true,
+                message: "Please input book genre!",
+              },
+            ]}
+          >
+            <Select
+              name="genre"
+              value={stateProduct.genreID}
+              onChange={handleOnChangeGenre}
+              style={{
+                width: "100%",
+              }}
+              options={renderGenre()}
             />
           </Form.Item>
 
@@ -1021,6 +1083,27 @@ const AdminProduct = () => {
                   width: "100%",
                 }}
                 options={renderPublisher()}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Genre"
+              name="genreID"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input book genre!",
+                },
+              ]}
+            >
+              <Select
+                name="genreID"
+                value={stateDetailProduct.genreID}
+                onChange={handleOnChangeDetailGenre}
+                style={{
+                  width: "100%",
+                }}
+                options={renderGenre()}
               />
             </Form.Item>
 

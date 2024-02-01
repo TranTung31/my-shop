@@ -1,20 +1,22 @@
-import React, { useState } from "react";
 import {
+  AccountBookOutlined,
   AppstoreOutlined,
-  UserOutlined,
-  ShoppingCartOutlined,
+  FormOutlined,
   HomeOutlined,
-  FormOutlined
+  ShoppingCartOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
-import { getItem } from "../../utils";
-import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
+import React, { useState } from "react";
+import AdminGenre from "../../components/AdminGenre/AdminGenre";
 import AdminHome from "../../components/AdminHome/AdminHome";
-import AdminUser from "../../components/AdminUser/AdminUser";
 import AdminOrder from "../../components/AdminOrder/AdminOrder";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
-import { WrapperContent } from "./styles";
 import AdminPublisher from "../../components/AdminPublisher/AdminPublisher";
+import AdminUser from "../../components/AdminUser/AdminUser";
+import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
+import { getItem } from "../../utils";
+import { WrapperContent } from "./styles";
 
 const AdminPage = () => {
   const renderKey = (key) => {
@@ -29,6 +31,8 @@ const AdminPage = () => {
         return <AdminOrder />;
       case "publisher":
         return <AdminPublisher />;
+      case "genre":
+        return <AdminGenre />;
       default:
         return <></>;
     }
@@ -39,6 +43,7 @@ const AdminPage = () => {
     getItem("Sản phẩm", "product", <AppstoreOutlined />),
     getItem("Đơn hàng", "order", <ShoppingCartOutlined />),
     getItem("Nhà xuất bản", "publisher", <FormOutlined />),
+    getItem("Thể loại", "genre", <AccountBookOutlined />),
   ];
   const [keySelected, setKeySelected] = useState("");
 
