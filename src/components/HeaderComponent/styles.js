@@ -1,11 +1,13 @@
-import { Row } from "antd";
+import Search from "antd/es/input/Search";
 import { styled } from "styled-components";
 
-export const WrapperHeader = styled(Row)`
-  padding: 10px 0;
-  height: 80px;
-  align-items: center;
+export const WrapperHeader = styled.div`
   width: 1285px;
+  height: 70px;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const WrapperLogo = styled.span`
@@ -20,7 +22,7 @@ export const WrapperContentPopover = styled.p`
   padding: 12px;
   margin: 0;
   &:hover {
-    background-color: #007fff;
+    background-color: #189eff;
     color: #fff;
   }
 `;
@@ -41,12 +43,20 @@ export const WrapperUserText = styled.div`
 export const WrapperUserAll = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 28px;
+  gap: 30px;
 `;
 
 export const WrapperCart = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 30px;
   cursor: pointer;
+`;
+
+export const WrapperSearch = styled(Search)`
+  & .ant-input-wrapper .ant-input-affix-wrapper {
+    width: 300px;
+  };
+  & .ant-input-wrapper .ant-input-group-addon .ant-btn {
+    background-color: #1465d6;
+  }
 `;

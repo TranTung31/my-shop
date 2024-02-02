@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Space } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import slider1 from "../../assets/images/slider1.webp";
@@ -13,6 +14,8 @@ import * as GenreService from "../../services/GenreService";
 import * as ProductService from "../../services/ProductService";
 import {
   WrapperButtonComponent,
+  WrapperDropdown,
+  WrapperNav,
   WrapperProducts,
   WrapperTypeProduct,
 } from "./styles";
@@ -43,7 +46,7 @@ const HomePage = () => {
   };
 
   const { data: products } = useQuery(
-    ["products", limitProduct, valueDebounce],
+    ["products", limitProduct],
     fetchProduct,
     {
       retry: 3,
@@ -107,13 +110,27 @@ const HomePage = () => {
     fetchAllGenreProduct();
   }, []);
 
+  const items = genreProduct.map((item, index) => ({
+    key: `${index}`,
+    label: <TypeProduct type={item?.name} genre={item?._id} />,
+  }));
+
   return (
     <>
       <div style={{ width: "1285px", margin: "0 auto" }}>
         <WrapperTypeProduct>
-          {genreProduct.map((item, index) => (
-            <TypeProduct type={item?.name} genre={item?._id} key={index} />
-          ))}
+          <WrapperDropdown
+            menu={{
+              items,
+            }}
+          >
+            <Space>
+              {/* <UnorderedListOutlined /> */}
+              Danh Mục Sản Phẩm
+            </Space>
+          </WrapperDropdown>
+          <WrapperNav>Giới thiệu</WrapperNav>
+          <WrapperNav>Liên hệ</WrapperNav>
         </WrapperTypeProduct>
       </div>
 
@@ -132,21 +149,27 @@ const HomePage = () => {
               SÁCH BÁN CHẠY
             </h2>
             <WrapperProducts>
-              {products?.data?.map((product, index) => (
-                <CardProduct
-                  key={product._id}
-                  name={product.name}
-                  price={product.price}
-                  image={product.image}
-                  rating={product.rating}
-                  description={product.description}
-                  countInStock={product.countInStock}
-                  type={product.type}
-                  discount={product.discount}
-                  selled={product.selled}
-                  id={product._id}
-                />
-              ))}
+              {products?.data
+                ?.filter((product) =>
+                  product.name
+                    .toLowerCase()
+                    .includes(valueDebounce.toLowerCase())
+                )
+                .map((product, index) => (
+                  <CardProduct
+                    key={product._id}
+                    name={product.name}
+                    price={product.price}
+                    image={product.image}
+                    rating={product.rating}
+                    description={product.description}
+                    countInStock={product.countInStock}
+                    type={product.type}
+                    discount={product.discount}
+                    selled={product.selled}
+                    id={product._id}
+                  />
+                ))}
             </WrapperProducts>
           </LoadingComponent>
           <div style={{ display: "flex", justifyContent: "center" }}>

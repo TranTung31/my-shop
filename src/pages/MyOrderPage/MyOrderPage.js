@@ -184,20 +184,22 @@ const MyOrderPage = () => {
                       </span>
                     </div>
                     <div style={{ display: "flex", gap: "10px" }}>
-                      <ButtonComponent
-                        onClick={() => handleDeleteOrder(item)}
-                        size={40}
-                        styleButton={{
-                          height: "36px",
-                          border: "1px solid rgb(11, 116, 229)",
-                          borderRadius: "4px",
-                        }}
-                        buttonText="Hủy đơn hàng"
-                        styleTextButton={{
-                          color: "rgb(11, 116, 229)",
-                          fontSize: "14px",
-                        }}
-                      ></ButtonComponent>
+                      {item?.isDelivered ? null : (
+                        <ButtonComponent
+                          onClick={() => handleDeleteOrder(item)}
+                          size={40}
+                          styleButton={{
+                            height: "36px",
+                            border: "1px solid rgb(11, 116, 229)",
+                            borderRadius: "4px",
+                          }}
+                          buttonText="Hủy đơn hàng"
+                          styleTextButton={{
+                            color: "rgb(11, 116, 229)",
+                            fontSize: "14px",
+                          }}
+                        ></ButtonComponent>
+                      )}
                       <ButtonComponent
                         onClick={() => handleOrderDetail(item?._id)}
                         size={40}
