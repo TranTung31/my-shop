@@ -9,6 +9,7 @@ import LoadingComponent from "../../components/LoadingComponent/LoadingComponent
 import SlitherComponent from "../../components/SliderComponent/SliderComponent";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import { useDebounceHook } from "../../hooks/useDebounceHook";
+import * as GenreService from "../../services/GenreService";
 import * as ProductService from "../../services/ProductService";
 import {
   WrapperButtonComponent,
@@ -17,7 +18,7 @@ import {
 } from "./styles";
 
 const HomePage = () => {
-  const [typeProduct, setTypeProduct] = useState([]);
+  const [genreProduct, setGenreProduct] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [limitProduct, setLimitProduct] = useState(6);
 
@@ -55,32 +56,29 @@ const HomePage = () => {
     setLimitProduct((prev) => prev + 6);
   };
 
-  const fetchAllTypeProduct = async () => {
-    const res = await ProductService.getAllType();
-    if (res?.status === "OK") {
-      setTypeProduct(res?.data);
-    }
-    return res.data;
+  const fetchAllGenreProduct = async () => {
+    const res = await GenreService.getAllGenre();
+    setGenreProduct(res?.data);
   };
 
-  const fetchAllBookVN = async (type, limit, page) => {
-    const res = await ProductService.getAllProductType(type, limit, page);
+  const fetchAllBookVN = async (genre, limit, page) => {
+    const res = await ProductService.getAllProductType(genre, limit, page);
     if (res?.status === "OK") {
       setProductVN(res?.data);
     }
     return res.data;
   };
 
-  const fetchAllBookNuocNgoai = async (type, limit, page) => {
-    const res = await ProductService.getAllProductType(type, limit, page);
+  const fetchAllBookNuocNgoai = async (genre, limit, page) => {
+    const res = await ProductService.getAllProductType(genre, limit, page);
     if (res?.status === "OK") {
       setProductNuocNgoai(res?.data);
     }
     return res.data;
   };
 
-  const fetchAllBookKhoaHoc = async (type, limit, page) => {
-    const res = await ProductService.getAllProductType(type, limit, page);
+  const fetchAllBookKhoaHoc = async (genre, limit, page) => {
+    const res = await ProductService.getAllProductType(genre, limit, page);
     if (res?.status === "OK") {
       setProductKhoaHoc(res?.data);
     }
@@ -88,31 +86,33 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    fetchAllBookVN("Văn học Việt Nam", pageProduct.limit, pageProduct.page);
+    fetchAllBookVN(
+      "65b36e4471282a077bff5239",
+      pageProduct.limit,
+      pageProduct.page
+    );
     fetchAllBookNuocNgoai(
-      "Văn học nước ngoài",
+      "65b36e9e71282a077bff523f",
       pageProduct.limit,
       pageProduct.page
     );
     fetchAllBookKhoaHoc(
-      "Kiến thức khoa học",
+      "65b6252b39026dfbaca3ec97",
       pageProduct.limit,
       pageProduct.page
     );
   }, []);
 
   useEffect(() => {
-    fetchAllTypeProduct();
+    fetchAllGenreProduct();
   }, []);
-
-  console.log("typeProduct: ", typeProduct);
 
   return (
     <>
       <div style={{ width: "1285px", margin: "0 auto" }}>
         <WrapperTypeProduct>
-          {typeProduct.map((item, index) => (
-            <TypeProduct type={item} key={index} />
+          {genreProduct.map((item, index) => (
+            <TypeProduct type={item?.name} genre={item?._id} key={index} />
           ))}
         </WrapperTypeProduct>
       </div>

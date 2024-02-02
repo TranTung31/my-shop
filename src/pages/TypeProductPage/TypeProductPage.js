@@ -6,6 +6,7 @@ import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardProduct from "../../components/CardProduct/CardProduct";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import { useDebounceHook } from "../../hooks/useDebounceHook";
+import * as GenreService from "../../services/GenreService";
 import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
 import {
@@ -24,13 +25,13 @@ import {
 } from "./styles";
 
 const TypeProductPage = () => {
-  const { state: stateType } = useLocation();
+  const { state: genre } = useLocation();
   const { search: valueSearch } = useSelector((state) => state.product);
   const searchDebound = useDebounceHook(valueSearch, 1000);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  const [productType, setProductType] = useState([]);
+  const [productGenre, setProductGenre] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [totalProduct, setTotalProduct] = useState(1);
   const [pageProduct, setPageProduct] = useState({
@@ -38,7 +39,7 @@ const TypeProductPage = () => {
     page: 0,
   });
   const [sortValue, setSortValue] = useState("");
-  const [typeProduct, setTypeProduct] = useState([]);
+  const [genreProduct, setGenreProduct] = useState([]);
   const [publisher, setPublisher] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
   const [selectedNames, setSelectedNames] = useState([]);
@@ -59,8 +60,8 @@ const TypeProductPage = () => {
     }
   };
 
-  const fetchAllProductType = async (
-    type,
+  const fetchAllProductGenre = async (
+    genre,
     limit,
     page,
     selectedValues,
@@ -68,21 +69,21 @@ const TypeProductPage = () => {
   ) => {
     setIsLoading(true);
     const res = await ProductService.getAllProductType(
-      type,
+      genre,
       limit,
       page,
       selectedValues,
       sortValue
     );
     if (res?.status === "OK") {
-      setProductType(res?.data);
+      setProductGenre(res?.data);
     }
     setIsLoading(false);
     return res.data;
   };
 
-  const fetchNewAllProductType = async (type) => {
-    const res = await ProductService.getAllProductType(type);
+  const fetchNewAllProductGenre = async (genre) => {
+    const res = await ProductService.getAllProductType(genre);
     if (res?.status === "OK") {
       setTotalProduct(res?.data?.length);
     }
@@ -90,18 +91,18 @@ const TypeProductPage = () => {
   };
 
   useEffect(() => {
-    fetchAllProductType(
-      stateType,
+    fetchAllProductGenre(
+      genre,
       pageProduct.limit,
       pageProduct.page,
       selectedValues,
       sortValue
     );
-  }, [stateType, pageProduct, selectedValues, sortValue]);
+  }, [genre, pageProduct, selectedValues, sortValue]);
 
   useEffect(() => {
-    fetchNewAllProductType(stateType);
-  }, []);
+    fetchNewAllProductGenre(genre);
+  }, [genre]);
 
   const onChange = (page, pageSize) => {
     setPageProduct({
@@ -120,15 +121,15 @@ const TypeProductPage = () => {
               style={{ cursor: "pointer" }}
               onClick={() => {
                 navigate(
-                  `/product/${item
+                  `/product/${item?.name
                     .normalize("NFD")
                     .replace(/[\u0300-\u036f]/g, "")
                     ?.replace(/ /g, "_")}`,
-                  { state: item }
+                  { state: item?._id }
                 );
               }}
             >
-              {item}
+              {item?.name}
             </WrapperItemCategory>
           );
         });
@@ -181,12 +182,11 @@ const TypeProductPage = () => {
     }
   };
 
-  const fetchAllTypeProduct = async () => {
-    const res = await ProductService.getAllType();
+  const fetchAllGenreProduct = async () => {
+    const res = await GenreService.getAllGenre();
     if (res?.status === "OK") {
-      setTypeProduct(res?.data);
+      setGenreProduct(res?.data);
     }
-    return res.data;
   };
 
   const fetchAllPublisher = async () => {
@@ -197,7 +197,7 @@ const TypeProductPage = () => {
   };
 
   useEffect(() => {
-    fetchAllTypeProduct();
+    fetchAllGenreProduct();
     fetchAllPublisher();
   }, []);
 
@@ -228,7 +228,7 @@ const TypeProductPage = () => {
             <WrapperNavbar>
               <WrapperTitleText>Danh mục sách</WrapperTitleText>
               <WrapperContent>
-                {renderContent("text", typeProduct)}
+                {renderContent("text", genreProduct)}
               </WrapperContent>
               <WrapperTitleText>Nhà xuất bản</WrapperTitleText>
               <WrapperContent>
@@ -306,7 +306,7 @@ const TypeProductPage = () => {
                   : null}
               </WrapperPublisher>
               <WrapperProducts>
-                {productType
+                {productGenre
                   ?.filter((product) =>
                     product.name
                       .toLowerCase()

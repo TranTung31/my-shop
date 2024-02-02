@@ -353,6 +353,10 @@ const AdminPublisher = () => {
 
   const columns = [
     {
+      title: "Code publisher",
+      dataIndex: "_id"
+    },
+    {
       title: "Name",
       dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,

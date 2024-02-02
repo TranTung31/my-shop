@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { WrapperTextProduct } from "./styles";
 
-const TypeProduct = ({ type }) => {
+const TypeProduct = ({ type, genre }) => {
   const navigate = useNavigate();
 
   const handleTypeProduct = () => {
@@ -10,7 +10,7 @@ const TypeProduct = ({ type }) => {
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         ?.replace(/ /g, "_")}`,
-      { state: type }
+      { state: genre }
     );
   };
   return (

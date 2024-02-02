@@ -6,14 +6,15 @@ import {
 } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Form, Select, Space } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import * as Message from "../../components/Message/Message";
 import useMutationHook from "../../hooks/useMutationHook";
-import * as ProductService from "../../services/ProductService";
 import * as GenreService from "../../services/GenreService";
+import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
-import { convertPrice, getBase64 } from "../../utils";
+import { getBase64 } from "../../utils";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import InputComponent from "../InputComponent/InputComponent";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
@@ -58,6 +59,7 @@ const AdminProduct = () => {
       newType: "",
       author: "",
       numberOfBook: "",
+      description: "",
       formatBook: "",
       publisherID: "",
       genreID: "",
@@ -75,6 +77,7 @@ const AdminProduct = () => {
       image: "",
       author: "",
       numberOfBook: "",
+      description: "",
       formatBook: "",
       publisherID: "",
       genreID: "",
@@ -145,7 +148,7 @@ const AdminProduct = () => {
   const { isLoading: isLoadingProducts, data: products } = queryGetAllProduct;
 
   const dataProducts = products?.data?.map((product) => {
-    return { ...product, key: product._id, price: convertPrice(product.price) };
+    return { ...product, key: product._id };
   });
 
   useEffect(() => {
@@ -161,6 +164,7 @@ const AdminProduct = () => {
         author: "",
         numberOfBook: "",
         formatBook: "",
+        description: "",
       });
       form.resetFields();
       setIsOpenModalCreate(false);
@@ -176,6 +180,7 @@ const AdminProduct = () => {
         author: "",
         numberOfBook: "",
         formatBook: "",
+        description: "",
       });
       form.resetFields();
       setIsOpenModalCreate(false);
@@ -232,6 +237,7 @@ const AdminProduct = () => {
     image: stateProduct.image,
     author: stateProduct.author,
     numberOfBook: stateProduct.numberOfBook,
+    description: stateProduct.description,
     formatBook: stateProduct.formatBook,
     publisherID: stateProduct.publisherID,
     genreID: stateProduct.genreID,
@@ -295,6 +301,7 @@ const AdminProduct = () => {
         author: res?.data?.author,
         numberOfBook: res?.data?.numberOfBook,
         formatBook: res?.data?.formatBook,
+        description: res?.data?.description,
         publisherID: res?.data?.publisherID,
         genreID: res?.data?.genreID,
       });
@@ -462,28 +469,24 @@ const AdminProduct = () => {
       dataIndex: "formatBook",
     },
     {
-      title: "Type",
-      dataIndex: "type",
-    },
-    {
       title: "Price",
       dataIndex: "price",
       sorter: (a, b) => a.price - b.price,
       filters: [
         {
-          text: ">= 300000",
+          text: ">= 50000",
           value: ">=",
         },
         {
-          text: "< 300000",
+          text: "< 50000",
           value: "<",
         },
       ],
       onFilter: (value, record) => {
         if (value === ">=") {
-          return record?.price >= 300000;
+          return record?.price >= 50000;
         }
-        return record?.price < 300000;
+        return record?.price < 50000;
       },
     },
     {
@@ -492,19 +495,19 @@ const AdminProduct = () => {
       sorter: (a, b) => a.discount - b.discount,
       filters: [
         {
-          text: ">= 5",
+          text: ">= 10",
           value: ">=",
         },
         {
-          text: "< 5",
+          text: "< 10",
           value: "<",
         },
       ],
       onFilter: (value, record) => {
         if (value === ">=") {
-          return record?.discount >= 5;
+          return record?.discount >= 10;
         }
-        return record?.discount < 5;
+        return record?.discount < 10;
       },
     },
     {
@@ -737,7 +740,7 @@ const AdminProduct = () => {
             rules={[
               {
                 required: true,
-                message: "Please input format book!",
+                message: "Please input book format!",
               },
             ]}
           >
@@ -748,7 +751,7 @@ const AdminProduct = () => {
             />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label="Type"
             name="type"
             rules={[
@@ -759,7 +762,6 @@ const AdminProduct = () => {
             ]}
           >
             <Select
-              // mode="multiple"
               name="type"
               value={stateProduct.type}
               onChange={handleOnChangeType}
@@ -767,6 +769,43 @@ const AdminProduct = () => {
                 width: "100%",
               }}
               options={renderTypeProduct()}
+            />
+          </Form.Item> */}
+
+          {/* {stateProduct.type === "add-type" && (
+            <Form.Item
+              label="New Type"
+              name="newType"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your new type!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateProduct.newType}
+                onChange={handleOnChange}
+                name="newType"
+              />
+            </Form.Item>
+          )} */}
+
+          <Form.Item
+            label="Description"
+            name="description"
+            rules={[
+              {
+                required: true,
+                message: "Please input book description!",
+              },
+            ]}
+          >
+            <TextArea
+              rows={4}
+              name="description"
+              value={stateProduct.description}
+              onChange={handleOnChange}
             />
           </Form.Item>
 
@@ -812,32 +851,13 @@ const AdminProduct = () => {
             />
           </Form.Item>
 
-          {stateProduct.type === "add-type" && (
-            <Form.Item
-              label="New Type"
-              name="newType"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your new type!",
-                },
-              ]}
-            >
-              <InputComponent
-                value={stateProduct.newType}
-                onChange={handleOnChange}
-                name="newType"
-              />
-            </Form.Item>
-          )}
-
           <Form.Item
             label="Price"
             name="price"
             rules={[
               {
                 required: true,
-                message: "Please input your price!",
+                message: "Please input book price!",
               },
             ]}
           >
@@ -854,7 +874,7 @@ const AdminProduct = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your count in stock!",
+                message: "Please input book count in stock!",
               },
             ]}
           >
@@ -871,7 +891,7 @@ const AdminProduct = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your discount!",
+                message: "Please input book discount!",
               },
             ]}
           >
@@ -888,7 +908,7 @@ const AdminProduct = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your rating!",
+                message: "Please input book rating!",
               },
             ]}
           >
@@ -905,7 +925,7 @@ const AdminProduct = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your image!",
+                message: "Please input book image!",
               },
             ]}
           >
@@ -1037,18 +1057,36 @@ const AdminProduct = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input format book!",
+                  message: "Please input book format!",
                 },
               ]}
             >
               <InputComponent
+                name="formatBook"
                 value={stateDetailProduct.formatBook}
                 onChange={handleOnChangeDetail}
-                name="formatBook"
               />
             </Form.Item>
 
             <Form.Item
+              label="Description"
+              name="description"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input book description!",
+                },
+              ]}
+            >
+              <TextArea
+                rows={4}
+                name="description"
+                value={stateDetailProduct.description}
+                onChange={handleOnChangeDetail}
+              />
+            </Form.Item>
+
+            {/* <Form.Item
               label="Type"
               name="type"
               rules={[
@@ -1063,7 +1101,7 @@ const AdminProduct = () => {
                 onChange={handleOnChangeDetail}
                 name="type"
               />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               label="Publisher"
@@ -1113,11 +1151,12 @@ const AdminProduct = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your price!",
+                  message: "Please input book price!",
                 },
               ]}
             >
               <InputComponent
+                type="number"
                 value={stateDetailProduct.price}
                 onChange={handleOnChangeDetail}
                 name="price"
@@ -1130,11 +1169,12 @@ const AdminProduct = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your count in stock!",
+                  message: "Please input book count in stock!",
                 },
               ]}
             >
               <InputComponent
+                type="number"
                 value={stateDetailProduct.countInStock}
                 onChange={handleOnChangeDetail}
                 name="countInStock"
@@ -1142,16 +1182,17 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Discount"
+              label="Discount (%)"
               name="discount"
               rules={[
                 {
                   required: true,
-                  message: "Please input your discount!",
+                  message: "Please input book discount!",
                 },
               ]}
             >
               <InputComponent
+                type="number"
                 value={stateDetailProduct.discount}
                 onChange={handleOnChangeDetail}
                 name="discount"
@@ -1164,11 +1205,12 @@ const AdminProduct = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your rating!",
+                  message: "Please input book rating!",
                 },
               ]}
             >
               <InputComponent
+                type="number"
                 value={stateDetailProduct.rating}
                 onChange={handleOnChangeDetail}
                 name="rating"
@@ -1181,7 +1223,7 @@ const AdminProduct = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your image!",
+                  message: "Please input book image!",
                 },
               ]}
             >
