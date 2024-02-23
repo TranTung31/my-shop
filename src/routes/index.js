@@ -12,6 +12,7 @@ import AdminPage from "../pages/AdminPage/AdminPage";
 import PaymentPage from "../pages/PaymentPage/PaymentPage";
 import MyOrderPage from "../pages/MyOrderPage/MyOrderPage";
 import OrderDetailPage from "../pages/OrderDetailPage/OrderDetailPage";
+import IntroPage from "../pages/IntroPage/IntroPage";
 
 export const routes = [
   {
@@ -92,6 +93,12 @@ export const routes = [
     isShowHeader: false,
     isPrivate: true,
     isShowFooter: false,
+  },
+  {
+    path: "/intro",
+    page: IntroPage,
+    isShowHeader: true,
+    isShowFooter: true,
   },
   {
     path: "*",

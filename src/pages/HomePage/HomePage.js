@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Space } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import slider1 from "../../assets/images/slider1.webp";
 import slider2 from "../../assets/images/slider2.webp";
 import slider3 from "../../assets/images/slider3.webp";
@@ -35,6 +36,8 @@ const HomePage = () => {
     limit: 6,
     page: 0,
   });
+
+  const navigate = useNavigate();
 
   const fetchProduct = async (context) => {
     const valueSearch = context?.queryKey ? context?.queryKey[2] : "";
@@ -129,7 +132,7 @@ const HomePage = () => {
               Danh Mục Sản Phẩm
             </Space>
           </WrapperDropdown>
-          <WrapperNav>Giới thiệu</WrapperNav>
+          <WrapperNav onClick={() => navigate("/intro")}>Giới thiệu</WrapperNav>
           <WrapperNav>Liên hệ</WrapperNav>
         </WrapperTypeProduct>
       </div>
