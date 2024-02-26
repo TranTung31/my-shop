@@ -133,7 +133,7 @@ const HomePage = () => {
             </Space>
           </WrapperDropdown>
           <WrapperNav onClick={() => navigate("/intro")}>Giới thiệu</WrapperNav>
-          <WrapperNav>Liên hệ</WrapperNav>
+          <WrapperNav onClick={() => navigate("/contact")}>Liên hệ</WrapperNav>
         </WrapperTypeProduct>
       </div>
 
