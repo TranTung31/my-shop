@@ -1,14 +1,9 @@
 import axios from "axios";
 import { axiosJWT } from "./UserService";
 
-export const getAllContact = async (access_token) => {
+export const getAllContact = async () => {
   const res = await axios.get(
-    `${process.env.REACT_APP_API}/contact/get-all-contact`,
-    {
-      headers: {
-        token: `Bearer ${access_token}`,
-      },
-    }
+    `${process.env.REACT_APP_API}/contact/get-all-contact`
   );
   return res.data;
 };

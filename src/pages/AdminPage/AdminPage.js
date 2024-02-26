@@ -5,6 +5,7 @@ import {
   HomeOutlined,
   ShoppingCartOutlined,
   UserOutlined,
+  PhoneOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import React, { useState } from "react";
@@ -17,6 +18,7 @@ import AdminUser from "../../components/AdminUser/AdminUser";
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
 import { getItem } from "../../utils";
 import { WrapperContent } from "./styles";
+import AdminContact from "../../components/AdminContact/AdminContact";
 
 const AdminPage = () => {
   const renderKey = (key) => {
@@ -33,6 +35,8 @@ const AdminPage = () => {
         return <AdminPublisher />;
       case "genre":
         return <AdminGenre />;
+      case "contact":
+        return <AdminContact />;
       default:
         return <></>;
     }
@@ -44,6 +48,7 @@ const AdminPage = () => {
     getItem("Đơn hàng", "order", <ShoppingCartOutlined />),
     getItem("Nhà xuất bản", "publisher", <FormOutlined />),
     getItem("Thể loại", "genre", <AccountBookOutlined />),
+    getItem("Liên hệ", "contact", <PhoneOutlined />),
   ];
   const [keySelected, setKeySelected] = useState("");
 
