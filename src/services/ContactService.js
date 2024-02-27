@@ -15,6 +15,18 @@ export const getDetailContact = async (id) => {
   return res.data;
 };
 
+export const getContactUser = async (id, access_token) => {
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API}/contact/get-contact-user/${id}`,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
 export const createContact = async (data, access_token) => {
   const res = await axiosJWT.post(
     `${process.env.REACT_APP_API}/contact/create-contact`,

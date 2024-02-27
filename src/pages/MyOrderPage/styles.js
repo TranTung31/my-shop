@@ -110,4 +110,4 @@ export const WrapperStatusContent = styled.div`
   span:last-child {
     color: rgb(255, 66, 78);
   }
-`
+`;

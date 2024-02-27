@@ -111,18 +111,20 @@ const MyOrderPage = () => {
 
   const handleDeleteOrder = (order) => {
     const orderId = order?._id;
-    mutationDelete.mutate(
-      {
-        id: orderId,
-        access_token: user?.access_token,
-        orderItems: order?.orderItems,
-      },
-      {
-        onSuccess: () => {
-          queryOrder.refetch();
+    if (window.confirm(`Bạn có muốn xóa đơn hàng có mã DH${orderId} không?`)) {
+      mutationDelete.mutate(
+        {
+          id: orderId,
+          access_token: user?.access_token,
+          orderItems: order?.orderItems,
         },
-      }
-    );
+        {
+          onSuccess: () => {
+            queryOrder.refetch();
+          },
+        }
+      );
+    }
   };
 
   return (

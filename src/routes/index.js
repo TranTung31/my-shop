@@ -14,6 +14,7 @@ import MyOrderPage from "../pages/MyOrderPage/MyOrderPage";
 import OrderDetailPage from "../pages/OrderDetailPage/OrderDetailPage";
 import IntroPage from "../pages/IntroPage/IntroPage";
 import ContactPage from "../pages/ContactPage/ContactPage";
+import MyContactPage from "../pages/MyContactPage/MyContactPage";
 
 export const routes = [
   {
@@ -106,6 +107,12 @@ export const routes = [
     page: ContactPage,
     isShowHeader: true,
     isShowFooter: true,
+  },
+  {
+    path: "/my-contact",
+    page: MyContactPage,
+    isShowHeader: true,
+    isShowFooter: false,
   },
   {
     path: "*",

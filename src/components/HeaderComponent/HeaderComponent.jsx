@@ -2,7 +2,7 @@ import {
   CaretDownOutlined,
   SearchOutlined,
   ShoppingCartOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons";
 import { Badge, Popover } from "antd";
 import { useEffect, useState } from "react";
@@ -72,6 +72,14 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           },
         });
         break;
+      case "contact":
+        navigate("/my-contact", {
+          state: {
+            id: user?.id,
+            token: user?.access_token,
+          },
+        });
+        break;
       default:
         handleLogout();
     }
@@ -89,6 +97,9 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
       )}
       <WrapperContentPopover onClick={() => handleClickNavigate("order")}>
         Đơn hàng của tôi
+      </WrapperContentPopover>
+      <WrapperContentPopover onClick={() => handleClickNavigate("contact")}>
+        Liên hệ của tôi
       </WrapperContentPopover>
       <WrapperContentPopover onClick={() => handleClickNavigate()}>
         Đăng xuất
@@ -120,7 +131,11 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               <WrapperSearch
                 placeholder="Vui lòng nhập..."
                 allowClear
-                enterButton={<div><SearchOutlined /> Tìm kiếm</div>}
+                enterButton={
+                  <div>
+                    <SearchOutlined /> Tìm kiếm
+                  </div>
+                }
                 size="large"
                 onChange={handleProductSearch}
               />
