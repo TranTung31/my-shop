@@ -14,6 +14,7 @@ import useMutationHook from "../../hooks/useMutationHook";
 import * as GenreService from "../../services/GenreService";
 import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
+import * as AuthorService from "../../services/AuthorService";
 import { getBase64 } from "../../utils";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import InputComponent from "../InputComponent/InputComponent";
@@ -28,6 +29,7 @@ const AdminProduct = () => {
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [publisher, setPublisher] = useState([]);
   const [genre, setGenre] = useState([]);
+  const [author, setAuthor] = useState([]);
   const [isRowSelected, setIsRowSelected] = useState("");
   const [isNameProduct, setIsNameProduct] = useState("");
   const [typeProduct, setTypeProduct] = useState([]);
@@ -63,6 +65,7 @@ const AdminProduct = () => {
       formatBook: "",
       publisherID: "",
       genreID: "",
+      authorID: "",
     };
   };
 
@@ -81,6 +84,7 @@ const AdminProduct = () => {
       formatBook: "",
       publisherID: "",
       genreID: "",
+      authorID: "",
     };
   };
 
@@ -241,6 +245,7 @@ const AdminProduct = () => {
     formatBook: stateProduct.formatBook,
     publisherID: stateProduct.publisherID,
     genreID: stateProduct.genreID,
+    authorID: stateProduct.authorID,
   };
 
   const handleCreateProduct = () => {
@@ -304,6 +309,7 @@ const AdminProduct = () => {
         description: res?.data?.description,
         publisherID: res?.data?.publisherID,
         genreID: res?.data?.genreID,
+        authorID: res?.data?.authorID,
       });
     }
     return res;
@@ -457,10 +463,6 @@ const AdminProduct = () => {
       ...getColumnSearchProps("name"),
     },
     {
-      title: "Author",
-      dataIndex: "author",
-    },
-    {
       title: "Number of book",
       dataIndex: "numberOfBook",
     },
@@ -582,6 +584,13 @@ const AdminProduct = () => {
     });
   };
 
+  const handleOnChangeAuthor = (e) => {
+    setStateProduct({
+      ...stateProduct,
+      authorID: e,
+    });
+  };
+
   const handleOnChangeDetailPublisher = (e) => {
     setStateDetailProduct({
       ...stateDetailProduct,
@@ -593,6 +602,13 @@ const AdminProduct = () => {
     setStateDetailProduct({
       ...stateDetailProduct,
       genreID: e,
+    });
+  };
+
+  const handleOnChangeDetailAuthor = (e) => {
+    setStateDetailProduct({
+      ...stateDetailProduct,
+      authorID: e,
     });
   };
 
@@ -610,12 +626,23 @@ const AdminProduct = () => {
     }
   };
 
+  const fetchAllAuthor = async () => {
+    const res = await AuthorService.getAllAuthor(user?.access_token);
+    if (res?.status === "OK") {
+      setAuthor(res?.data);
+    }
+  };
+
   useEffect(() => {
     fetchAllPublisher();
   }, []);
 
   useEffect(() => {
     fetchAllGenre();
+  }, []);
+
+  useEffect(() => {
+    fetchAllAuthor();
   }, []);
 
   const renderTypeProduct = () => {
@@ -644,6 +671,16 @@ const AdminProduct = () => {
 
   const renderGenre = () => {
     let result = genre?.map((item, index) => {
+      return {
+        value: item._id,
+        label: item.name,
+      };
+    });
+    return result;
+  };
+
+  const renderAuthor = () => {
+    let result = author?.map((item, index) => {
       return {
         value: item._id,
         label: item.name,
@@ -702,7 +739,7 @@ const AdminProduct = () => {
 
           <Form.Item
             label="Author"
-            name="author"
+            name="authorID"
             rules={[
               {
                 required: true,
@@ -710,10 +747,14 @@ const AdminProduct = () => {
               },
             ]}
           >
-            <InputComponent
-              value={stateProduct.author}
-              onChange={handleOnChange}
+            <Select
               name="author"
+              value={stateProduct.authorID}
+              onChange={handleOnChangeAuthor}
+              style={{
+                width: "100%",
+              }}
+              options={renderAuthor()}
             />
           </Form.Item>
 
@@ -1018,7 +1059,7 @@ const AdminProduct = () => {
 
             <Form.Item
               label="Author"
-              name="author"
+              name="authorID"
               rules={[
                 {
                   required: true,
@@ -1026,10 +1067,14 @@ const AdminProduct = () => {
                 },
               ]}
             >
-              <InputComponent
-                value={stateDetailProduct.author}
-                onChange={handleOnChangeDetail}
-                name="author"
+              <Select
+                name="authorID"
+                value={stateDetailProduct.authorID}
+                onChange={handleOnChangeDetailAuthor}
+                style={{
+                  width: "100%",
+                }}
+                options={renderAuthor()}
               />
             </Form.Item>
 
@@ -1085,23 +1130,6 @@ const AdminProduct = () => {
                 onChange={handleOnChangeDetail}
               />
             </Form.Item>
-
-            {/* <Form.Item
-              label="Type"
-              name="type"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input book type!",
-                },
-              ]}
-            >
-              <InputComponent
-                value={stateDetailProduct.type}
-                onChange={handleOnChangeDetail}
-                name="type"
-              />
-            </Form.Item> */}
 
             <Form.Item
               label="Publisher"

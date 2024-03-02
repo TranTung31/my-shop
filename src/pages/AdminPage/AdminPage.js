@@ -6,6 +6,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
   PhoneOutlined,
+  TeamOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import React, { useState } from "react";
@@ -19,6 +20,7 @@ import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
 import { getItem } from "../../utils";
 import { WrapperContent } from "./styles";
 import AdminContact from "../../components/AdminContact/AdminContact";
+import AdminAuthor from "../../components/AdminAuthor/AdminAuthor";
 
 const AdminPage = () => {
   const renderKey = (key) => {
@@ -31,6 +33,8 @@ const AdminPage = () => {
         return <AdminProduct />;
       case "order":
         return <AdminOrder />;
+      case "author":
+        return <AdminAuthor />;
       case "publisher":
         return <AdminPublisher />;
       case "genre":
@@ -46,6 +50,7 @@ const AdminPage = () => {
     getItem("Người dùng", "user", <UserOutlined />),
     getItem("Sản phẩm", "product", <AppstoreOutlined />),
     getItem("Đơn hàng", "order", <ShoppingCartOutlined />),
+    getItem("Tác giả", "author", <TeamOutlined />),
     getItem("Nhà xuất bản", "publisher", <FormOutlined />),
     getItem("Thể loại", "genre", <AccountBookOutlined />),
     getItem("Liên hệ", "contact", <PhoneOutlined />),
