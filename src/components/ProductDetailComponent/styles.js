@@ -56,3 +56,21 @@ export const WrapperTextQuantity = styled.span`
 export const WrapperIcon = styled.div`
   margin-left: 8px;
 `;
+
+export const WrapperDescription = styled.div`
+  width: 100%;
+  padding: 20px 0px;
+  border-bottom: 1px solid #ccc;
+`;
+
+export const WrapperTitleDescription = styled.h2`
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 500;
+`;
+
+export const WrapperTitleComment = styled.h2`
+  margin: 20px 0 10px;
+  font-size: 2rem;
+  font-weight: 500;
+`;

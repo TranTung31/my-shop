@@ -1,29 +1,29 @@
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Col, Image, InputNumber, Rate, Row } from "antd";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import * as Message from "../../components/Message/Message";
+import { addProductToCart, resetOrder } from "../../redux/slides/orderSlice";
+import * as ProductService from "../../services/ProductService";
+import * as PublisherService from "../../services/PublisherService";
+import { convertPrice, initFacebookSDK } from "../../utils";
+import ButtonComponent from "../ButtonComponent/ButtonComponent";
+import CommentComponent from "../CommentComponent/CommentComponent";
+import LikeButtonComponent from "../LikeButtonComponent/LikeButtonComponent";
 import {
   WrapperCurrentAddress,
   WrapperCurrentPrice,
+  WrapperDescription,
+  WrapperDetailBook,
   WrapperImageProductSmall,
   WrapperStyleTextHeader,
   WrapperStyleTextSell,
   WrapperTextQuantity,
-  WrapperDetailBook,
+  WrapperTitleComment,
+  WrapperTitleDescription,
 } from "./styles";
-import {
-  PlusOutlined,
-  MinusOutlined,
-} from "@ant-design/icons";
-import ButtonComponent from "../ButtonComponent/ButtonComponent";
-import { useEffect, useState } from "react";
-import * as ProductService from "../../services/ProductService";
-import { useQuery } from "@tanstack/react-query";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import { addProductToCart, resetOrder } from "../../redux/slides/orderSlice";
-import { convertPrice, initFacebookSDK } from "../../utils";
-import * as Message from "../../components/Message/Message";
-import LikeButtonComponent from "../LikeButtonComponent/LikeButtonComponent";
-import CommentComponent from "../CommentComponent/CommentComponent";
-import * as PublisherService from "../../services/PublisherService";
 
 const ProductDetailComponent = ({ id }) => {
   const [numberProduct, setNumberProduct] = useState(1);
@@ -135,13 +135,15 @@ const ProductDetailComponent = ({ id }) => {
   const fetchGetAllPublisher = async () => {
     const res = await PublisherService.getAllPublisher();
     setArrPublisher(res.data);
-  }
+  };
 
   useEffect(() => {
     fetchGetAllPublisher();
   }, []);
 
-  const publisherBook = arrPublisher.find((item) => item._id === product?.publisherID);
+  const publisherBook = arrPublisher.find(
+    (item) => item._id === product?.publisherID
+  );
 
   return (
     <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
@@ -252,16 +254,19 @@ const ProductDetailComponent = ({ id }) => {
         <WrapperCurrentAddress>
           <span>Giao đến: </span>
           <span className="address">
-            {user?.address}, {user?.city}{" "}
+            {user?.address && user?.city
+              ? `${user?.address}, ${user.city}`
+              : "Vui lòng đăng nhập"}
           </span>{" "}
-          -
-          <span
-            className="change-address"
-            onClick={() => navigate("/user-detail")}
-          >
-            {" "}
-            Đổi địa chỉ
-          </span>
+          {user?.id ? (
+            <span
+              className="change-address"
+              onClick={() => navigate("/user-detail")}
+            >
+              {" "}
+              Đổi địa chỉ
+            </span>
+          ) : null}
         </WrapperCurrentAddress>
         <LikeButtonComponent
           dataHref={
@@ -329,6 +334,13 @@ const ProductDetailComponent = ({ id }) => {
           />
         </div>
       </Col>
+      <WrapperDescription>
+        <WrapperTitleDescription>Mô tả sản phẩm</WrapperTitleDescription>
+        <div style={{ marginTop: "10px", fontSize: "1.6rem" }}>
+          {product?.description ? product?.description : "Đang cập nhật..."}
+        </div>
+      </WrapperDescription>
+      <WrapperTitleComment>Viết bình luận</WrapperTitleComment>
       <CommentComponent
         dataHref={
           process.env.REACT_APP_CHECK_LOCAL || true
