@@ -105,3 +105,21 @@ export const getCountProduct = async (access_token) => {
   );
   return res.data;
 };
+
+export const getProductAuthor = async (
+  authorId,
+  limit,
+  page,
+  publisher,
+  typeSort
+) => {
+  const publisherID =
+    publisher?.length > 0
+      ? `&publisher=publisherID&publisher=${publisher.join(",")}`
+      : "";
+  const sort = typeSort ? `&sort=${typeSort}` : "";
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/product/get-product-author?filter=authorID&filter=${authorId}&limit=${limit}&page=${page}${publisherID}${sort}`
+  );
+  return res.data;
+};

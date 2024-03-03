@@ -93,7 +93,7 @@ const AdminAuthor = () => {
     mutationDeleteMany;
 
   const getAllAuthor = async () => {
-    const res = await AuthorService.getAllAuthor(user?.access_token);
+    const res = await AuthorService.getAllAuthor();
     return res;
   };
 

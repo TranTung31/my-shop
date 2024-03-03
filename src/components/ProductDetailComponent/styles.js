@@ -1,6 +1,5 @@
-import { Image, InputNumber } from "antd";
+import { Image } from "antd";
 import { styled } from "styled-components";
-import ButtonComponent from "../ButtonComponent/ButtonComponent";
 
 export const WrapperImageProductSmall = styled(Image)``;
 
@@ -27,6 +26,10 @@ export const WrapperCurrentPrice = styled.div`
 `;
 
 export const WrapperDetailBook = styled.div`
+  span.author {
+    color: #d51c24;
+    font-weight: 600;
+  }
   margin-top: 10px;
   font-size: 1.6rem;
 `;

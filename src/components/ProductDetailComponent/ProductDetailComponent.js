@@ -8,6 +8,7 @@ import * as Message from "../../components/Message/Message";
 import { addProductToCart, resetOrder } from "../../redux/slides/orderSlice";
 import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
+import * as AuthorService from "../../services/AuthorService";
 import { convertPrice, initFacebookSDK } from "../../utils";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import CommentComponent from "../CommentComponent/CommentComponent";
@@ -28,6 +29,7 @@ import {
 const ProductDetailComponent = ({ id }) => {
   const [numberProduct, setNumberProduct] = useState(1);
   const [arrPublisher, setArrPublisher] = useState([]);
+  const [arrAuthor, setArrAuthor] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -145,6 +147,17 @@ const ProductDetailComponent = ({ id }) => {
     (item) => item._id === product?.publisherID
   );
 
+  const fetchGetAllAuthor = async () => {
+    const res = await AuthorService.getAllAuthor();
+    setArrAuthor(res.data);
+  };
+
+  useEffect(() => {
+    fetchGetAllAuthor();
+  }, []);
+
+  const authorBook = arrAuthor.find((item) => item._id === product?.authorID);
+
   return (
     <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
       <Col span={10}>
@@ -240,7 +253,18 @@ const ProductDetailComponent = ({ id }) => {
           <span>Mã sách: {product?._id}</span>
         </WrapperDetailBook>
         <WrapperDetailBook>
-          <span>Tác giả: {product?.author}</span>
+          <span>Tác giả: </span>
+          {authorBook?.name ? (
+            <span
+              className="author"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate(`/product-author/${authorBook?._id}`)}
+            >
+              {authorBook?.name}
+            </span>
+          ) : (
+            <span>Đang cập nhật</span>
+          )}
         </WrapperDetailBook>
         <WrapperDetailBook>
           <span>Số trang: {product?.numberOfBook}</span>
