@@ -23,7 +23,7 @@ const AdminOrder = () => {
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
-  const [typeDelivered, setTypeDelivered] = useState(["true", "false"]);
+  const [typeBoolean, setTypeBoolean] = useState(["true", "false"]);
   const [isCodeOrder, setIsCodeOrder] = useState("");
 
   const [searchText, setSearchText] = useState("");
@@ -48,6 +48,7 @@ const AdminOrder = () => {
     address: "",
     city: "",
     deliveryMethod: "",
+    isPaided: false,
     isDelivered: false,
   });
 
@@ -59,6 +60,7 @@ const AdminOrder = () => {
       city: stateOrderDetail.city,
     },
     deliveryMethod: stateOrderDetail.deliveryMethod,
+    isPaid: stateOrderDetail.isPaided,
     isDelivered: stateOrderDetail.isDelivered,
   };
 
@@ -180,7 +182,8 @@ const AdminOrder = () => {
         address: res?.data?.shippingAddress?.address,
         city: res?.data?.shippingAddress?.city,
         deliveryMethod: res?.data?.deliveryMethod,
-        isDelivered: res?.data?.isDelivered,
+        isPaided: String(res?.data?.isPaid),
+        isDelivered: String(res?.data?.isDelivered),
       });
     }
     return res;
@@ -394,8 +397,15 @@ const AdminOrder = () => {
     });
   };
 
-  const renderTypeProduct = () => {
-    let result = typeDelivered.map((type) => {
+  const handleOnChangePaided = (e) => {
+    setStateOrderDetail({
+      ...stateOrderDetail,
+      isPaided: e,
+    });
+  };
+
+  const renderType = () => {
+    let result = typeBoolean.map((type) => {
       return {
         value: type,
         label: type,
@@ -481,6 +491,7 @@ const AdminOrder = () => {
                 value={stateOrderDetail.phone}
                 onChange={handleOnChangeDetail}
                 name="phone"
+                type="number"
               />
             </Form.Item>
 
@@ -536,6 +547,27 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
+              label="Paided"
+              name="isPaided"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your paided!",
+                },
+              ]}
+            >
+              <Select
+                name="isPaided"
+                value={stateOrderDetail.isPaided}
+                onChange={handleOnChangePaided}
+                style={{
+                  width: "100%",
+                }}
+                options={renderType()}
+              />
+            </Form.Item>
+
+            <Form.Item
               label="Delivered"
               name="isDelivered"
               rules={[
@@ -552,7 +584,7 @@ const AdminOrder = () => {
                 style={{
                   width: "100%",
                 }}
-                options={renderTypeProduct()}
+                options={renderType()}
               />
             </Form.Item>
 

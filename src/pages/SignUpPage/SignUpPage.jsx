@@ -127,7 +127,7 @@ const SignUpPage = () => {
               type={isShowConfirm ? "text" : "password"}
               onChange={handleOnChangeConfirmPassword}
             />
-            {data?.status === "ERR" && (
+            {data?.status === "ERROR" && (
               <span
                 style={{
                   fontSize: "15px",

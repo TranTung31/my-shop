@@ -1,30 +1,33 @@
-import { WrapperHeader, WrapperUpload } from "./styles";
-import TableComponent from "../TableComponent/TableComponent";
-import { Button, Form, Space } from "antd";
-import { useEffect, useRef, useState } from "react";
-import ModalComponent from "../ModalComponent/ModalComponent";
-import InputComponent from "../InputComponent/InputComponent";
-import LoadingComponent from "../LoadingComponent/LoadingComponent";
-import DrawerComponent from "../DrawerComponent/DrawerComponent";
-import { useSelector } from "react-redux";
-import * as UserService from "../../services/UserService";
-import useMutationHook from "../../hooks/useMutationHook";
-import * as Message from "../../components/Message/Message";
-import { useQuery } from "@tanstack/react-query";
 import {
   DeleteOutlined,
+  PlusOutlined,
   EditOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
+import { Button, Form, Select, Space } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import * as Message from "../../components/Message/Message";
+import useMutationHook from "../../hooks/useMutationHook";
+import * as UserService from "../../services/UserService";
 import { getBase64 } from "../../utils";
+import DrawerComponent from "../DrawerComponent/DrawerComponent";
+import InputComponent from "../InputComponent/InputComponent";
+import LoadingComponent from "../LoadingComponent/LoadingComponent";
+import ModalComponent from "../ModalComponent/ModalComponent";
+import TableComponent from "../TableComponent/TableComponent";
+import { WrapperButton, WrapperHeader, WrapperUpload } from "./styles";
 
 const AdminUser = () => {
-  const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
+  const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
+  const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
   const [isNameUser, setIsNameUser] = useState("");
 
   const [searchText, setSearchText] = useState("");
+  const [typeBoolean, setTypeBoolean] = useState(["true", "false"]);
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -48,7 +51,19 @@ const AdminUser = () => {
     avatar: "",
   });
 
+  const [stateUser, setStateUser] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
+
+  const mutationCreate = useMutationHook(({ data }) => {
+    const res = UserService.signupUser(data);
+    return res;
+  });
 
   const mutationUpdate = useMutationHook(({ id, data, access_token }) => {
     const res = UserService.updateUser(id, data, access_token);
@@ -64,6 +79,12 @@ const AdminUser = () => {
     const res = UserService.deleteManyUser(ids, access_token);
     return res;
   });
+
+  const {
+    data: dataCreateUser,
+    isSuccess: isSuccessCreateUser,
+    isLoading: isLoadingCreateUser,
+  } = mutationCreate;
 
   const {
     data: dataUpdateUser,
@@ -103,6 +124,28 @@ const AdminUser = () => {
   });
 
   useEffect(() => {
+    if (isSuccessCreateUser && dataCreateUser?.status === "OK") {
+      Message.success("Create user success!");
+      form1.resetFields();
+      setStateUser({
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      setIsOpenModalCreate(false);
+    } else if (dataCreateUser?.status === "ERROR") {
+      Message.error(`${dataCreateUser?.message}`);
+      form1.resetFields();
+      setStateUser({
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      setIsOpenModalCreate(false);
+    }
+  }, [isSuccessCreateUser]);
+
+  useEffect(() => {
     if (isSuccessUpdateUser && dataUpdateUser?.status === "OK") {
       Message.success("Update user success!");
       setIsOpenModalEdit(false);
@@ -130,6 +173,11 @@ const AdminUser = () => {
     }
   }, [isSuccessDeleteManyUser]);
 
+  const handleCancelModalCreate = () => {
+    form.resetFields();
+    setIsOpenModalCreate(false);
+  };
+
   const handleOnChangeAvatarDetail = async ({ fileList }) => {
     const file = fileList[0];
     if (!file.url && !file.preview) {
@@ -140,6 +188,15 @@ const AdminUser = () => {
       avatar: file.preview,
     });
   };
+
+  const handleOnChange = (e) => {
+    setStateUser({
+      ...stateUser,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  console.log(dataCreateUser);
 
   const handleOnChangeDetail = (e) => {
     setStateUserDetail({
@@ -159,7 +216,7 @@ const AdminUser = () => {
         email: res?.data?.email,
         phone: res?.data?.phone,
         address: res?.data?.address,
-        isAdmin: res?.data?.isAdmin,
+        isAdmin: String(res?.data?.isAdmin),
         avatar: res?.data?.avatar,
       });
     }
@@ -178,6 +235,17 @@ const AdminUser = () => {
 
   const handleGetDetailProduct = () => {
     setIsOpenModalEdit(true);
+  };
+
+  const handleCreateUser = () => {
+    mutationCreate.mutate(
+      { data: stateUser },
+      {
+        onSettled: () => {
+          queryGetAllUser.refetch();
+        },
+      }
+    );
   };
 
   const handleUpdateUser = () => {
@@ -224,6 +292,13 @@ const AdminUser = () => {
         />
       </div>
     );
+  };
+
+  const renderTypeBoolean = () => {
+    return typeBoolean.map((type) => ({
+      label: type,
+      value: type,
+    }));
   };
 
   const getColumnSearchProps = (dataIndex) => ({
@@ -362,9 +437,108 @@ const AdminUser = () => {
     );
   };
 
+  const handleOnChangeIsAdmin = (e) => {
+    setStateUserDetail({
+      ...stateUserDetail,
+      isAdmin: e,
+    });
+  };
+
   return (
     <div>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
+
+      <WrapperButton type="dashed" onClick={() => setIsOpenModalCreate(true)}>
+        Thêm <PlusOutlined />
+      </WrapperButton>
+
+      <ModalComponent
+        title="Tạo người dùng mới"
+        open={isOpenModalCreate}
+        onCancel={handleCancelModalCreate}
+        footer={null}
+      >
+        <Form
+          name="basic"
+          labelCol={{
+            span: 6,
+          }}
+          wrapperCol={{
+            span: 20,
+          }}
+          style={{
+            maxWidth: 600,
+          }}
+          initialValues={{
+            remember: true,
+          }}
+          onFinish={handleCreateUser}
+          autoComplete="off"
+          form={form1}
+        >
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your email!",
+              },
+            ]}
+          >
+            <InputComponent
+              value={stateUser.email}
+              onChange={handleOnChange}
+              name="email"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input password!",
+              },
+            ]}
+          >
+            <InputComponent
+              value={stateUser.password}
+              onChange={handleOnChange}
+              name="password"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Confirm password"
+            name="confirmPassword"
+            rules={[
+              {
+                required: true,
+                message: "Please input confirm password!",
+              },
+            ]}
+          >
+            <InputComponent
+              value={stateUser.confirmPassword}
+              onChange={handleOnChange}
+              name="confirmPassword"
+            />
+          </Form.Item>
+
+          <Form.Item
+            wrapperCol={{
+              offset: 20,
+              span: 16,
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </ModalComponent>
 
       <ModalComponent
         title="Xóa người dùng"
@@ -375,7 +549,7 @@ const AdminUser = () => {
         <LoadingComponent isLoading={isLoadingDeleteUser}>
           <div
             style={{ marginTop: "12px", fontWeight: 600, height: "50px" }}
-          >{`Bạn có chắc chắn muốn xóa người dùng có name "${isNameUser}" này không?`}</div>
+          >{`Bạn có chắc chắn muốn xóa người dùng có tên "${isNameUser}" này không?`}</div>
         </LoadingComponent>
       </ModalComponent>
 
@@ -452,6 +626,7 @@ const AdminUser = () => {
                 value={stateUserDetail.phone}
                 onChange={handleOnChangeDetail}
                 name="phone"
+                type="number"
               />
             </Form.Item>
 
@@ -469,6 +644,27 @@ const AdminUser = () => {
                 value={stateUserDetail.address}
                 onChange={handleOnChangeDetail}
                 name="address"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Role admin"
+              name="isAdmin"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your role admin!",
+                },
+              ]}
+            >
+              <Select
+                name="isAdmin"
+                value={stateUserDetail?.isAdmin}
+                onChange={handleOnChangeIsAdmin}
+                style={{
+                  width: "100%",
+                }}
+                options={renderTypeBoolean()}
               />
             </Form.Item>
 
