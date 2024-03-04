@@ -347,21 +347,21 @@ const AdminAuthor = () => {
 
   const columns = [
     {
-      title: "Code author",
+      title: "Mã tác giả",
       dataIndex: "_id",
     },
     {
-      title: "Name",
+      title: "Tên tác giả",
       dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps('name'),
     },
     {
-      title: "Bio",
+      title: "Tiểu sử",
       dataIndex: "bio",
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderIcons,
     },

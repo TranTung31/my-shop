@@ -24,6 +24,9 @@ import {
 const HomePage = () => {
   const [genreProduct, setGenreProduct] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingBookVN, setIsLoadingBookVN] = useState(false);
+  const [isLoadingBookNN, setIsLoadingBookNN] = useState(false);
+  const [isLoadingBookKT, setIsLoadingBookKT] = useState(false);
   const [limitProduct, setLimitProduct] = useState(6);
 
   const valueSearchInput = useSelector((state) => state.product.search);
@@ -68,26 +71,32 @@ const HomePage = () => {
   };
 
   const fetchAllBookVN = async (genre, limit, page) => {
+    setIsLoadingBookVN(true);
     const res = await ProductService.getAllProductType(genre, limit, page);
     if (res?.status === "OK") {
       setProductVN(res?.data);
     }
+    setIsLoadingBookVN(false);
     return res.data;
   };
 
   const fetchAllBookNuocNgoai = async (genre, limit, page) => {
+    setIsLoadingBookNN(true);
     const res = await ProductService.getAllProductType(genre, limit, page);
     if (res?.status === "OK") {
       setProductNuocNgoai(res?.data);
     }
+    setIsLoadingBookNN(false);
     return res.data;
   };
 
   const fetchAllBookKhoaHoc = async (genre, limit, page) => {
+    setIsLoadingBookKT(true);
     const res = await ProductService.getAllProductType(genre, limit, page);
     if (res?.status === "OK") {
       setProductKhoaHoc(res?.data);
     }
+    setIsLoadingBookKT(false);
     return res.data;
   };
 
@@ -185,7 +194,7 @@ const HomePage = () => {
               onClick={handleLoadMore}
             />
           </div>
-          <LoadingComponent isLoading={isLoading}>
+          <LoadingComponent isLoading={isLoadingBookVN}>
             <h2 style={{ margin: "16px 0", textAlign: "center" }}>
               SÁCH VĂN HỌC VIỆT NAM
             </h2>
@@ -207,7 +216,7 @@ const HomePage = () => {
               ))}
             </WrapperProducts>
           </LoadingComponent>
-          <LoadingComponent isLoading={isLoading}>
+          <LoadingComponent isLoading={isLoadingBookNN}>
             <h2 style={{ margin: "16px 0", textAlign: "center" }}>
               SÁCH VĂN HỌC NƯỚC NGOÀI
             </h2>
@@ -229,7 +238,7 @@ const HomePage = () => {
               ))}
             </WrapperProducts>
           </LoadingComponent>
-          <LoadingComponent isLoading={isLoading}>
+          <LoadingComponent isLoading={isLoadingBookKT}>
             <h2 style={{ margin: "16px 0", textAlign: "center" }}>
               SÁCH KIẾN THỨC KHOA HỌC
             </h2>

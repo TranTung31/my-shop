@@ -47,6 +47,7 @@ const AdminUser = () => {
     email: "",
     phone: "",
     address: "",
+    city: "",
     isAdmin: false,
     avatar: "",
   });
@@ -57,8 +58,8 @@ const AdminUser = () => {
     confirmPassword: "",
   });
 
-  const [form] = Form.useForm();
-  const [form1] = Form.useForm();
+  const [formCreate] = Form.useForm();
+  const [formUpdate] = Form.useForm();
 
   const mutationCreate = useMutationHook(({ data }) => {
     const res = UserService.signupUser(data);
@@ -88,21 +89,18 @@ const AdminUser = () => {
 
   const {
     data: dataUpdateUser,
-    isError: isErrorUpdateUser,
     isSuccess: isSuccessUpdateUser,
     isLoading: isLoadingUpdateUser,
   } = mutationUpdate;
 
   const {
     data: dataDeleteUser,
-    isError: isErrorDeleteUser,
     isSuccess: isSuccessDeleteUser,
     isLoading: isLoadingDeleteUser,
   } = mutationDelete;
 
   const {
     data: dataDeleteManyUser,
-    isError: isErrorDeleteManyUser,
     isSuccess: isSuccessDeleteManyUser,
     isLoading: isLoadingDeleteManyUser,
   } = mutationDeleteMany;
@@ -125,8 +123,8 @@ const AdminUser = () => {
 
   useEffect(() => {
     if (isSuccessCreateUser && dataCreateUser?.status === "OK") {
-      Message.success("Create user success!");
-      form1.resetFields();
+      Message.success("Tạo người dùng mới thành công!");
+      formCreate.resetFields();
       setStateUser({
         email: "",
         password: "",
@@ -135,7 +133,7 @@ const AdminUser = () => {
       setIsOpenModalCreate(false);
     } else if (dataCreateUser?.status === "ERROR") {
       Message.error(`${dataCreateUser?.message}`);
-      form1.resetFields();
+      formCreate.resetFields();
       setStateUser({
         email: "",
         password: "",
@@ -147,34 +145,34 @@ const AdminUser = () => {
 
   useEffect(() => {
     if (isSuccessUpdateUser && dataUpdateUser?.status === "OK") {
-      Message.success("Update user success!");
+      Message.success("Cập nhật thông tin người dùng thành công!");
       setIsOpenModalEdit(false);
-    } else if (isErrorUpdateUser) {
-      Message.error("Update user error!");
+    } else if (dataUpdateUser?.status === "ERROR") {
+      Message.error("Cập nhật thông tin người dùng thất bại!");
       setIsOpenModalEdit(false);
     }
   }, [isSuccessUpdateUser]);
 
   useEffect(() => {
     if (isSuccessDeleteUser && dataDeleteUser?.status === "OK") {
-      Message.success("Delete user success!");
+      Message.success("Xóa người dùng thành công!");
       setIsOpenModalDelete(false);
     } else if (dataDeleteUser?.status === "ERROR") {
-      Message.success("Delete user error!");
+      Message.success("Xóa người dùng thất bại!");
       setIsOpenModalDelete(false);
     }
   }, [isSuccessDeleteUser]);
 
   useEffect(() => {
     if (isSuccessDeleteManyUser && dataDeleteManyUser?.status === "OK") {
-      Message.success("Delete many user success!");
+      Message.success("Xóa nhiều người dùng thành công!");
     } else if (dataDeleteManyUser?.status === "ERROR") {
-      Message.success("Delete many user error!");
+      Message.success("Xóa nhiều người dùng thất bại!");
     }
   }, [isSuccessDeleteManyUser]);
 
   const handleCancelModalCreate = () => {
-    form.resetFields();
+    formCreate.resetFields();
     setIsOpenModalCreate(false);
   };
 
@@ -216,11 +214,11 @@ const AdminUser = () => {
         email: res?.data?.email,
         phone: res?.data?.phone,
         address: res?.data?.address,
+        city: res?.data?.city,
         isAdmin: String(res?.data?.isAdmin),
         avatar: res?.data?.avatar,
       });
     }
-    return res;
   };
 
   useEffect(() => {
@@ -230,8 +228,8 @@ const AdminUser = () => {
   }, [isRowSelected]);
 
   useEffect(() => {
-    form.setFieldsValue(stateUserDetail);
-  }, [form, stateUserDetail]);
+    formUpdate.setFieldsValue(stateUserDetail);
+  }, [formUpdate, stateUserDetail]);
 
   const handleGetDetailProduct = () => {
     setIsOpenModalEdit(true);
@@ -379,7 +377,7 @@ const AdminUser = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Tên người dùng",
       dataIndex: "name",
       sorter: (a, b) => a?.name?.length - b?.name?.length,
       ...getColumnSearchProps("name"),
@@ -391,13 +389,17 @@ const AdminUser = () => {
       ...getColumnSearchProps("email"),
     },
     {
-      title: "Phone",
+      title: "Số điện thoại",
       dataIndex: "phone",
     },
     {
-      title: "Address",
+      title: "Địa chỉ",
       dataIndex: "address",
       ...getColumnSearchProps("address"),
+    },
+    {
+      title: "Thành phố",
+      dataIndex: "city",
     },
     {
       title: "Admin",
@@ -420,7 +422,7 @@ const AdminUser = () => {
       },
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderIcons,
     },
@@ -458,86 +460,90 @@ const AdminUser = () => {
         onCancel={handleCancelModalCreate}
         footer={null}
       >
-        <Form
-          name="basic"
-          labelCol={{
-            span: 6,
-          }}
-          wrapperCol={{
-            span: 20,
-          }}
-          style={{
-            maxWidth: 600,
-          }}
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={handleCreateUser}
-          autoComplete="off"
-          form={form1}
-        >
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: "Please input your email!",
-              },
-            ]}
-          >
-            <InputComponent
-              value={stateUser.email}
-              onChange={handleOnChange}
-              name="email"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Please input password!",
-              },
-            ]}
-          >
-            <InputComponent
-              value={stateUser.password}
-              onChange={handleOnChange}
-              name="password"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Confirm password"
-            name="confirmPassword"
-            rules={[
-              {
-                required: true,
-                message: "Please input confirm password!",
-              },
-            ]}
-          >
-            <InputComponent
-              value={stateUser.confirmPassword}
-              onChange={handleOnChange}
-              name="confirmPassword"
-            />
-          </Form.Item>
-
-          <Form.Item
-            wrapperCol={{
-              offset: 20,
-              span: 16,
+        <LoadingComponent isLoading={isLoadingCreateUser}>
+          <Form
+            name="basic"
+            labelCol={{
+              span: 8,
             }}
+            wrapperCol={{
+              span: 20,
+            }}
+            style={{
+              maxWidth: 600,
+            }}
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={handleCreateUser}
+            autoComplete="off"
+            form={formCreate}
           >
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập email!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUser.email}
+                onChange={handleOnChange}
+                name="email"
+              />
+            </Form.Item>
+  
+            <Form.Item
+              label="Mật khẩu"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập mật khẩu!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUser.password}
+                onChange={handleOnChange}
+                name="password"
+                type="password"
+              />
+            </Form.Item>
+  
+            <Form.Item
+              label="Xác nhận mật khẩu"
+              name="confirmPassword"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập xác nhận mật khẩu!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUser.confirmPassword}
+                onChange={handleOnChange}
+                name="confirmPassword"
+                type="password"
+              />
+            </Form.Item>
+  
+            <Form.Item
+              wrapperCol={{
+                offset: 20,
+                span: 16,
+              }}
+            >
+              <Button type="primary" htmlType="submit">
+                Tạo mới
+              </Button>
+            </Form.Item>
+          </Form>
+        </LoadingComponent>
       </ModalComponent>
 
       <ModalComponent
@@ -576,15 +582,15 @@ const AdminUser = () => {
             }}
             onFinish={handleUpdateUser}
             autoComplete="off"
-            form={form}
+            form={formUpdate}
           >
             <Form.Item
-              label="Name"
+              label="Tên người dùng"
               name="name"
               rules={[
                 {
                   required: true,
-                  message: "Please input your name!",
+                  message: "Vui lòng nhập tên người dùng!",
                 },
               ]}
             >
@@ -601,7 +607,7 @@ const AdminUser = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your email!",
+                  message: "Vui lòng nhập email!",
                 },
               ]}
             >
@@ -613,12 +619,12 @@ const AdminUser = () => {
             </Form.Item>
 
             <Form.Item
-              label="Phone"
+              label="Số điện thoại"
               name="phone"
               rules={[
                 {
                   required: true,
-                  message: "Please input your phone!",
+                  message: "Vui lòng nhập số điện thoại!",
                 },
               ]}
             >
@@ -631,12 +637,12 @@ const AdminUser = () => {
             </Form.Item>
 
             <Form.Item
-              label="Address"
+              label="Địa chỉ"
               name="address"
               rules={[
                 {
                   required: true,
-                  message: "Please input your address!",
+                  message: "Vui lòng nhập địa chỉ!",
                 },
               ]}
             >
@@ -648,12 +654,29 @@ const AdminUser = () => {
             </Form.Item>
 
             <Form.Item
+              label="Thành phố"
+              name="city"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập thành phố!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUserDetail.city}
+                onChange={handleOnChangeDetail}
+                name="city"
+              />
+            </Form.Item>
+
+            <Form.Item
               label="Role admin"
               name="isAdmin"
               rules={[
                 {
                   required: true,
-                  message: "Please input your role admin!",
+                  message: "Vui lòng chọn True hoặc False!",
                 },
               ]}
             >
@@ -669,12 +692,12 @@ const AdminUser = () => {
             </Form.Item>
 
             <Form.Item
-              label="Avatar"
+              label="Hình ảnh"
               name="avatar"
               rules={[
                 {
                   required: true,
-                  message: "Please input your avatar!",
+                  message: "Vui lòng chọn hình ảnh!",
                 },
               ]}
             >
@@ -707,7 +730,7 @@ const AdminUser = () => {
               }}
             >
               <Button type="primary" htmlType="submit">
-                Update
+                Cập nhật
               </Button>
             </Form.Item>
           </Form>

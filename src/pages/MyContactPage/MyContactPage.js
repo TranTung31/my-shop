@@ -73,7 +73,7 @@ function MyContactPage() {
     }
   };
 
-  console.log(dataDeleteContact);
+  console.log(dataContactUser);
 
   return (
     <LoadingComponent isLoading={isLoadingContactUser || isLoadingDelete}>
@@ -81,55 +81,57 @@ function MyContactPage() {
         <WrapperMyOrderPage>
           <WrapperStyleTitle>Liên hệ của tôi</WrapperStyleTitle>
           <WrapperListContact>
-            {dataContactUser?.map((item, index) => (
-              <WrapperItemContact key={index}>
-                <WrapperStatus>
-                  <WrapperStatusTitle>Liên hệ</WrapperStatusTitle>
-                  <WrapperStatusContent>
-                    <span>Mã liên hệ: </span>
-                    <span>{item?._id}</span>
-                  </WrapperStatusContent>
-                  <WrapperStatusContent>
-                    <span>Ngày gửi liên hệ: </span>
-                    <span>{convertDate(item?.createdAt)}</span>
-                  </WrapperStatusContent>
-                  <WrapperStatusContent>
-                    <span>Tên người gửi: </span>
-                    <span>{item?.userName}</span>
-                  </WrapperStatusContent>
-                  <WrapperStatusContent>
-                    <span>Email: </span>
-                    <span>{item?.email}</span>
-                  </WrapperStatusContent>
-                  <WrapperStatusContent>
-                    <span>Địa chỉ: </span>
-                    <span>{item?.address}</span>
-                  </WrapperStatusContent>
-                  <WrapperStatusContent>
-                    <span>Nội dung: </span>
-                    <span>{item?.content}</span>
-                  </WrapperStatusContent>
-                </WrapperStatus>
-                <WrapperFooterItem>
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <ButtonComponent
-                      onClick={() => handleDeleteContact(item?._id)}
-                      size={40}
-                      styleButton={{
-                        height: "36px",
-                        border: "1px solid rgb(11, 116, 229)",
-                        borderRadius: "4px",
-                      }}
-                      buttonText="Xóa liên hệ"
-                      styleTextButton={{
-                        color: "rgb(11, 116, 229)",
-                        fontSize: "14px",
-                      }}
-                    ></ButtonComponent>
-                  </div>
-                </WrapperFooterItem>
-              </WrapperItemContact>
-            ))}
+            {dataContactUser
+              ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              ?.map((item, index) => (
+                <WrapperItemContact key={index}>
+                  <WrapperStatus>
+                    <WrapperStatusTitle>Liên hệ</WrapperStatusTitle>
+                    <WrapperStatusContent>
+                      <span>Mã liên hệ: </span>
+                      <span>{item?._id}</span>
+                    </WrapperStatusContent>
+                    <WrapperStatusContent>
+                      <span>Ngày gửi liên hệ: </span>
+                      <span>{convertDate(item?.createdAt)}</span>
+                    </WrapperStatusContent>
+                    <WrapperStatusContent>
+                      <span>Tên người gửi: </span>
+                      <span>{item?.userName}</span>
+                    </WrapperStatusContent>
+                    <WrapperStatusContent>
+                      <span>Email: </span>
+                      <span>{item?.email}</span>
+                    </WrapperStatusContent>
+                    <WrapperStatusContent>
+                      <span>Địa chỉ: </span>
+                      <span>{item?.address}</span>
+                    </WrapperStatusContent>
+                    <WrapperStatusContent>
+                      <span>Nội dung: </span>
+                      <span>{item?.content}</span>
+                    </WrapperStatusContent>
+                  </WrapperStatus>
+                  <WrapperFooterItem>
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <ButtonComponent
+                        onClick={() => handleDeleteContact(item?._id)}
+                        size={40}
+                        styleButton={{
+                          height: "36px",
+                          border: "1px solid rgb(11, 116, 229)",
+                          borderRadius: "4px",
+                        }}
+                        buttonText="Xóa liên hệ"
+                        styleTextButton={{
+                          color: "rgb(11, 116, 229)",
+                          fontSize: "14px",
+                        }}
+                      ></ButtonComponent>
+                    </div>
+                  </WrapperFooterItem>
+                </WrapperItemContact>
+              ))}
           </WrapperListContact>
         </WrapperMyOrderPage>
       </WrapperContainer>

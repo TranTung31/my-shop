@@ -333,47 +333,47 @@ const AdminOrder = () => {
 
   const columns = [
     {
-      title: "Code order",
+      title: "Mã đơn hàng",
       dataIndex: "codeOrder",
     },
     {
-      title: "User name",
+      title: "Tên người dùng",
       dataIndex: "userName",
     },
     {
-      title: "Phone",
+      title: "Số điện thoại",
       dataIndex: "phone",
     },
     {
-      title: "Address",
+      title: "Địa chỉ",
       dataIndex: "address",
     },
     {
-      title: "City",
+      title: "Thành phố",
       dataIndex: "city",
     },
     {
-      title: "Paided",
+      title: "Trạng thái thanh toán",
       dataIndex: "isPaid",
     },
     {
-      title: "Delivered",
+      title: "Trạng thái giao hàng",
       dataIndex: "isDelivered",
     },
     {
-      title: "Payment method",
+      title: "Phương thức thanh toán",
       dataIndex: "paymentMethod",
     },
     {
-      title: "Delivery method",
+      title: "Phương thức giao hàng",
       dataIndex: "deliveryMethod",
     },
     {
-      title: "Total price",
+      title: "Tổng tiền",
       dataIndex: "totalPrice",
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderIcons,
     },

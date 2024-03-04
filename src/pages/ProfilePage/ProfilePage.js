@@ -1,5 +1,13 @@
+import { UploadOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import InputForm from "../../components/InputForm/InputForm";
+import * as Message from "../../components/Message/Message";
+import useMutationHook from "../../hooks/useMutationHook";
+import { updateUser } from "../../redux/slides/userSlice";
+import * as UserService from "../../services/UserService";
+import { getBase64 } from "../../utils";
 import {
   WrapperButtonComponent,
   WrapperContent,
@@ -8,14 +16,6 @@ import {
   WrapperLable,
   WrapperUpload,
 } from "./styles";
-import { useDispatch, useSelector } from "react-redux";
-import * as UserService from "../../services/UserService";
-import useMutationHook from "../../hooks/useMutationHook";
-import * as Message from "../../components/Message/Message";
-import { updateUser } from "../../redux/slides/userSlice";
-import { Button } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { getBase64 } from "../../utils";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
@@ -64,18 +64,19 @@ const ProfilePage = () => {
     setAvatar(file.preview);
   };
 
-  const mutation = useMutationHook(({ id, access_token, ...rests }) =>
-    UserService.updateUser(id, rests, access_token)
-  );
+  const mutation = useMutationHook(({ id, access_token, ...rests }) => {
+    const res = UserService.updateUser(id, rests, access_token);
+    return res;
+  });
 
-  const { isSuccess, isError } = mutation;
+  const { data, isSuccess, isError } = mutation;
 
   useEffect(() => {
-    if (isSuccess) {
-      Message.success("Success");
+    if (isSuccess && data?.status === "OK") {
+      Message.success("Cập nhật thông tin người dùng thành công!");
       handleGetDetailUser(user?.id, user?.access_token);
     } else if (isError) {
-      Message.error();
+      Message.error("Cập nhật thông tin người dùng thất bại!");
     }
   }, [isSuccess, isError]);
 
@@ -103,7 +104,7 @@ const ProfilePage = () => {
       <WrapperHeader>Thông tin người dùng</WrapperHeader>
       <WrapperContent>
         <WrapperInput>
-          <WrapperLable>Name</WrapperLable>
+          <WrapperLable>Họ và tên</WrapperLable>
           <InputForm
             value={name}
             onChange={handleOnChangeName}
@@ -131,9 +132,10 @@ const ProfilePage = () => {
         </WrapperInput>
 
         <WrapperInput>
-          <WrapperLable>Phone</WrapperLable>
+          <WrapperLable>Số điện thoại</WrapperLable>
           <InputForm
             value={phone}
+            type="number"
             onChange={handleOnChangePhone}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
@@ -145,7 +147,7 @@ const ProfilePage = () => {
         </WrapperInput>
 
         <WrapperInput>
-          <WrapperLable>Address</WrapperLable>
+          <WrapperLable>Địa chỉ</WrapperLable>
           <InputForm
             value={address}
             onChange={handleOnChangeAddress}
@@ -159,7 +161,7 @@ const ProfilePage = () => {
         </WrapperInput>
 
         <WrapperInput>
-          <WrapperLable>City</WrapperLable>
+          <WrapperLable>Thành phố</WrapperLable>
           <InputForm
             value={city}
             onChange={handleOnChangeCity}
@@ -173,7 +175,7 @@ const ProfilePage = () => {
         </WrapperInput>
 
         <WrapperInput>
-          <WrapperLable>Avatar</WrapperLable>
+          <WrapperLable>Hình ảnh</WrapperLable>
           <WrapperUpload onChange={handleOnChangeAvatar} maxCount={1}>
             <Button icon={<UploadOutlined />}>Upload</Button>
           </WrapperUpload>

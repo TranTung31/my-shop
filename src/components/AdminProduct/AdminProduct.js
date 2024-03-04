@@ -94,7 +94,8 @@ const AdminProduct = () => {
     initialStateDetailProduct()
   );
 
-  const [form] = Form.useForm();
+  const [formCreate] = Form.useForm();
+  const [formUpdate] = Form.useForm();
 
   const mutationUpdate = useMutationHook(({ id, data, access_token }) => {
     const res = ProductService.updateProduct(id, data, access_token);
@@ -157,7 +158,7 @@ const AdminProduct = () => {
 
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {
-      Message.success("Create product success!");
+      Message.success("Tạo sản phẩm mới thành công!");
       setStateProduct({
         name: "",
         type: "",
@@ -170,10 +171,10 @@ const AdminProduct = () => {
         formatBook: "",
         description: "",
       });
-      form.resetFields();
+      formCreate.resetFields();
       setIsOpenModalCreate(false);
     } else if (data?.status === "ERROR") {
-      Message.error("Create product error!");
+      Message.error("Tạo sản phẩm mới thất bại!");
       setStateProduct({
         name: "",
         type: "",
@@ -186,36 +187,36 @@ const AdminProduct = () => {
         formatBook: "",
         description: "",
       });
-      form.resetFields();
+      formCreate.resetFields();
       setIsOpenModalCreate(false);
     }
   }, [isSuccess]);
 
   useEffect(() => {
     if (isSuccessUpdateProduct && dataUpdateProduct?.status === "OK") {
-      Message.success("Update product success!");
+      Message.success("Cập nhật thông tin sản phẩm thành công!");
       setIsOpenModalEdit(false);
-    } else if (isErrorUpdateProduct) {
-      Message.error("Update product error!");
+    } else if (dataUpdateProduct?.status === "ERROR") {
+      Message.error("Cập nhật thông tin sản phẩm thất bại!");
       setIsOpenModalEdit(false);
     }
   }, [isSuccessUpdateProduct]);
 
   useEffect(() => {
     if (isSuccessDeleteProduct && dataDeleteProduct?.status === "OK") {
-      Message.success("Delete product success!");
+      Message.success("Xóa sản phẩm thành công!");
       setIsOpenModalDelete(false);
     } else if (dataDeleteProduct?.status === "ERROR") {
-      Message.success("Delete product error!");
+      Message.success("Xóa sản phẩm thất bại!");
       setIsOpenModalDelete(false);
     }
   }, [isSuccessDeleteProduct]);
 
   useEffect(() => {
     if (isSuccessDeleteManyProduct && dataDeleteManyProduct?.status === "OK") {
-      Message.success("Delete many product success!");
+      Message.success("Xóa nhiều sản phẩm thành công!");
     } else if (dataDeleteProduct?.status === "ERROR") {
-      Message.success("Delete many product error!");
+      Message.success("Xóa nhiều sản phẩm thất bại!");
     }
   }, [isSuccessDeleteManyProduct]);
 
@@ -224,7 +225,7 @@ const AdminProduct = () => {
   };
 
   const handleCancelModalCreate = () => {
-    form.resetFields();
+    formCreate.resetFields();
     setIsOpenModalCreate(false);
   };
 
@@ -322,12 +323,12 @@ const AdminProduct = () => {
   }, [isRowSelected]);
 
   useEffect(() => {
-    if (!isOpenModalCreate) {
-      form.setFieldsValue(stateDetailProduct);
+    if (isOpenModalEdit) {
+      formUpdate.setFieldsValue(stateDetailProduct);
     } else {
-      form.resetFields();
+      formUpdate.resetFields();
     }
-  }, [form, stateDetailProduct, isOpenModalCreate]);
+  }, [formUpdate, stateDetailProduct, isOpenModalEdit]);
 
   const handleGetDetailProduct = () => {
     setIsOpenModalEdit(true);
@@ -457,21 +458,21 @@ const AdminProduct = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Tên sách",
       dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
     },
     {
-      title: "Number of book",
+      title: "Số trang",
       dataIndex: "numberOfBook",
     },
     {
-      title: "Format book",
+      title: "Định dạng",
       dataIndex: "formatBook",
     },
     {
-      title: "Price",
+      title: "Giá tiền",
       dataIndex: "price",
       sorter: (a, b) => a.price - b.price,
       filters: [
@@ -492,7 +493,7 @@ const AdminProduct = () => {
       },
     },
     {
-      title: "Discount",
+      title: "% Giảm giá",
       dataIndex: "discount",
       sorter: (a, b) => a.discount - b.discount,
       filters: [
@@ -513,7 +514,7 @@ const AdminProduct = () => {
       },
     },
     {
-      title: "Rating",
+      title: "Đánh giá",
       dataIndex: "rating",
       sorter: (a, b) => a.rating - b.rating,
       filters: [
@@ -534,7 +535,7 @@ const AdminProduct = () => {
       },
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderIcons,
     },
@@ -718,7 +719,7 @@ const AdminProduct = () => {
           }}
           onFinish={handleCreateProduct}
           autoComplete="off"
-          form={form}
+          form={formCreate}
         >
           <Form.Item
             label="Name"
@@ -1038,7 +1039,7 @@ const AdminProduct = () => {
             }}
             onFinish={handleUpdateProduct}
             autoComplete="off"
-            form={form}
+            form={formUpdate}
           >
             <Form.Item
               label="Name"

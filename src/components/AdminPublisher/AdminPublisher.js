@@ -353,21 +353,21 @@ const AdminPublisher = () => {
 
   const columns = [
     {
-      title: "Code publisher",
+      title: "Mã nhà xuất bản",
       dataIndex: "_id"
     },
     {
-      title: "Name",
+      title: "Tên nhà xuất bản",
       dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
     },
     {
-      title: "Address",
+      title: "Địa chỉ nhà xuất bản",
       dataIndex: "address",
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderIcons,
     },

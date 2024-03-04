@@ -341,17 +341,17 @@ const AdminGenre = () => {
 
   const columns = [
     {
-      title: "Code genre",
+      title: "Mã thể loại",
       dataIndex: "_id",
     },
     {
-      title: "Name",
+      title: "Tên thể loại",
       dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderIcons,
     },

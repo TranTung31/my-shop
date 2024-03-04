@@ -103,9 +103,9 @@ const MyOrderPage = () => {
 
   useEffect(() => {
     if (isSuccessDelete) {
-      Message.success("Delete order success!");
+      Message.success("Xóa đơn hàng thành công!");
     } else if (isErrorDelete && dataDelete?.status === "ERROR") {
-      Message.error("Delete order error!");
+      Message.error("Xóa đơn hàng thất bại!");
     }
   }, [isSuccessDelete]);
 
@@ -133,94 +133,98 @@ const MyOrderPage = () => {
         <WrapperMyOrderPage>
           <WrapperStyleTitle>Đơn hàng của tôi</WrapperStyleTitle>
           <WrapperListOrder>
-            {data?.map((item, index) => {
-              return (
-                <WrapperItemOrder key={item?._id}>
-                  <WrapperStatus>
-                    <WrapperStatusTitle>Trạng thái</WrapperStatusTitle>
-                    <WrapperStatusContent>
-                      <span>Mã đơn hàng: </span>
-                      <span>{`DH${item?._id}`}</span>
-                    </WrapperStatusContent>
-                    <WrapperStatusContent>
-                      <span>Giao hàng: </span>
-                      <span>
-                        {`${
-                          item?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"
-                        }`}
-                      </span>
-                    </WrapperStatusContent>
-                    <WrapperStatusContent>
-                      <span>Thanh toán: </span>
-                      <span>
-                        {`${
-                          item?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"
-                        }`}
-                      </span>
-                    </WrapperStatusContent>
-                    <WrapperStatusContent>
-                      <span>Ngày đặt: </span>
-                      <span>{convertDate(item?.createdAt)}</span>
-                    </WrapperStatusContent>
-                  </WrapperStatus>
-                  {renderOrder(item?.orderItems)}
-                  <WrapperFooterItem>
-                    <div>
-                      <span
-                        style={{
-                          fontSize: "1.6rem",
-                          color: "rgb(255, 66, 78)",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        Tổng tiền:{" "}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "1.6rem",
-                          color: "rgb(255, 66, 78)",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {`${convertPrice(item?.totalPrice)}₫`}
-                      </span>
-                    </div>
-                    <div style={{ display: "flex", gap: "10px" }}>
-                      {item?.isDelivered ? null : (
+            {data
+              ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              ?.map((item, index) => {
+                return (
+                  <WrapperItemOrder key={item?._id}>
+                    <WrapperStatus>
+                      <WrapperStatusTitle>Trạng thái</WrapperStatusTitle>
+                      <WrapperStatusContent>
+                        <span>Mã đơn hàng: </span>
+                        <span>{`DH${item?._id}`}</span>
+                      </WrapperStatusContent>
+                      <WrapperStatusContent>
+                        <span>Giao hàng: </span>
+                        <span>
+                          {`${
+                            item?.isDelivered
+                              ? "Đã giao hàng"
+                              : "Chưa giao hàng"
+                          }`}
+                        </span>
+                      </WrapperStatusContent>
+                      <WrapperStatusContent>
+                        <span>Thanh toán: </span>
+                        <span>
+                          {`${
+                            item?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"
+                          }`}
+                        </span>
+                      </WrapperStatusContent>
+                      <WrapperStatusContent>
+                        <span>Ngày đặt: </span>
+                        <span>{convertDate(item?.createdAt)}</span>
+                      </WrapperStatusContent>
+                    </WrapperStatus>
+                    {renderOrder(item?.orderItems)}
+                    <WrapperFooterItem>
+                      <div>
+                        <span
+                          style={{
+                            fontSize: "1.6rem",
+                            color: "rgb(255, 66, 78)",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Tổng tiền:{" "}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: "1.6rem",
+                            color: "rgb(255, 66, 78)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          {`${convertPrice(item?.totalPrice)}₫`}
+                        </span>
+                      </div>
+                      <div style={{ display: "flex", gap: "10px" }}>
+                        {item?.isDelivered ? null : (
+                          <ButtonComponent
+                            onClick={() => handleDeleteOrder(item)}
+                            size={40}
+                            styleButton={{
+                              height: "36px",
+                              border: "1px solid rgb(11, 116, 229)",
+                              borderRadius: "4px",
+                            }}
+                            buttonText="Hủy đơn hàng"
+                            styleTextButton={{
+                              color: "rgb(11, 116, 229)",
+                              fontSize: "14px",
+                            }}
+                          ></ButtonComponent>
+                        )}
                         <ButtonComponent
-                          onClick={() => handleDeleteOrder(item)}
+                          onClick={() => handleOrderDetail(item?._id)}
                           size={40}
                           styleButton={{
                             height: "36px",
                             border: "1px solid rgb(11, 116, 229)",
                             borderRadius: "4px",
                           }}
-                          buttonText="Hủy đơn hàng"
+                          buttonText="Xem chi tiết"
                           styleTextButton={{
                             color: "rgb(11, 116, 229)",
                             fontSize: "14px",
                           }}
                         ></ButtonComponent>
-                      )}
-                      <ButtonComponent
-                        onClick={() => handleOrderDetail(item?._id)}
-                        size={40}
-                        styleButton={{
-                          height: "36px",
-                          border: "1px solid rgb(11, 116, 229)",
-                          borderRadius: "4px",
-                        }}
-                        buttonText="Xem chi tiết"
-                        styleTextButton={{
-                          color: "rgb(11, 116, 229)",
-                          fontSize: "14px",
-                        }}
-                      ></ButtonComponent>
-                    </div>
-                  </WrapperFooterItem>
-                </WrapperItemOrder>
-              );
-            })}
+                      </div>
+                    </WrapperFooterItem>
+                  </WrapperItemOrder>
+                );
+              })}
           </WrapperListOrder>
         </WrapperMyOrderPage>
       </WrapperContainer>

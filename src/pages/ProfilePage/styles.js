@@ -28,7 +28,7 @@ export const WrapperInput = styled.div`
 export const WrapperLable = styled.span`
   font-size: 1.6rem;
   text-align: left;
-  width: 70px;
+  width: 90px;
 `;
 
 export const WrapperUpload = styled(Upload)`

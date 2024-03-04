@@ -359,15 +359,15 @@ const AdminContact = () => {
 
   const columns = [
     {
-      title: "Code contact",
+      title: "Mã liên hệ",
       dataIndex: "_id",
     },
     {
-      title: "User id",
+      title: "Mã người dùng",
       dataIndex: "userId",
     },
     {
-      title: "User name",
+      title: "Tên người gửi",
       dataIndex: "userName",
       sorter: (a, b) => a.userName.length - b.userName.length,
       ...getColumnSearchProps("userName"),
@@ -377,16 +377,16 @@ const AdminContact = () => {
       dataIndex: "email",
     },
     {
-      title: "Address",
+      title: "Địa chỉ người gửi",
       dataIndex: "address",
     },
     {
-      title: "Content",
+      title: "Nội dung",
       dataIndex: "content",
       sorter: (a, b) => a.content.length - b.content.length,
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderIcons,
     },
