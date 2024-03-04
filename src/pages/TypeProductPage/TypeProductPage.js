@@ -1,3 +1,4 @@
+import { CloseCircleFilled } from "@ant-design/icons";
 import { Checkbox, Col, Pagination, Rate, Row, Select } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -11,15 +12,15 @@ import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
 import {
   WrapperContent,
+  WrapperFilter,
   WrapperItemCategory,
-  WrapperItemPublisher,
+  WrapperItemFilter,
   WrapperNavbar,
   WrapperNavigation,
   WrapperNavigationHome,
   WrapperPagination,
   WrapperPriceText,
   WrapperProducts,
-  WrapperPublisher,
   WrapperTitleText,
   WrapperTypeProduct,
 } from "./styles";
@@ -38,24 +39,28 @@ const TypeProductPage = () => {
     limit: 10,
     page: 0,
   });
+  const [ratingValue, setRatingValue] = useState("");
   const [sortValue, setSortValue] = useState("");
   const [genreProduct, setGenreProduct] = useState([]);
   const [publisher, setPublisher] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
-  const [selectedNames, setSelectedNames] = useState([]);
 
   const onChangeCheckbox = (e) => {
     const value = e.target.value;
     const name = e.target.name;
     if (e.target.checked) {
+      setSelectedFilter((prevFilter) => [
+        ...prevFilter,
+        { value: value, name: name },
+      ]);
       setSelectedValues((prevValues) => [...prevValues, value]);
-      setSelectedNames((prevNames) => [...prevNames, name]);
     } else {
+      setSelectedFilter((prevFilter) =>
+        prevFilter.filter((item) => item.value !== value)
+      );
       setSelectedValues((prevValues) =>
         prevValues.filter((item) => item !== value)
-      );
-      setSelectedNames((prevNames) =>
-        prevNames.filter((item) => item !== name)
       );
     }
   };
@@ -65,7 +70,8 @@ const TypeProductPage = () => {
     limit,
     page,
     selectedValues,
-    sortValue
+    sortValue,
+    ratingValue
   ) => {
     setIsLoading(true);
     const res = await ProductService.getAllProductType(
@@ -73,7 +79,8 @@ const TypeProductPage = () => {
       limit,
       page,
       selectedValues,
-      sortValue
+      sortValue,
+      ratingValue
     );
     if (res?.status === "OK") {
       setProductGenre(res?.data);
@@ -96,9 +103,17 @@ const TypeProductPage = () => {
       pageProduct.limit,
       pageProduct.page,
       selectedValues,
-      sortValue
+      sortValue,
+      ratingValue
     );
-  }, [genre, pageProduct, selectedValues, sortValue]);
+  }, [
+    genre,
+    pageProduct,
+    selectedFilter,
+    selectedValues,
+    ratingValue,
+    sortValue,
+  ]);
 
   useEffect(() => {
     fetchNewAllProductGenre(genre);
@@ -157,11 +172,117 @@ const TypeProductPage = () => {
             </WrapperPriceText>
           );
         });
-      case "review":
+      case "rating":
         return option.map((item, index) => {
           return (
-            <div style={{ display: "flex", alignItems: "center" }} key={index}>
-              <Rate style={{ fontSize: "12px" }} value={item} />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+              key={index}
+              onClick={() => {
+                if (item === 3) {
+                  setRatingValue("3");
+                  setSelectedFilter((prevFilter) => {
+                    const checkRating3 = prevFilter.some(
+                      (prev) => prev.value === 3
+                    );
+                    const checkRating4 = prevFilter.some(
+                      (prev) => prev.value === 4
+                    );
+                    const checkRating5 = prevFilter.some(
+                      (prev) => prev.value === 5
+                    );
+                    if (checkRating3) {
+                      return [...prevFilter];
+                    }
+                    if (checkRating4) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 4),
+                        { value: 3, name: `Từ 3 sao` },
+                      ];
+                    }
+                    if (checkRating5) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 5),
+                        { value: 3, name: `Từ 3 sao` },
+                      ];
+                    }
+                    return [...prevFilter, { value: 3, name: `Từ 3 sao` }];
+                  });
+                }
+
+                if (item === 4) {
+                  setRatingValue("4");
+                  setSelectedFilter((prevFilter) => {
+                    const checkRating3 = prevFilter.some(
+                      (prev) => prev.value === 3
+                    );
+                    const checkRating4 = prevFilter.some(
+                      (prev) => prev.value === 4
+                    );
+                    const checkRating5 = prevFilter.some(
+                      (prev) => prev.value === 5
+                    );
+                    if (checkRating3) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 3),
+                        { value: 4, name: `Từ 4 sao` },
+                      ];
+                    }
+                    if (checkRating4) {
+                      return [...prevFilter];
+                    }
+                    if (checkRating5) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 5),
+                        { value: 4, name: `Từ 4 sao` },
+                      ];
+                    }
+                    return [...prevFilter, { value: 4, name: `Từ 4 sao` }];
+                  });
+                }
+
+                if (item === 5) {
+                  setRatingValue("5");
+                  setSelectedFilter((prevFilter) => {
+                    const checkRating3 = prevFilter.some(
+                      (prev) => prev.value === 3
+                    );
+                    const checkRating4 = prevFilter.some(
+                      (prev) => prev.value === 4
+                    );
+                    const checkRating5 = prevFilter.some(
+                      (prev) => prev.value === 5
+                    );
+                    if (checkRating3) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 3),
+                        { value: 5, name: `Từ 5 sao` },
+                      ];
+                    }
+                    if (checkRating4) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 4),
+                        { value: 5, name: `Từ 5 sao` },
+                      ];
+                    }
+                    if (checkRating5) {
+                      return [...prevFilter];
+                    }
+                    return [...prevFilter, { value: 5, name: `Từ 5 sao` }];
+                  });
+                }
+              }}
+            >
+              <Rate
+                style={{ fontSize: "12px", cursor: "pointer" }}
+                disabled
+                value={item}
+              />{" "}
+              &nbsp;
               <span
                 style={{
                   fontSize: "14px",
@@ -236,7 +357,7 @@ const TypeProductPage = () => {
               </WrapperContent>
               <WrapperTitleText>Đánh giá</WrapperTitleText>
               <WrapperContent>
-                {renderContent("review", [5, 4, 3])}
+                {renderContent("rating", [5, 4, 3])}
               </WrapperContent>
               <WrapperTitleText>Giá</WrapperTitleText>
               <WrapperContent>
@@ -261,8 +382,9 @@ const TypeProductPage = () => {
               >
                 <ButtonComponent
                   onClick={() => {
+                    setSelectedFilter([]);
                     setSelectedValues([]);
-                    setSelectedNames([]);
+                    setRatingValue("");
                     setSortValue("");
                   }}
                   buttonText="Xóa bộ lọc"
@@ -296,15 +418,36 @@ const TypeProductPage = () => {
                   />
                 </WrapperPagination>
               </div>
-              <WrapperPublisher>
-                {selectedNames.length > 0
-                  ? selectedNames.map((item, index) => (
-                      <WrapperItemPublisher key={index}>
-                        {item}
-                      </WrapperItemPublisher>
+              <WrapperFilter>
+                {selectedFilter.length > 0
+                  ? selectedFilter.map((item, index) => (
+                      <WrapperItemFilter key={index}>
+                        <div>{item.name}</div>
+                        <div
+                          style={{ cursor: "pointer" }}
+                          // Logic xóa theo từng filter
+                          onClick={() => {
+                            // Giúp gọi lại API trong useEffect
+                            setSelectedValues((prevValues) =>
+                              prevValues.filter(
+                                (itemValue) => itemValue !== item.value
+                              )
+                            );
+                            // Giúp render lại các nhãn filter
+                            setSelectedFilter((prevFilter) =>
+                              prevFilter.filter(
+                                (itemFilter) => itemFilter.value !== item.value
+                              )
+                            );
+                            setRatingValue("");
+                          }}
+                        >
+                          <CloseCircleFilled style={{ fontSize: "1.4rem" }} />
+                        </div>
+                      </WrapperItemFilter>
                     ))
                   : null}
-              </WrapperPublisher>
+              </WrapperFilter>
               <WrapperProducts>
                 {productGenre
                   ?.filter((product) =>
