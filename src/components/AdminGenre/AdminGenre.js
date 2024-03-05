@@ -49,7 +49,8 @@ const AdminGenre = () => {
     name: "",
   });
 
-  const [form] = Form.useForm();
+  const [formCreate] = Form.useForm();
+  const [formUpdate] = Form.useForm();
 
   const mutationUpdate = useMutationHook(({ id, data, access_token }) => {
     const res = GenreService.updateGenre(id, data, access_token);
@@ -107,47 +108,47 @@ const AdminGenre = () => {
 
   useEffect(() => {
     if (isSuccessCreateGenre && dataCreateGenre?.status === "OK") {
-      Message.success("Create genre success!");
+      Message.success("Tạo thể loại mới thành công!");
       setStateGenre({
         name: "",
       });
-      form.resetFields();
+      formCreate.resetFields();
       setIsOpenModalCreate(false);
     } else if (dataCreateGenre?.status === "ERROR") {
-      Message.error(dataCreateGenre?.message);
+      Message.error("Tạo thể loại mới thất bại!");
       setStateGenre({
         name: "",
       });
-      form.resetFields();
+      formCreate.resetFields();
       setIsOpenModalCreate(false);
     }
   }, [isSuccessCreateGenre]);
 
   useEffect(() => {
     if (isSuccessUpdateGenre && dataUpdateGenre?.status === "OK") {
-      Message.success("Update genre success!");
+      Message.success("Cập nhật thông tin thể loại thành công!");
       setIsOpenModalEdit(false);
     } else if (dataUpdateGenre?.status === "ERROR") {
-      Message.error("Update genre error!");
+      Message.error("Cập nhật thông tin thể loại thất bại!");
       setIsOpenModalEdit(false);
     }
   }, [isSuccessUpdateGenre]);
 
   useEffect(() => {
     if (isSuccessDeleteGenre && dataDeleteGenre?.status === "OK") {
-      Message.success("Delete genre success!");
+      Message.success("Xóa thể loại thành công!");
       setIsOpenModalDelete(false);
     } else if (dataDeleteGenre?.status === "ERROR") {
-      Message.success("Delete genre error!");
+      Message.success("Xóa thể loại thất bại!");
       setIsOpenModalDelete(false);
     }
   }, [isSuccessDeleteGenre]);
 
   useEffect(() => {
     if (isSuccessDeleteManyGenre && dataDeleteManyGenre?.status === "OK") {
-      Message.success("Delete many genre success!");
+      Message.success("Xóa nhiều thể loại thành công!");
     } else if (dataDeleteGenre?.status === "ERROR") {
-      Message.success("Delete many genre error!");
+      Message.success("Xóa nhiều thể loại thất bại!");
     }
   }, [isSuccessDeleteManyGenre]);
 
@@ -156,7 +157,7 @@ const AdminGenre = () => {
   };
 
   const handleCancelModalCreate = () => {
-    form.resetFields();
+    formCreate.resetFields();
     setIsOpenModalCreate(false);
   };
 
@@ -207,12 +208,12 @@ const AdminGenre = () => {
   }, [isRowSelected]);
 
   useEffect(() => {
-    if (!isOpenModalCreate) {
-      form.setFieldsValue(stateDetailGenre);
+    if (isOpenModalEdit) {
+      formUpdate.setFieldsValue(stateDetailGenre);
     } else {
-      form.resetFields();
+      formUpdate.resetFields();
     }
-  }, [form, stateDetailGenre, isOpenModalCreate]);
+  }, [formUpdate, stateDetailGenre, isOpenModalEdit]);
 
   const handleGetDetailPublisher = () => {
     setIsOpenModalEdit(true);
@@ -397,15 +398,15 @@ const AdminGenre = () => {
           }}
           onFinish={handleCreateGenre}
           autoComplete="off"
-          form={form}
+          form={formCreate}
         >
           <Form.Item
-            label="Name"
+            label="Tên thể loại"
             name="name"
             rules={[
               {
                 required: true,
-                message: "Please input genre name!",
+                message: "Vui lòng nhập tên thể loại!",
               },
             ]}
           >
@@ -423,7 +424,7 @@ const AdminGenre = () => {
             }}
           >
             <Button type="primary" htmlType="submit">
-              Submit
+              Tạo mới
             </Button>
           </Form.Item>
         </Form>
@@ -438,7 +439,7 @@ const AdminGenre = () => {
         <LoadingComponent isLoading={isLoadingDeleteGenre}>
           <div
             style={{ marginTop: "12px", fontWeight: 600, height: "50px" }}
-          >{`Bạn có chắc chắn muốn xóa thể loại có name "${isNameGenre}" này không?`}</div>
+          >{`Bạn có chắc chắn muốn xóa thể loại có tên "${isNameGenre}" này không?`}</div>
         </LoadingComponent>
       </ModalComponent>
 
@@ -465,15 +466,15 @@ const AdminGenre = () => {
             }}
             onFinish={handleUpdateGenre}
             autoComplete="off"
-            form={form}
+            form={formUpdate}
           >
             <Form.Item
-              label="Name"
+              label="Tên thể loại"
               name="name"
               rules={[
                 {
                   required: true,
-                  message: "Please input genre name!",
+                  message: "Vui lòng nhập tên thể loại!",
                 },
               ]}
             >
@@ -491,7 +492,7 @@ const AdminGenre = () => {
               }}
             >
               <Button type="primary" htmlType="submit">
-                Update
+                Cập nhật
               </Button>
             </Form.Item>
           </Form>

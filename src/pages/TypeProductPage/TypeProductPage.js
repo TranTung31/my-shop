@@ -135,6 +135,7 @@ const TypeProductPage = () => {
               key={index}
               style={{ cursor: "pointer" }}
               onClick={() => {
+                handleDeleteAllFilter();
                 navigate(
                   `/product/${item?.name
                     .normalize("NFD")
@@ -333,6 +334,13 @@ const TypeProductPage = () => {
     setSortValue(value);
   };
 
+  const handleDeleteAllFilter = () => {
+    setSelectedFilter([]);
+    setSelectedValues([]);
+    setRatingValue("");
+    setSortValue("");
+  };
+
   return (
     <WrapperTypeProduct>
       <div style={{ width: "1285px", height: "100%", margin: "0 auto" }}>
@@ -381,12 +389,7 @@ const TypeProductPage = () => {
                 }}
               >
                 <ButtonComponent
-                  onClick={() => {
-                    setSelectedFilter([]);
-                    setSelectedValues([]);
-                    setRatingValue("");
-                    setSortValue("");
-                  }}
+                  onClick={() => handleDeleteAllFilter()}
                   buttonText="Xóa bộ lọc"
                 >
                   Xóa tất cả

@@ -54,7 +54,8 @@ const AdminContact = () => {
     content: "",
   });
 
-  const [form] = Form.useForm();
+  const [formCreate] = Form.useForm();
+  const [formUpdate] = Form.useForm();
 
   const mutationUpdate = useMutationHook(({ id, data, access_token }) => {
     const res = ContactService.updateContact(id, data, access_token);
@@ -112,53 +113,53 @@ const AdminContact = () => {
 
   useEffect(() => {
     if (isSuccessCreateContact && dataCreateContact?.status === "OK") {
-      Message.success("Create contact success!");
+      Message.success("Tạo liên hệ mới thành công!");
       setStateContact({
         userName: "",
         email: "",
         address: "",
         content: "",
       });
-      form.resetFields();
+      formCreate.resetFields();
       setIsOpenModalCreate(false);
     } else if (dataCreateContact?.status === "ERROR") {
-      Message.error(dataCreateContact?.message);
+      Message.error("Tạo liên hệ mới thất bại!");
       setStateContact({
         userName: "",
         email: "",
         address: "",
         content: "",
       });
-      form.resetFields();
+      formCreate.resetFields();
       setIsOpenModalCreate(false);
     }
   }, [isSuccessCreateContact]);
 
   useEffect(() => {
     if (isSuccessUpdateContact && dataUpdateContact?.status === "OK") {
-      Message.success("Update contact success!");
+      Message.success("Cập nhật thông tin liên hệ thành công!");
       setIsOpenModalEdit(false);
     } else if (dataUpdateContact?.status === "ERROR") {
-      Message.error("Update contact error!");
+      Message.error("Cập nhật thông tin liên hệ thất bại!");
       setIsOpenModalEdit(false);
     }
   }, [isSuccessUpdateContact]);
 
   useEffect(() => {
     if (isSuccessDeleteContact && dataDeleteContact?.status === "OK") {
-      Message.success("Delete contact success!");
+      Message.success("Xóa liên hệ thành công!");
       setIsOpenModalDelete(false);
     } else if (dataDeleteContact?.status === "ERROR") {
-      Message.success("Delete contact error!");
+      Message.success("Xóa liên hệ thất bại!");
       setIsOpenModalDelete(false);
     }
   }, [isSuccessDeleteContact]);
 
   useEffect(() => {
     if (isSuccessDeleteManyContact && dataDeleteManyContact?.status === "OK") {
-      Message.success("Delete many contact success!");
+      Message.success("Xóa nhiều liên hệ thành công!");
     } else if (dataDeleteContact?.status === "ERROR") {
-      Message.success("Delete many contact error!");
+      Message.success("Xóa nhiều liên hệ thất bại!");
     }
   }, [isSuccessDeleteManyContact]);
 
@@ -167,7 +168,7 @@ const AdminContact = () => {
   };
 
   const handleCancelModalCreate = () => {
-    form.resetFields();
+    formCreate.resetFields();
     setIsOpenModalCreate(false);
   };
 
@@ -225,12 +226,12 @@ const AdminContact = () => {
   }, [isRowSelected]);
 
   useEffect(() => {
-    if (!isOpenModalCreate) {
-      form.setFieldsValue(stateDetailContact);
+    if (isOpenModalEdit) {
+      formUpdate.setFieldsValue(stateDetailContact);
     } else {
-      form.resetFields();
+      formUpdate.resetFields();
     }
-  }, [form, stateDetailContact, isOpenModalCreate]);
+  }, [formUpdate, stateDetailContact, isOpenModalEdit]);
 
   const handleGetDetailContact = () => {
     setIsOpenModalEdit(true);
@@ -411,7 +412,7 @@ const AdminContact = () => {
       </WrapperButton>
 
       <ModalComponent
-        title="Tạo liên hệ"
+        title="Tạo liên hệ mới"
         open={isOpenModalCreate}
         onCancel={handleCancelModalCreate}
         footer={null}
@@ -432,15 +433,15 @@ const AdminContact = () => {
           }}
           onFinish={handleCreateContact}
           autoComplete="off"
-          form={form}
+          form={formCreate}
         >
           <Form.Item
-            label="User name"
+            label="Tên người gửi"
             name="userName"
             rules={[
               {
                 required: true,
-                message: "Please input user name!",
+                message: "Vui lòng nhập tên người gửi!",
               },
             ]}
           >
@@ -457,7 +458,7 @@ const AdminContact = () => {
             rules={[
               {
                 required: true,
-                message: "Please input email!",
+                message: "Vui lòng nhập email!",
               },
             ]}
           >
@@ -469,12 +470,12 @@ const AdminContact = () => {
           </Form.Item>
 
           <Form.Item
-            label="Address"
+            label="Địa chỉ"
             name="address"
             rules={[
               {
                 required: true,
-                message: "Please input address!",
+                message: "Vui lòng nhập địa chỉ người gửi!",
               },
             ]}
           >
@@ -486,12 +487,12 @@ const AdminContact = () => {
           </Form.Item>
 
           <Form.Item
-            label="Content"
+            label="Nội dung"
             name="content"
             rules={[
               {
                 required: true,
-                message: "Please input content!",
+                message: "Vui lòng nhập nội dung!",
               },
             ]}
           >
@@ -510,7 +511,7 @@ const AdminContact = () => {
             }}
           >
             <Button type="primary" htmlType="submit">
-              Submit
+              Tạo mới
             </Button>
           </Form.Item>
         </Form>
@@ -552,15 +553,15 @@ const AdminContact = () => {
             }}
             onFinish={handleUpdateContact}
             autoComplete="off"
-            form={form}
+            form={formUpdate}
           >
             <Form.Item
-              label="User name"
+              label="Họ tên người gửi"
               name="userName"
               rules={[
                 {
                   required: true,
-                  message: "Please input user name!",
+                  message: "Vui lòng nhập họ tên người gửi!",
                 },
               ]}
             >
@@ -577,7 +578,7 @@ const AdminContact = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input email!",
+                  message: "Vui lòng nhập email!",
                 },
               ]}
             >
@@ -589,12 +590,12 @@ const AdminContact = () => {
             </Form.Item>
 
             <Form.Item
-              label="Address"
+              label="Địa chỉ"
               name="address"
               rules={[
                 {
                   required: true,
-                  message: "Please input address!",
+                  message: "Vui lòng nhập địa chỉ!",
                 },
               ]}
             >
@@ -606,12 +607,12 @@ const AdminContact = () => {
             </Form.Item>
 
             <Form.Item
-              label="Content"
+              label="Nội dung"
               name="content"
               rules={[
                 {
                   required: true,
-                  message: "Please input content!",
+                  message: "Vui lòng nhập nội dung!",
                 },
               ]}
             >
@@ -630,7 +631,7 @@ const AdminContact = () => {
               }}
             >
               <Button type="primary" htmlType="submit">
-                Update
+                Cập nhật
               </Button>
             </Form.Item>
           </Form>

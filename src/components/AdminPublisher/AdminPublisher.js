@@ -50,7 +50,8 @@ const AdminPublisher = () => {
     address: "",
   });
 
-  const [form] = Form.useForm();
+  const [formCreate] = Form.useForm();
+  const [formUpdate] = Form.useForm();
 
   const mutationUpdate = useMutationHook(({ id, data, access_token }) => {
     const res = PublisherService.updatePublisher(id, data, access_token);
@@ -111,12 +112,12 @@ const AdminPublisher = () => {
 
   useEffect(() => {
     if (isSuccessCreatePublisher && dataCreatePublisher?.status === "OK") {
-      Message.success("Create publisher success!");
+      Message.success("Tạo nhà xuất bản mới thành công!");
       setStatePublisher({
         name: "",
         address: "",
       });
-      form.resetFields();
+      formCreate.resetFields();
       setIsOpenModalCreate(false);
     } else if (dataCreatePublisher?.status === "ERROR") {
       Message.error(dataCreatePublisher?.message);
@@ -124,36 +125,36 @@ const AdminPublisher = () => {
         name: "",
         address: "",
       });
-      form.resetFields();
+      formCreate.resetFields();
       setIsOpenModalCreate(false);
     }
   }, [isSuccessCreatePublisher]);
 
   useEffect(() => {
     if (isSuccessUpdatePublisher && dataUpdatePublisher?.status === "OK") {
-      Message.success("Update publisher success!");
+      Message.success("Cập nhật thông tin nhà xuất bản thành công!");
       setIsOpenModalEdit(false);
     } else if (dataUpdatePublisher?.status === "ERROR") {
-      Message.error("Update publisher error!");
+      Message.error("Cập nhật thông tin nhà xuất bản thất bại!");
       setIsOpenModalEdit(false);
     }
   }, [isSuccessUpdatePublisher]);
 
   useEffect(() => {
     if (isSuccessDeletePublisher && dataDeletePublisher?.status === "OK") {
-      Message.success("Delete publisher success!");
+      Message.success("Xóa nhà xuất bản thành công!");
       setIsOpenModalDelete(false);
     } else if (dataDeletePublisher?.status === "ERROR") {
-      Message.success("Delete publisher error!");
+      Message.success("Xóa nhà xuất bản thất bại!");
       setIsOpenModalDelete(false);
     }
   }, [isSuccessDeletePublisher]);
 
   useEffect(() => {
     if (isSuccessDeleteManyPublisher && dataDeleteManyPublisher?.status === "OK") {
-      Message.success("Delete many publisher success!");
+      Message.success("Xóa nhiều nhà xuất bản thành công!");
     } else if (dataDeletePublisher?.status === "ERROR") {
-      Message.success("Delete many publisher error!");
+      Message.success("Xóa nhiều nhà xuất bản thất bại!");
     }
   }, [isSuccessDeleteManyPublisher]);
 
@@ -162,7 +163,7 @@ const AdminPublisher = () => {
   };
 
   const handleCancelModalCreate = () => {
-    form.resetFields();
+    formCreate.resetFields();
     setIsOpenModalCreate(false);
   };
 
@@ -218,12 +219,12 @@ const AdminPublisher = () => {
   }, [isRowSelected]);
 
   useEffect(() => {
-    if (!isOpenModalCreate) {
-      form.setFieldsValue(stateDetailPublisher);
+    if (isOpenModalEdit) {
+      formUpdate.setFieldsValue(stateDetailPublisher);
     } else {
-      form.resetFields();
+      formUpdate.resetFields();
     }
-  }, [form, stateDetailPublisher, isOpenModalCreate]);
+  }, [formUpdate, stateDetailPublisher, isOpenModalEdit]);
 
   const handleGetDetailPublisher = () => {
     setIsOpenModalEdit(true);
@@ -413,15 +414,15 @@ const AdminPublisher = () => {
           }}
           onFinish={handleCreatePublisher}
           autoComplete="off"
-          form={form}
+          form={formCreate}
         >
           <Form.Item
-            label="Name"
+            label="Tên NXB"
             name="name"
             rules={[
               {
                 required: true,
-                message: "Please input publisher name!",
+                message: "Vui lòng nhập tên NXB!",
               },
             ]}
           >
@@ -433,12 +434,12 @@ const AdminPublisher = () => {
           </Form.Item>
 
           <Form.Item
-            label="Address"
+            label="Địa chỉ"
             name="address"
             rules={[
               {
                 required: true,
-                message: "Please input publisher address!",
+                message: "Vui lòng nhập địa chỉ NXB!",
               },
             ]}
           >
@@ -456,7 +457,7 @@ const AdminPublisher = () => {
             }}
           >
             <Button type="primary" htmlType="submit">
-              Submit
+              Tạo mới
             </Button>
           </Form.Item>
         </Form>
@@ -471,13 +472,13 @@ const AdminPublisher = () => {
         <LoadingComponent isLoading={isLoadingDeletePublisher}>
           <div
             style={{ marginTop: "12px", fontWeight: 600, height: "50px" }}
-          >{`Bạn có chắc chắn muốn xóa nhà xuất bản có name "${isNamePublisher}" này không?`}</div>
+          >{`Bạn có chắc chắn muốn xóa nhà xuất bản có tên "${isNamePublisher}" này không?`}</div>
         </LoadingComponent>
       </ModalComponent>
 
       <DrawerComponent
         open={isOpenModalEdit}
-        title="Chi tiết nhà sản xuất"
+        title="Chi tiết nhà xuất bản"
         onClose={() => setIsOpenModalEdit(false)}
         width="50%"
       >
@@ -498,15 +499,15 @@ const AdminPublisher = () => {
             }}
             onFinish={handleUpdatePublisher}
             autoComplete="off"
-            form={form}
+            form={formUpdate}
           >
             <Form.Item
-              label="Name"
+              label="Tên NXB"
               name="name"
               rules={[
                 {
                   required: true,
-                  message: "Please input publisher name!",
+                  message: "Vui lòng nhập tên NXB!",
                 },
               ]}
             >
@@ -518,12 +519,12 @@ const AdminPublisher = () => {
             </Form.Item>
 
             <Form.Item
-              label="Address"
+              label="Địa chỉ"
               name="address"
               rules={[
                 {
                   required: true,
-                  message: "Please input publisher address!",
+                  message: "Vui lòng nhập địa chỉ NXB!",
                 },
               ]}
             >
@@ -541,7 +542,7 @@ const AdminPublisher = () => {
               }}
             >
               <Button type="primary" htmlType="submit">
-                Update
+                Cập nhật
               </Button>
             </Form.Item>
           </Form>

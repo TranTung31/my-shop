@@ -52,7 +52,8 @@ const AdminAuthor = () => {
     bio: "",
   });
 
-  const [form] = Form.useForm();
+  const [formCreate] = Form.useForm();
+  const [formUpdate] = Form.useForm();
 
   const mutationUpdate = useMutationHook(({ id, data, access_token }) => {
     const res = AuthorService.updateAuthor(id, data, access_token);
@@ -110,12 +111,12 @@ const AdminAuthor = () => {
 
   useEffect(() => {
     if (isSuccessCreateAuthor && dataCreateAuthor?.status === "OK") {
-      Message.success("Create author success!");
+      Message.success("Tạo tác giả mới thành công!");
       setStateAuthor({
         name: "",
         bio: "",
       });
-      form.resetFields();
+      formCreate.resetFields();
       setIsOpenModalCreate(false);
     } else if (dataCreateAuthor?.status === "ERROR") {
       Message.error(dataCreateAuthor?.message);
@@ -123,36 +124,36 @@ const AdminAuthor = () => {
         name: "",
         bio: "",
       });
-      form.resetFields();
+      formCreate.resetFields();
       setIsOpenModalCreate(false);
     }
   }, [isSuccessCreateAuthor]);
 
   useEffect(() => {
     if (isSuccessUpdateAuthor && dataUpdateAuthor?.status === "OK") {
-      Message.success("Update author success!");
+      Message.success("Cập nhật thông tin tác giả thành công!");
       setIsOpenModalEdit(false);
     } else if (dataUpdateAuthor?.status === "ERROR") {
-      Message.error("Update author error!");
+      Message.error("Cập nhật thông tin tác giả thất bại!");
       setIsOpenModalEdit(false);
     }
   }, [isSuccessUpdateAuthor]);
 
   useEffect(() => {
     if (isSuccessDeleteAuthor && dataDeleteAuthor?.status === "OK") {
-      Message.success("Delete author success!");
+      Message.success("Xóa tác giả thành công!");
       setIsOpenModalDelete(false);
     } else if (dataDeleteAuthor?.status === "ERROR") {
-      Message.success("Delete author error!");
+      Message.success("Xóa tác giả thất bại!");
       setIsOpenModalDelete(false);
     }
   }, [isSuccessDeleteAuthor]);
 
   useEffect(() => {
     if (isSuccessDeleteManyContact && dataDeleteManyContact?.status === "OK") {
-      Message.success("Delete many contact success!");
+      Message.success("Xóa nhiều tác giả thành công!");
     } else if (dataDeleteAuthor?.status === "ERROR") {
-      Message.success("Delete many contact error!");
+      Message.success("Xóa nhiều tác giả thất bại!");
     }
   }, [isSuccessDeleteManyContact]);
 
@@ -161,7 +162,7 @@ const AdminAuthor = () => {
   };
 
   const handleCancelModalCreate = () => {
-    form.resetFields();
+    formCreate.resetFields();
     setIsOpenModalCreate(false);
   };
 
@@ -213,12 +214,12 @@ const AdminAuthor = () => {
   }, [isRowSelected]);
 
   useEffect(() => {
-    if (!isOpenModalCreate) {
-      form.setFieldsValue(stateDetailAuthor);
+    if (isOpenModalEdit) {
+      formUpdate.setFieldsValue(stateDetailAuthor);
     } else {
-      form.resetFields();
+      formUpdate.resetFields();
     }
-  }, [form, stateDetailAuthor, isOpenModalCreate]);
+  }, [formUpdate, stateDetailAuthor, isOpenModalEdit]);
 
   const handleGetDetailAuthor = () => {
     setIsOpenModalEdit(true);
@@ -407,15 +408,15 @@ const AdminAuthor = () => {
           }}
           onFinish={handleCreateAuthor}
           autoComplete="off"
-          form={form}
+          form={formCreate}
         >
           <Form.Item
-            label="Author name"
+            label="Tên tác giả"
             name="name"
             rules={[
               {
                 required: true,
-                message: "Please input author name!",
+                message: "Vui lòng nhập tên tác giả!",
               },
             ]}
           >
@@ -427,12 +428,12 @@ const AdminAuthor = () => {
           </Form.Item>
 
           <Form.Item
-            label="Author bio"
+            label="Tiểu sử"
             name="bio"
             rules={[
               {
                 required: true,
-                message: "Please input author bio!",
+                message: "Vui lòng nhập tiểu sử!",
               },
             ]}
           >
@@ -451,7 +452,7 @@ const AdminAuthor = () => {
             }}
           >
             <Button type="primary" htmlType="submit">
-              Submit
+              Tạo mới
             </Button>
           </Form.Item>
         </Form>
@@ -493,15 +494,15 @@ const AdminAuthor = () => {
             }}
             onFinish={handleUpdateAuthor}
             autoComplete="off"
-            form={form}
+            form={formUpdate}
           >
             <Form.Item
-              label="Author name"
+              label="Tên tác giả"
               name="name"
               rules={[
                 {
                   required: true,
-                  message: "Please input author name!",
+                  message: "Vui lòng nhập tên tác giả!",
                 },
               ]}
             >
@@ -513,12 +514,12 @@ const AdminAuthor = () => {
             </Form.Item>
 
             <Form.Item
-              label="Author bio"
+              label="Tiểu sử"
               name="bio"
               rules={[
                 {
                   required: true,
-                  message: "Please input author bio!",
+                  message: "Vui lòng nhập tiểu sử!",
                 },
               ]}
             >
@@ -537,7 +538,7 @@ const AdminAuthor = () => {
               }}
             >
               <Button type="primary" htmlType="submit">
-                Update
+                Cập nhật
               </Button>
             </Form.Item>
           </Form>

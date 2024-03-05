@@ -706,10 +706,10 @@ const AdminProduct = () => {
         <Form
           name="basic"
           labelCol={{
-            span: 6,
+            span: 8,
           }}
           wrapperCol={{
-            span: 20,
+            span: 22,
           }}
           style={{
             maxWidth: 600,
@@ -722,12 +722,12 @@ const AdminProduct = () => {
           form={formCreate}
         >
           <Form.Item
-            label="Name"
+            label="Tên sách"
             name="name"
             rules={[
               {
                 required: true,
-                message: "Please input book name!",
+                message: "Vui lòng nhập tên sách!",
               },
             ]}
           >
@@ -739,12 +739,12 @@ const AdminProduct = () => {
           </Form.Item>
 
           <Form.Item
-            label="Author"
+            label="Tác giả"
             name="authorID"
             rules={[
               {
                 required: true,
-                message: "Please input book author!",
+                message: "Vui lòng chọn tác giả!",
               },
             ]}
           >
@@ -760,12 +760,12 @@ const AdminProduct = () => {
           </Form.Item>
 
           <Form.Item
-            label="Number of book"
+            label="Số trang"
             name="numberOfBook"
             rules={[
               {
                 required: true,
-                message: "Please input number of book!",
+                message: "Vui lòng nhập số trang!",
               },
             ]}
           >
@@ -773,16 +773,17 @@ const AdminProduct = () => {
               value={stateProduct.numberOfBook}
               onChange={handleOnChange}
               name="numberOfBook"
+              type="number"
             />
           </Form.Item>
 
           <Form.Item
-            label="Format book"
+            label="Định dạng"
             name="formatBook"
             rules={[
               {
                 required: true,
-                message: "Please input book format!",
+                message: "Vui lòng nhập định dạng sách!",
               },
             ]}
           >
@@ -834,12 +835,12 @@ const AdminProduct = () => {
           )} */}
 
           <Form.Item
-            label="Description"
+            label="Mô tả"
             name="description"
             rules={[
               {
                 required: true,
-                message: "Please input book description!",
+                message: "Vui lòng nhập mô tả!",
               },
             ]}
           >
@@ -852,12 +853,12 @@ const AdminProduct = () => {
           </Form.Item>
 
           <Form.Item
-            label="Publisher"
+            label="Nhà xuất bản"
             name="publisherID"
             rules={[
               {
                 required: true,
-                message: "Please input book publisher!",
+                message: "Vui lòng chọn nhà xuất bản!",
               },
             ]}
           >
@@ -873,12 +874,12 @@ const AdminProduct = () => {
           </Form.Item>
 
           <Form.Item
-            label="Genre"
+            label="Thể loại"
             name="genreID"
             rules={[
               {
                 required: true,
-                message: "Please input book genre!",
+                message: "Vui lòng chọn thể loại!",
               },
             ]}
           >
@@ -894,12 +895,12 @@ const AdminProduct = () => {
           </Form.Item>
 
           <Form.Item
-            label="Price"
+            label="Giá tiền"
             name="price"
             rules={[
               {
                 required: true,
-                message: "Please input book price!",
+                message: "Vui lòng nhập giá tiền!",
               },
             ]}
           >
@@ -907,16 +908,17 @@ const AdminProduct = () => {
               value={stateProduct.price}
               onChange={handleOnChange}
               name="price"
+              type="number"
             />
           </Form.Item>
 
           <Form.Item
-            label="Count In Stock"
+            label="Số lượng trong kho"
             name="countInStock"
             rules={[
               {
                 required: true,
-                message: "Please input book count in stock!",
+                message: "Vui lòng nhập số lượng trong kho!",
               },
             ]}
           >
@@ -924,16 +926,17 @@ const AdminProduct = () => {
               value={stateProduct.countInStock}
               onChange={handleOnChange}
               name="countInStock"
+              type="number"
             />
           </Form.Item>
 
           <Form.Item
-            label="Discount"
+            label="% Giảm giá"
             name="discount"
             rules={[
               {
                 required: true,
-                message: "Please input book discount!",
+                message: "Vui lòng nhập % giảm giá!",
               },
             ]}
           >
@@ -941,16 +944,17 @@ const AdminProduct = () => {
               value={stateProduct.discount}
               onChange={handleOnChange}
               name="discount"
+              type="number"
             />
           </Form.Item>
 
           <Form.Item
-            label="Rating"
+            label="Số sao đánh giá"
             name="rating"
             rules={[
               {
                 required: true,
-                message: "Please input book rating!",
+                message: "Vui lòng nhập số sao đánh giá!",
               },
             ]}
           >
@@ -958,16 +962,17 @@ const AdminProduct = () => {
               value={stateProduct.rating}
               onChange={handleOnChange}
               name="rating"
+              type="number"
             />
           </Form.Item>
 
           <Form.Item
-            label="Image"
+            label="Hình ảnh"
             name="image"
             rules={[
               {
                 required: true,
-                message: "Please input book image!",
+                message: "Vui lòng chọn hình ảnh!",
               },
             ]}
           >
@@ -998,7 +1003,7 @@ const AdminProduct = () => {
             }}
           >
             <Button type="primary" htmlType="submit">
-              Submit
+              Tạo mới
             </Button>
           </Form.Item>
         </Form>
@@ -1042,12 +1047,12 @@ const AdminProduct = () => {
             form={formUpdate}
           >
             <Form.Item
-              label="Name"
+              label="Tên sách"
               name="name"
               rules={[
                 {
                   required: true,
-                  message: "Please input book name!",
+                  message: "Vui lòng nhập tên sách!",
                 },
               ]}
             >
@@ -1059,12 +1064,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Author"
+              label="Tác giả"
               name="authorID"
               rules={[
                 {
                   required: true,
-                  message: "Please input book author!",
+                  message: "Vui lòng chọn tác giả!",
                 },
               ]}
             >
@@ -1080,12 +1085,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Number of book"
+              label="Số trang"
               name="numberOfBook"
               rules={[
                 {
                   required: true,
-                  message: "Please input number of book!",
+                  message: "Vui lòng nhập số trang!",
                 },
               ]}
             >
@@ -1098,12 +1103,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Format book"
+              label="Định dạng"
               name="formatBook"
               rules={[
                 {
                   required: true,
-                  message: "Please input book format!",
+                  message: "Vui lòng nhập định dạng sách!",
                 },
               ]}
             >
@@ -1115,12 +1120,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Description"
+              label="Mô tả"
               name="description"
               rules={[
                 {
                   required: true,
-                  message: "Please input book description!",
+                  message: "Vui lòng nhập mô tả!",
                 },
               ]}
             >
@@ -1133,12 +1138,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Publisher"
+              label="Nhà xuất bản"
               name="publisherID"
               rules={[
                 {
                   required: true,
-                  message: "Please input book publisher!",
+                  message: "Vui lòng chọn nhà xuất bản!",
                 },
               ]}
             >
@@ -1154,12 +1159,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Genre"
+              label="Thể loại"
               name="genreID"
               rules={[
                 {
                   required: true,
-                  message: "Please input book genre!",
+                  message: "Vui lòng chọn thể loại!",
                 },
               ]}
             >
@@ -1175,12 +1180,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Price"
+              label="Giá tiền"
               name="price"
               rules={[
                 {
                   required: true,
-                  message: "Please input book price!",
+                  message: "Vui lòng nhập giá tiền!",
                 },
               ]}
             >
@@ -1193,12 +1198,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Count In Stock"
+              label="Số lượng trong kho"
               name="countInStock"
               rules={[
                 {
                   required: true,
-                  message: "Please input book count in stock!",
+                  message: "Vui lòng nhập số lượng trong kho!",
                 },
               ]}
             >
@@ -1211,12 +1216,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Discount (%)"
+              label="% Giảm giá"
               name="discount"
               rules={[
                 {
                   required: true,
-                  message: "Please input book discount!",
+                  message: "Vui lòng nhập % giảm giá!",
                 },
               ]}
             >
@@ -1229,12 +1234,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Rating"
+              label="Số sao đánh giá"
               name="rating"
               rules={[
                 {
                   required: true,
-                  message: "Please input book rating!",
+                  message: "Vui lòng nhập số sao đánh giá!",
                 },
               ]}
             >
@@ -1247,12 +1252,12 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Image"
+              label="Hình ảnh"
               name="image"
               rules={[
                 {
                   required: true,
-                  message: "Please input book image!",
+                  message: "Vui lòng chọn hình ảnh!",
                 },
               ]}
             >
@@ -1285,7 +1290,7 @@ const AdminProduct = () => {
               }}
             >
               <Button type="primary" htmlType="submit">
-                Update
+                Cập nhật
               </Button>
             </Form.Item>
           </Form>

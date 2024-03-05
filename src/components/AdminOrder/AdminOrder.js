@@ -135,30 +135,30 @@ const AdminOrder = () => {
 
   useEffect(() => {
     if (isSuccessUpdateOrder && dataUpdateOrder?.status === "OK") {
-      Message.success("Update order success!");
+      Message.success("Cập nhật thông tin đơn hàng thành công!");
       setIsOpenModalEdit(false);
     }
     if (isErrorUpdateOrder) {
-      Message.error("Update order error!");
+      Message.error("Cập nhật thông tin đơn hàng thất bại!");
       setIsOpenModalEdit(false);
     }
   }, [isSuccessUpdateOrder]);
 
   useEffect(() => {
     if (isSuccessDeleteOrder && dataDeleteOrder?.status === "OK") {
-      Message.success("Delete order success!");
+      Message.success("Xóa đơn hàng thành công!");
       setIsOpenModalDelete(false);
     } else if (dataDeleteOrder?.status === "ERROR") {
-      Message.success("Delete order error!");
+      Message.success("Xóa đơn hàng thất bại!");
       setIsOpenModalDelete(false);
     }
   }, [isSuccessDeleteOrder]);
 
   useEffect(() => {
     if (isSuccessDeleteManyOrder && dataDeleteManyOrder?.status === "OK") {
-      Message.success("Delete many order success!");
+      Message.success("Xóa nhiều đơn hàng thành công!");
     } else if (dataDeleteManyOrder?.status === "ERROR") {
-      Message.success("Delete many order error!");
+      Message.success("Xóa nhiều đơn hàng thất bại!");
     }
   }, [isSuccessDeleteManyOrder]);
 
@@ -337,7 +337,7 @@ const AdminOrder = () => {
       dataIndex: "codeOrder",
     },
     {
-      title: "Tên người dùng",
+      title: "Tên người đặt",
       dataIndex: "userName",
     },
     {
@@ -445,10 +445,10 @@ const AdminOrder = () => {
           <Form
             name="basic"
             labelCol={{
-              span: 6,
+              span: 8,
             }}
             wrapperCol={{
-              span: 20,
+              span: 22,
             }}
             style={{
               maxWidth: 600,
@@ -461,12 +461,12 @@ const AdminOrder = () => {
             form={form}
           >
             <Form.Item
-              label="User name"
+              label="Tên người đặt"
               name="fullName"
               rules={[
                 {
                   required: true,
-                  message: "Please input your user name!",
+                  message: "Vui lòng nhập tên người đặt!",
                 },
               ]}
             >
@@ -478,12 +478,12 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="Phone"
+              label="Số điện thoại"
               name="phone"
               rules={[
                 {
                   required: true,
-                  message: "Please input your phone!",
+                  message: "Vui lòng nhập số điện thoại!",
                 },
               ]}
             >
@@ -496,12 +496,12 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="Address"
+              label="Địa chỉ"
               name="address"
               rules={[
                 {
                   required: true,
-                  message: "Please input your address!",
+                  message: "Vui lòng nhập địa chỉ!",
                 },
               ]}
             >
@@ -513,12 +513,12 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="City"
+              label="Thành phố"
               name="city"
               rules={[
                 {
                   required: true,
-                  message: "Please input your city!",
+                  message: "Vui lòng nhập thành phố!",
                 },
               ]}
             >
@@ -530,12 +530,12 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="Delivery method"
+              label="Phương thức giao hàng"
               name="deliveryMethod"
               rules={[
                 {
                   required: true,
-                  message: "Please input your deliveryMethod!",
+                  message: "Vui lòng nhập phương thức giao hàng!",
                 },
               ]}
             >
@@ -547,12 +547,12 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="Paided"
+              label="Trạng thái thanh toán"
               name="isPaided"
               rules={[
                 {
                   required: true,
-                  message: "Please input your paided!",
+                  message: "Vui lòng chọn trạng thái thanh toán!",
                 },
               ]}
             >
@@ -568,12 +568,12 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="Delivered"
+              label="Trạng thái giao hàng"
               name="isDelivered"
               rules={[
                 {
                   required: true,
-                  message: "Please input your delivered!",
+                  message: "Vui lòng nhập trạng thái giao hàng!",
                 },
               ]}
             >
@@ -595,7 +595,7 @@ const AdminOrder = () => {
               }}
             >
               <Button type="primary" htmlType="submit">
-                Update
+                Cập nhật
               </Button>
             </Form.Item>
           </Form>
