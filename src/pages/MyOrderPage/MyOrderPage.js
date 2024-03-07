@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Loading from "../../components/LoadingComponent/LoadingComponent";
 import { useQuery } from "@tanstack/react-query";
 import * as OrderService from "../../services/OrderService";
-import { convertDate, convertPrice } from "../../utils";
+import { convertDate, convertPrice } from "../../utils/utils";
 import {
   WrapperItemOrder,
   WrapperListOrder,
@@ -20,6 +20,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useMutationHook from "../../hooks/useMutationHook";
 import { useSelector } from "react-redux";
 import * as Message from "../../components/Message/Message";
+import { sortDate } from "../../utils/sorts";
 
 const MyOrderPage = () => {
   const user = useSelector((state) => state.user);
@@ -133,9 +134,8 @@ const MyOrderPage = () => {
         <WrapperMyOrderPage>
           <WrapperStyleTitle>Đơn hàng của tôi</WrapperStyleTitle>
           <WrapperListOrder>
-            {data
-              ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-              ?.map((item, index) => {
+            {data?.length > 0 ? (
+              sortDate(data)?.map((item, index) => {
                 return (
                   <WrapperItemOrder key={item?._id}>
                     <WrapperStatus>
@@ -224,7 +224,10 @@ const MyOrderPage = () => {
                     </WrapperFooterItem>
                   </WrapperItemOrder>
                 );
-              })}
+              })
+            ) : (
+              <span>Chưa có đơn hàng nào...</span>
+            )}
           </WrapperListOrder>
         </WrapperMyOrderPage>
       </WrapperContainer>

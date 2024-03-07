@@ -9,7 +9,7 @@ import {
   TeamOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminGenre from "../../components/AdminGenre/AdminGenre";
 import AdminHome from "../../components/AdminHome/AdminHome";
 import AdminOrder from "../../components/AdminOrder/AdminOrder";
@@ -17,7 +17,7 @@ import AdminProduct from "../../components/AdminProduct/AdminProduct";
 import AdminPublisher from "../../components/AdminPublisher/AdminPublisher";
 import AdminUser from "../../components/AdminUser/AdminUser";
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
-import { getItem } from "../../utils";
+import { getItem } from "../../utils/utils";
 import { WrapperContent } from "./styles";
 import AdminContact from "../../components/AdminContact/AdminContact";
 import AdminAuthor from "../../components/AdminAuthor/AdminAuthor";
@@ -61,15 +61,22 @@ const AdminPage = () => {
     setKeySelected(key);
   };
 
+  useEffect(() => {
+    setKeySelected("home");
+  }, []);
+
   return (
     <>
       <HeaderComponent isHiddenSearch isHiddenCart />
       <div style={{ display: "flex" }}>
         <Menu
           mode="inline"
+          theme="dark"
           onClick={handleClick}
           style={{
-            width: 256,
+            backgroundColor: "#34495e",
+            minWidth: 256,
+            maxWidth: 256,
             height: "100vh",
             borderRight: "2px solid #ccc",
           }}

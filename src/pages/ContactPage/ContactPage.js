@@ -50,7 +50,7 @@ function ContactPage() {
 
   useEffect(() => {
     if (isSuccessCreate && dataCreate?.status === "OK") {
-      Message.success("Create contact success!");
+      Message.success("Tạo liên hệ mới thành công!");
       form.resetFields();
     }
   }, [isSuccessCreate]);
@@ -148,7 +148,7 @@ function ContactPage() {
                     },
                   ]}
                 >
-                  <Input onChange={(e) => setEmail(e.target.value)} />
+                  <Input onChange={(e) => setEmail(e.target.value)} type="email"/>
                 </Form.Item>
 
                 <Form.Item

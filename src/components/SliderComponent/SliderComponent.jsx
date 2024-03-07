@@ -13,7 +13,7 @@ const SlitherComponent = ({ arrImages }) => {
   return (
     <WrapperSlider {...settings}>
       {arrImages.map((image, index) => {
-        return <img src={image} alt="slider" key={index} width="100%" height="425px"/>;
+        return <img src={image} alt="slider" key={index} width="100%" height="500px"/>;
       })}
     </WrapperSlider>
   );

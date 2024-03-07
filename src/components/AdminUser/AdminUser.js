@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import * as Message from "../../components/Message/Message";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as UserService from "../../services/UserService";
-import { getBase64 } from "../../utils";
+import { getBase64 } from "../../utils/utils";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import InputComponent from "../InputComponent/InputComponent";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
@@ -117,9 +117,15 @@ const AdminUser = () => {
 
   const { isLoading: isLoadingProducts, data: users } = queryGetAllUser;
 
-  const dataUsers = users?.data?.map((user) => {
-    return { ...user, key: user._id, isAdmin: user.isAdmin ? "TRUE" : "FALSE" };
-  });
+  const dataUsers = users?.data
+    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    ?.map((user) => {
+      return {
+        ...user,
+        key: user._id,
+        isAdmin: user.isAdmin ? "TRUE" : "FALSE",
+      };
+    });
 
   useEffect(() => {
     if (isSuccessCreateUser && dataCreateUser?.status === "OK") {
@@ -495,7 +501,7 @@ const AdminUser = () => {
                 name="email"
               />
             </Form.Item>
-  
+
             <Form.Item
               label="Mật khẩu"
               name="password"
@@ -513,7 +519,7 @@ const AdminUser = () => {
                 type="password"
               />
             </Form.Item>
-  
+
             <Form.Item
               label="Xác nhận mật khẩu"
               name="confirmPassword"
@@ -531,7 +537,7 @@ const AdminUser = () => {
                 type="password"
               />
             </Form.Item>
-  
+
             <Form.Item
               wrapperCol={{
                 offset: 20,

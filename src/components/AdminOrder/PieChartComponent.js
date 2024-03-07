@@ -1,6 +1,6 @@
 import React from "react";
 import { PieChart, Tooltip, Pie, Cell, ResponsiveContainer } from "recharts";
-import { convertDataChart } from "../../utils";
+import { convertDataChart } from "../../utils/utils";
 
 const PieChartComponent = (props) => {
   const { dataChart } = props;

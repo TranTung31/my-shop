@@ -1,16 +1,15 @@
+import { StarFilled } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import logo from "../../assets/images/logo.png";
+import { convertPrice } from "../../utils/utils";
 import {
-  WrapperCardStyle,
   StyleNameProduct,
-  WrapperPriceDiscount,
+  WrapperCardStyle,
   WrapperPriceProduct,
   WrapperReportProduct,
-  WrapperStyleTextSell,
   WrapperStyleDiscount,
+  WrapperStyleTextSell,
 } from "./styles";
-import { StarFilled } from "@ant-design/icons";
-import logo from "../../assets/images/logo.png";
-import { useNavigate } from "react-router-dom";
-import { convertPrice } from "../../utils";
 
 const CardProduct = (props) => {
   const {
@@ -24,6 +23,7 @@ const CardProduct = (props) => {
     discount,
     selled,
     id,
+    productRef,
   } = props;
 
   const navigate = useNavigate();
@@ -34,6 +34,7 @@ const CardProduct = (props) => {
 
   return (
     <WrapperCardStyle
+      ref={productRef}
       hoverable
       headStyle={{ width: "200px", height: "200px" }}
       style={{
@@ -67,7 +68,6 @@ const CardProduct = (props) => {
       <WrapperPriceProduct>
         <div>{`${convertPrice(price - price * (discount / 100))}₫`}</div>
         <s style={{ color: "#ccc" }}>{`${convertPrice(price)}₫`}</s>
-        {/* <WrapperPriceDiscount>- {discount || 5} %</WrapperPriceDiscount> */}
       </WrapperPriceProduct>
     </WrapperCardStyle>
   );

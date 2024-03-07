@@ -9,7 +9,7 @@ import { addProductToCart, resetOrder } from "../../redux/slides/orderSlice";
 import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
 import * as AuthorService from "../../services/AuthorService";
-import { convertPrice, initFacebookSDK } from "../../utils";
+import { convertPrice, initFacebookSDK } from "../../utils/utils";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import CommentComponent from "../CommentComponent/CommentComponent";
 import LikeButtonComponent from "../LikeButtonComponent/LikeButtonComponent";
@@ -18,6 +18,7 @@ import {
   WrapperCurrentPrice,
   WrapperDescription,
   WrapperDetailBook,
+  WrapperDetailBookAuthor,
   WrapperImageProductSmall,
   WrapperStyleTextHeader,
   WrapperStyleTextSell,
@@ -255,13 +256,12 @@ const ProductDetailComponent = ({ id }) => {
         <WrapperDetailBook>
           <span>Tác giả: </span>
           {authorBook?.name ? (
-            <span
+            <WrapperDetailBookAuthor
               className="author"
-              style={{ cursor: "pointer" }}
               onClick={() => navigate(`/product-author/${authorBook?._id}`)}
             >
               {authorBook?.name}
-            </span>
+            </WrapperDetailBookAuthor>
           ) : (
             <span>Đang cập nhật</span>
           )}

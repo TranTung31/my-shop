@@ -20,6 +20,7 @@ export const WrapperStyleTitle = styled.div`
 export const WrapperListContact = styled.div`
   display: flex;
   flex-direction: column;
+  padding-bottom: 20px;
   gap: 20px;
 `;
 

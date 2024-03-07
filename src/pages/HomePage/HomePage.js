@@ -13,6 +13,7 @@ import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import { useDebounceHook } from "../../hooks/useDebounceHook";
 import * as GenreService from "../../services/GenreService";
 import * as ProductService from "../../services/ProductService";
+import ListProducts from "./ListProducts/ListProducts";
 import {
   WrapperButtonComponent,
   WrapperDropdown,
@@ -101,21 +102,9 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    fetchAllBookVN(
-      "65b36e4471282a077bff5239",
-      pageProduct.limit,
-      pageProduct.page
-    );
-    fetchAllBookNuocNgoai(
-      "65b36e9e71282a077bff523f",
-      pageProduct.limit,
-      pageProduct.page
-    );
-    fetchAllBookKhoaHoc(
-      "65b6252b39026dfbaca3ec97",
-      pageProduct.limit,
-      pageProduct.page
-    );
+    fetchAllBookVN("65b36e4471282a077bff5239", 12, pageProduct.page);
+    fetchAllBookNuocNgoai("65b36e9e71282a077bff523f", 12, pageProduct.page);
+    fetchAllBookKhoaHoc("65b6252b39026dfbaca3ec97", 12, pageProduct.page);
   }, []);
 
   useEffect(() => {
@@ -157,7 +146,7 @@ const HomePage = () => {
         <div style={{ width: "1285px", margin: "0 auto" }}>
           <SlitherComponent arrImages={[slider1, slider2, slider3]} />
           <LoadingComponent isLoading={isLoading}>
-            <h2 style={{ margin: "16px 0", textAlign: "center" }}>
+            <h2 style={{ margin: "20px 0 0", textAlign: "center" }}>
               SÁCH BÁN CHẠY
             </h2>
             <WrapperProducts>
@@ -194,72 +183,22 @@ const HomePage = () => {
               onClick={handleLoadMore}
             />
           </div>
-          <LoadingComponent isLoading={isLoadingBookVN}>
-            <h2 style={{ margin: "16px 0", textAlign: "center" }}>
-              SÁCH VĂN HỌC VIỆT NAM
-            </h2>
-            <WrapperProducts>
-              {productVN.map((product, index) => (
-                <CardProduct
-                  key={product._id}
-                  name={product.name}
-                  price={product.price}
-                  image={product.image}
-                  rating={product.rating}
-                  description={product.description}
-                  countInStock={product.countInStock}
-                  type={product.type}
-                  discount={product.discount}
-                  selled={product.selled}
-                  id={product._id}
-                />
-              ))}
-            </WrapperProducts>
-          </LoadingComponent>
-          <LoadingComponent isLoading={isLoadingBookNN}>
-            <h2 style={{ margin: "16px 0", textAlign: "center" }}>
-              SÁCH VĂN HỌC NƯỚC NGOÀI
-            </h2>
-            <WrapperProducts>
-              {productNuocNgoai.map((product, index) => (
-                <CardProduct
-                  key={product._id}
-                  name={product.name}
-                  price={product.price}
-                  image={product.image}
-                  rating={product.rating}
-                  description={product.description}
-                  countInStock={product.countInStock}
-                  type={product.type}
-                  discount={product.discount}
-                  selled={product.selled}
-                  id={product._id}
-                />
-              ))}
-            </WrapperProducts>
-          </LoadingComponent>
-          <LoadingComponent isLoading={isLoadingBookKT}>
-            <h2 style={{ margin: "16px 0", textAlign: "center" }}>
-              SÁCH KIẾN THỨC KHOA HỌC
-            </h2>
-            <WrapperProducts>
-              {productKhoaHoc.map((product, index) => (
-                <CardProduct
-                  key={product._id}
-                  name={product.name}
-                  price={product.price}
-                  image={product.image}
-                  rating={product.rating}
-                  description={product.description}
-                  countInStock={product.countInStock}
-                  type={product.type}
-                  discount={product.discount}
-                  selled={product.selled}
-                  id={product._id}
-                />
-              ))}
-            </WrapperProducts>
-          </LoadingComponent>
+
+          <ListProducts
+            products={productVN}
+            title="SÁCH VĂN HỌC VIỆT NAM"
+            isLoading={isLoadingBookVN}
+          />
+          <ListProducts
+            products={productNuocNgoai}
+            title="SÁCH VĂN HỌC NƯỚC NGOÀI"
+            isLoading={isLoadingBookNN}
+          />
+          <ListProducts
+            products={productKhoaHoc}
+            title="SÁCH KIẾN THỨC KHOA HỌC"
+            isLoading={isLoadingBookKT}
+          />
         </div>
       </div>
     </>

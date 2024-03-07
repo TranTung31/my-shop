@@ -37,8 +37,9 @@ export const WrapperNav = styled.div`
 `;
 
 export const WrapperProducts = styled.div`
+  padding: 20px 0;
   display: flex;
-  gap: 16px;
+  gap: 17px;
   flex-wrap: wrap;
 `;
 
@@ -56,7 +57,7 @@ export const WrapperButtonComponent = styled(ButtonComponent)`
   border-radius: 6px;
   font-size: 1.6rem;
   font-weight: 600;
-  margin-top: 20px;
+  margin-bottom: 20px;
   border: ${(props) =>
     props.disabled ? "1px solid #ccc" : "1px solid #0060ff"};
 `;

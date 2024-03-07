@@ -10,7 +10,7 @@ import * as ProductService from "../../services/ProductService";
 import { useSelector } from "react-redux";
 import * as OrderService from "../../services/OrderService";
 import { useEffect, useState } from "react";
-import { convertPrice } from "../../utils";
+import { convertPrice } from "../../utils/utils";
 import ContentOfTooltip from "./ContentOfTooltip";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 

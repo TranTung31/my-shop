@@ -18,7 +18,7 @@ import {
   addOrderItemsSelected,
 } from "../../redux/slides/orderSlice";
 import { useEffect, useState } from "react";
-import { convertPrice } from "../../utils";
+import { convertPrice } from "../../utils/utils";
 import * as Message from "../../components/Message/Message";
 import ModalComponent from "../../components/ModalComponent/ModalComponent";
 import InputComponent from "../../components/InputComponent/InputComponent";

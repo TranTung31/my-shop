@@ -8,7 +8,7 @@ export const WrapperProducts = styled.div`
 
 export const WrapperProductAuthor = styled.div`
   width: 100%;
-  height: calc(100% - 80px);
+  height: 100vh;
   background-color: rgb(239, 239, 239);
 `;
 

@@ -48,7 +48,7 @@ const SignInPage = () => {
     if (data?.status === "OK") {
       if (!!pathProductDetail) {
         navigate(`${pathProductDetail}`);
-        Message.success("Login Successfully");
+        Message.success("Đăng nhập thành công!");
         localStorage.setItem(
           "access_token",
           JSON.stringify(data?.access_token)
@@ -69,7 +69,7 @@ const SignInPage = () => {
       }
 
       navigate("/");
-      Message.success("Login Successfully");
+      Message.success("Đăng nhập thành công!");
       localStorage.setItem("access_token", JSON.stringify(data?.access_token));
       localStorage.setItem(
         "refresh_token",
@@ -86,7 +86,7 @@ const SignInPage = () => {
     }
 
     if (data?.status === "ERR") {
-      Message.error("Login Error");
+      Message.error("Đăng nhập thất bại");
     }
   }, [data?.status]);
 

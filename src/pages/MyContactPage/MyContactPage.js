@@ -7,7 +7,7 @@ import LoadingComponent from "../../components/LoadingComponent/LoadingComponent
 import * as Message from "../../components/Message/Message";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as ContactService from "../../services/ContactService";
-import { convertDate } from "../../utils";
+import { convertDate } from "../../utils/utils";
 import {
   WrapperContainer,
   WrapperFooterItem,
@@ -19,6 +19,7 @@ import {
   WrapperStatusTitle,
   WrapperStyleTitle,
 } from "./styles";
+import { sortDate } from "../../utils/sorts";
 
 function MyContactPage() {
   const location = useLocation();
@@ -51,9 +52,9 @@ function MyContactPage() {
 
   useEffect(() => {
     if (isSuccessDelete && dataDeleteContact?.status === "OK") {
-      Message.success("Delete contact success!");
+      Message.success("Xóa liên hệ thành công!");
     } else if (dataContactUser?.status === "ERROR") {
-      Message.error("Delete contact error!");
+      Message.error("Xóa liên hệ thất bại!");
     }
   }, [isSuccessDelete]);
 
@@ -81,9 +82,8 @@ function MyContactPage() {
         <WrapperMyOrderPage>
           <WrapperStyleTitle>Liên hệ của tôi</WrapperStyleTitle>
           <WrapperListContact>
-            {dataContactUser
-              ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-              ?.map((item, index) => (
+            {dataContactUser?.length > 0 ? (
+              sortDate(dataContactUser)?.map((item, index) => (
                 <WrapperItemContact key={index}>
                   <WrapperStatus>
                     <WrapperStatusTitle>Liên hệ</WrapperStatusTitle>
@@ -131,7 +131,10 @@ function MyContactPage() {
                     </div>
                   </WrapperFooterItem>
                 </WrapperItemContact>
-              ))}
+              ))
+            ) : (
+              <span>Chưa có liên hệ nào...</span>
+            )}
           </WrapperListContact>
         </WrapperMyOrderPage>
       </WrapperContainer>

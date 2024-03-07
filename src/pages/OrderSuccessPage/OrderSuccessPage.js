@@ -14,7 +14,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { addOrderItemsSelected } from "../../redux/slides/orderSlice";
 import { useEffect, useState } from "react";
-import { convertPrice } from "../../utils";
+import { convertPrice } from "../../utils/utils";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const OrderSuccessPage = () => {

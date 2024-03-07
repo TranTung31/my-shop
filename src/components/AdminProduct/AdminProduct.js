@@ -15,7 +15,7 @@ import * as GenreService from "../../services/GenreService";
 import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
 import * as AuthorService from "../../services/AuthorService";
-import { getBase64 } from "../../utils";
+import { getBase64 } from "../../utils/utils";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import InputComponent from "../InputComponent/InputComponent";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
@@ -152,9 +152,11 @@ const AdminProduct = () => {
 
   const { isLoading: isLoadingProducts, data: products } = queryGetAllProduct;
 
-  const dataProducts = products?.data?.map((product) => {
-    return { ...product, key: product._id };
-  });
+  const dataProducts = products?.data
+    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    ?.map((product) => {
+      return { ...product, key: product._id };
+    });
 
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {

@@ -7,7 +7,7 @@ import * as Message from "../../components/Message/Message";
 import useMutationHook from "../../hooks/useMutationHook";
 import { updateUser } from "../../redux/slides/userSlice";
 import * as UserService from "../../services/UserService";
-import { getBase64 } from "../../utils";
+import { getBase64 } from "../../utils/utils";
 import {
   WrapperButtonComponent,
   WrapperContent,

@@ -16,7 +16,7 @@ import {
   EditOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { convertPrice } from "../../utils";
+import { convertPrice } from "../../utils/utils";
 import PieChartComponent from "./PieChartComponent";
 
 const AdminOrder = () => {
@@ -114,24 +114,26 @@ const AdminOrder = () => {
 
   const { isLoading: isLoadingProducts, data: orders } = queryGetAllOrder;
 
-  const dataOrder = orders?.data?.map((order) => {
-    return {
-      ...order,
-      key: order._id,
-      codeOrder: `DH${order._id}`,
-      userName: order.shippingAddress.fullName,
-      phone: order.shippingAddress.phone,
-      address: order.shippingAddress.address,
-      city: order.shippingAddress.city,
-      isPaid: order.isPaid ? "Đã thanh toán" : "Chưa thanh toán",
-      isDelivered: order.isDelivered ? "Đã giao hàng" : "Chưa giao hàng",
-      orderItems: order.orderItems,
-      totalPrice: convertPrice(order.totalPrice),
-      paymentMethod: order.paymentMethod,
-      orderItemsLength: order.orderItems.length,
-      deliveryMethod: order.deliveryMethod,
-    };
-  });
+  const dataOrder = orders?.data
+    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    ?.map((order) => {
+      return {
+        ...order,
+        key: order._id,
+        codeOrder: `DH${order._id}`,
+        userName: order.shippingAddress.fullName,
+        phone: order.shippingAddress.phone,
+        address: order.shippingAddress.address,
+        city: order.shippingAddress.city,
+        isPaid: order.isPaid ? "Đã thanh toán" : "Chưa thanh toán",
+        isDelivered: order.isDelivered ? "Đã giao hàng" : "Chưa giao hàng",
+        orderItems: order.orderItems,
+        totalPrice: convertPrice(order.totalPrice),
+        paymentMethod: order.paymentMethod,
+        orderItemsLength: order.orderItems.length,
+        deliveryMethod: order.deliveryMethod,
+      };
+    });
 
   useEffect(() => {
     if (isSuccessUpdateOrder && dataUpdateOrder?.status === "OK") {

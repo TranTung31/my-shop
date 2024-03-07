@@ -24,6 +24,7 @@ import {
   WrapperTitleText,
   WrapperTypeProduct,
 } from "./styles";
+import { sortDate } from "../../utils/sorts";
 
 const TypeProductPage = () => {
   const { state: genre } = useLocation();
@@ -452,7 +453,7 @@ const TypeProductPage = () => {
                   : null}
               </WrapperFilter>
               <WrapperProducts>
-                {productGenre
+                {sortDate(productGenre)
                   ?.filter((product) =>
                     product.name
                       .toLowerCase()

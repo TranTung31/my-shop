@@ -9,7 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { convertDataContentOfTooltip, convertPrice } from "../../utils";
+import { convertDataContentOfTooltip, convertPrice } from "../../utils/utils";
 
 const ContentOfTooltip = (props) => {
   const { dataOrder } = props;

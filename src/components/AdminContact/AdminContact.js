@@ -18,6 +18,7 @@ import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import TableComponent from "../TableComponent/TableComponent";
 import { WrapperButton, WrapperHeader } from "./styles";
+import { sortDate } from "../../utils/sorts";
 
 const AdminContact = () => {
   const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
@@ -642,7 +643,7 @@ const AdminContact = () => {
         <TableComponent
           isLoading={isLoadingContact}
           columns={columns}
-          data={dataContacts}
+          data={sortDate(dataContacts)}
           handleDelete={handleDeleteManyContact}
           onRow={(record) => {
             return {

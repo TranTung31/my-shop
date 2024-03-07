@@ -34,6 +34,13 @@ export const WrapperDetailBook = styled.div`
   font-size: 1.6rem;
 `;
 
+export const WrapperDetailBookAuthor = styled.span`
+  cursor: pointer;
+  &:hover {
+    opacity: 80%;
+  }
+`;
+
 export const WrapperCurrentAddress = styled.div`
   font-size: 1.6rem;
   color: rgb(39, 39, 42);

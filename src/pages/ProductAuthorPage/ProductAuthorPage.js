@@ -192,7 +192,7 @@ const ProductAuthorPage = () => {
 
   return (
     <WrapperProductAuthor>
-      <div style={{ width: "1285px", height: "100%", margin: "0 auto" }}>
+      <div style={{ width: "1285px", margin: "0 auto" }}>
         <WrapperNavigation>
           <WrapperNavigationHome onClick={() => navigate("/")}>
             Trang chủ

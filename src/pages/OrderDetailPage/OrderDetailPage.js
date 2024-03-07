@@ -19,7 +19,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import * as OrderService from "../../services/OrderService";
 import { useQuery } from "@tanstack/react-query";
-import { convertDate, convertPrice } from "../../utils";
+import { convertDate, convertPrice } from "../../utils/utils";
 import Loading from "../../components/LoadingComponent/LoadingComponent";
 
 const OrderDetailPage = () => {
