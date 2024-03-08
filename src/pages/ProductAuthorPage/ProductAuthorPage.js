@@ -4,26 +4,26 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
-import CardProduct from "../../components/CardProduct/CardProduct";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import { useDebounceHook } from "../../hooks/useDebounceHook";
 import * as AuthorService from "../../services/AuthorService";
 import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
+import ListProducts from "./ListProducts/ListProducts";
 import {
   WrapperContent,
+  WrapperFilter,
   WrapperItemCategory,
-  WrapperItemPublisher,
+  WrapperItemFilter,
   WrapperNavbar,
   WrapperNavigation,
   WrapperNavigationHome,
   WrapperPagination,
   WrapperPriceText,
   WrapperProductAuthor,
-  WrapperProducts,
-  WrapperPublisher,
   WrapperTitleText,
 } from "./styles";
+import { CloseCircleFilled } from "@ant-design/icons";
 
 const ProductAuthorPage = () => {
   const { id: authorId } = useParams();
@@ -39,23 +39,28 @@ const ProductAuthorPage = () => {
     limit: 10,
     page: 0,
   });
+
+  const [ratingValue, setRatingValue] = useState("");
   const [sortValue, setSortValue] = useState("");
   const [publisher, setPublisher] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
-  const [selectedNames, setSelectedNames] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState([]);
 
   const onChangeCheckbox = (e) => {
     const value = e.target.value;
     const name = e.target.name;
     if (e.target.checked) {
+      setSelectedFilter((prevFilter) => [
+        ...prevFilter,
+        { value: value, name: name },
+      ]);
       setSelectedValues((prevValues) => [...prevValues, value]);
-      setSelectedNames((prevNames) => [...prevNames, name]);
     } else {
+      setSelectedFilter((prevFilter) =>
+        prevFilter.filter((item) => item.value !== value)
+      );
       setSelectedValues((prevValues) =>
         prevValues.filter((item) => item !== value)
-      );
-      setSelectedNames((prevNames) =>
-        prevNames.filter((item) => item !== name)
       );
     }
   };
@@ -67,7 +72,8 @@ const ProductAuthorPage = () => {
       pageProduct.limit,
       pageProduct.page,
       selectedValues,
-      sortValue
+      sortValue,
+      ratingValue
     );
     if (res?.data) {
       setProductAuthor(res?.data);
@@ -79,7 +85,7 @@ const ProductAuthorPage = () => {
 
   useEffect(() => {
     fetchGetProductAuthor();
-  }, [authorId, pageProduct, selectedValues, sortValue]);
+  }, [authorId, pageProduct, selectedFilter, selectedValues, sortValue]);
 
   const fetchGetAuthor = async () => {
     const res = await AuthorService.getDetailAuthor(authorId);
@@ -143,11 +149,117 @@ const ProductAuthorPage = () => {
             </WrapperPriceText>
           );
         });
-      case "review":
+      case "rating":
         return option.map((item, index) => {
           return (
-            <div style={{ display: "flex", alignItems: "center" }} key={index}>
-              <Rate style={{ fontSize: "12px" }} value={item} />
+            <div
+              onClick={() => {
+                if (item === 3) {
+                  setRatingValue("3");
+                  setSelectedFilter((prevFilter) => {
+                    const checkRating3 = prevFilter.some(
+                      (prev) => prev.value === 3
+                    );
+                    const checkRating4 = prevFilter.some(
+                      (prev) => prev.value === 4
+                    );
+                    const checkRating5 = prevFilter.some(
+                      (prev) => prev.value === 5
+                    );
+                    if (checkRating3) {
+                      return [...prevFilter];
+                    }
+                    if (checkRating4) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 4),
+                        { value: 3, name: `Từ 3 sao` },
+                      ];
+                    }
+                    if (checkRating5) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 5),
+                        { value: 3, name: `Từ 3 sao` },
+                      ];
+                    }
+                    return [...prevFilter, { value: 3, name: `Từ 3 sao` }];
+                  });
+                }
+
+                if (item === 4) {
+                  setRatingValue("4");
+                  setSelectedFilter((prevFilter) => {
+                    const checkRating3 = prevFilter.some(
+                      (prev) => prev.value === 3
+                    );
+                    const checkRating4 = prevFilter.some(
+                      (prev) => prev.value === 4
+                    );
+                    const checkRating5 = prevFilter.some(
+                      (prev) => prev.value === 5
+                    );
+                    if (checkRating3) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 3),
+                        { value: 4, name: `Từ 4 sao` },
+                      ];
+                    }
+                    if (checkRating4) {
+                      return [...prevFilter];
+                    }
+                    if (checkRating5) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 5),
+                        { value: 4, name: `Từ 4 sao` },
+                      ];
+                    }
+                    return [...prevFilter, { value: 4, name: `Từ 4 sao` }];
+                  });
+                }
+
+                if (item === 5) {
+                  setRatingValue("5");
+                  setSelectedFilter((prevFilter) => {
+                    const checkRating3 = prevFilter.some(
+                      (prev) => prev.value === 3
+                    );
+                    const checkRating4 = prevFilter.some(
+                      (prev) => prev.value === 4
+                    );
+                    const checkRating5 = prevFilter.some(
+                      (prev) => prev.value === 5
+                    );
+                    if (checkRating3) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 3),
+                        { value: 5, name: `Từ 5 sao` },
+                      ];
+                    }
+                    if (checkRating4) {
+                      return [
+                        ...prevFilter.filter((prev) => prev.value !== 4),
+                        { value: 5, name: `Từ 5 sao` },
+                      ];
+                    }
+                    if (checkRating5) {
+                      return [...prevFilter];
+                    }
+                    return [...prevFilter, { value: 5, name: `Từ 5 sao` }];
+                  });
+                }
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+              key={index}
+            >
+              <Rate
+                style={{ fontSize: "12px", cursor: "pointer" }}
+                disabled
+                value={item}
+              />{" "}
+              &nbsp;
               <span
                 style={{
                   fontSize: "14px",
@@ -190,6 +302,13 @@ const ProductAuthorPage = () => {
     setSortValue(value);
   };
 
+  const handleDeleteAllFilter = () => {
+    setSelectedFilter([]);
+    setSelectedValues([]);
+    setRatingValue("");
+    setSortValue("");
+  };
+
   return (
     <WrapperProductAuthor>
       <div style={{ width: "1285px", margin: "0 auto" }}>
@@ -210,7 +329,7 @@ const ProductAuthorPage = () => {
               </WrapperContent>
               <WrapperTitleText>Đánh giá</WrapperTitleText>
               <WrapperContent>
-                {renderContent("review", [5, 4, 3])}
+                {renderContent("rating", [5, 4, 3])}
               </WrapperContent>
               <WrapperTitleText>Giá</WrapperTitleText>
               <WrapperContent>
@@ -234,15 +353,13 @@ const ProductAuthorPage = () => {
                 }}
               >
                 <ButtonComponent
-                  onClick={() => {
-                    setSelectedValues([]);
-                    setSelectedNames([]);
-                    setSortValue("");
-                  }}
+                  onClick={() => handleDeleteAllFilter()}
                   buttonText="Xóa bộ lọc"
                 >
                   Xóa tất cả
                 </ButtonComponent>
+
+                {/* Phân trang */}
                 <WrapperPagination>
                   <Pagination
                     defaultCurrent={1}
@@ -270,38 +387,41 @@ const ProductAuthorPage = () => {
                   />
                 </WrapperPagination>
               </div>
-              <WrapperPublisher>
-                {selectedNames.length > 0
-                  ? selectedNames.map((item, index) => (
-                      <WrapperItemPublisher key={index}>
-                        {item}
-                      </WrapperItemPublisher>
-                    ))
-                  : null}
-              </WrapperPublisher>
-              <WrapperProducts>
-                {productAuthor
-                  ?.filter((product) =>
-                    product.name
-                      .toLowerCase()
-                      .includes(searchDebound.toLowerCase())
-                  )
-                  .map((product, index) => (
-                    <CardProduct
-                      key={product._id}
-                      name={product.name}
-                      price={product.price}
-                      image={product.image}
-                      rating={product.rating}
-                      description={product.description}
-                      countInStock={product.countInStock}
-                      type={product.type}
-                      discount={product.discount}
-                      selled={product.selled}
-                      id={product._id}
-                    />
+
+              <WrapperFilter>
+                {!!selectedFilter.length &&
+                  selectedFilter.map((item, index) => (
+                    <WrapperItemFilter key={index}>
+                      <div>{item.name}</div>
+                      <div
+                        style={{ cursor: "pointer" }}
+                        // Logic xóa theo từng filter
+                        onClick={() => {
+                          // Giúp gọi lại API trong useEffect
+                          setSelectedValues((prevValues) =>
+                            prevValues.filter(
+                              (itemValue) => itemValue !== item.value
+                            )
+                          );
+                          // Giúp render lại các nhãn filter
+                          setSelectedFilter((prevFilter) =>
+                            prevFilter.filter(
+                              (itemFilter) => itemFilter.value !== item.value
+                            )
+                          );
+                          setRatingValue("");
+                        }}
+                      >
+                        <CloseCircleFilled style={{ fontSize: "1.4rem" }} />
+                      </div>
+                    </WrapperItemFilter>
                   ))}
-              </WrapperProducts>
+              </WrapperFilter>
+
+              <ListProducts
+                products={productAuthor}
+                searchDebound={searchDebound}
+              />
             </LoadingComponent>
           </Col>
         </Row>

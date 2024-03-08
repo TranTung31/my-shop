@@ -113,15 +113,15 @@ export const getProductAuthor = async (
   limit,
   page,
   publisher,
-  typeSort
+  typeSort,
+  ratingValue
 ) => {
   const publisherID =
-    publisher?.length > 0
-      ? `&publisher=publisherID&publisher=${publisher.join(",")}`
-      : "";
+    publisher?.length > 0 ? `&publisher=${publisher.join(",")}` : "";
   const sort = typeSort ? `&sort=${typeSort}` : "";
+  const rating = ratingValue ? `&rating=${ratingValue}` : "";
   const res = await axios.get(
-    `${process.env.REACT_APP_API}/product/get-product-author?filter=authorID&filter=${authorId}&limit=${limit}&page=${page}${publisherID}${sort}`
+    `${process.env.REACT_APP_API}/product/get-product-author?filter=authorID&filter=${authorId}&limit=${limit}&page=${page}&publisher=publisherID${publisherID}${sort}${rating}`
   );
   return res.data;
 };

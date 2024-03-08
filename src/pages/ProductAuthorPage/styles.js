@@ -1,11 +1,5 @@
 import { styled } from "styled-components";
 
-export const WrapperProducts = styled.div`
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-`;
-
 export const WrapperProductAuthor = styled.div`
   width: 100%;
   height: 100vh;
@@ -22,12 +16,15 @@ export const WrapperNavigationHome = styled.span`
   cursor: pointer;
 `;
 
-export const WrapperPublisher = styled.div`
+export const WrapperFilter = styled.div`
   display: flex;
   gap: 10px;
 `;
 
-export const WrapperItemPublisher = styled.div`
+export const WrapperItemFilter = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: fit-content;
   line-height: 32px;
   height: 32px;
