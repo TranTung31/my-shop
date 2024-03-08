@@ -423,34 +423,33 @@ const TypeProductPage = () => {
                 </WrapperPagination>
               </div>
               <WrapperFilter>
-                {selectedFilter.length > 0
-                  ? selectedFilter.map((item, index) => (
-                      <WrapperItemFilter key={index}>
-                        <div>{item.name}</div>
-                        <div
-                          style={{ cursor: "pointer" }}
-                          // Logic xóa theo từng filter
-                          onClick={() => {
-                            // Giúp gọi lại API trong useEffect
-                            setSelectedValues((prevValues) =>
-                              prevValues.filter(
-                                (itemValue) => itemValue !== item.value
-                              )
-                            );
-                            // Giúp render lại các nhãn filter
-                            setSelectedFilter((prevFilter) =>
-                              prevFilter.filter(
-                                (itemFilter) => itemFilter.value !== item.value
-                              )
-                            );
-                            setRatingValue("");
-                          }}
-                        >
-                          <CloseCircleFilled style={{ fontSize: "1.4rem" }} />
-                        </div>
-                      </WrapperItemFilter>
-                    ))
-                  : null}
+                {selectedFilter.length &&
+                  selectedFilter.map((item, index) => (
+                    <WrapperItemFilter key={index}>
+                      <div>{item.name}</div>
+                      <div
+                        style={{ cursor: "pointer" }}
+                        // Logic xóa theo từng filter
+                        onClick={() => {
+                          // Giúp gọi lại API trong useEffect
+                          setSelectedValues((prevValues) =>
+                            prevValues.filter(
+                              (itemValue) => itemValue !== item.value
+                            )
+                          );
+                          // Giúp render lại các nhãn filter
+                          setSelectedFilter((prevFilter) =>
+                            prevFilter.filter(
+                              (itemFilter) => itemFilter.value !== item.value
+                            )
+                          );
+                          setRatingValue("");
+                        }}
+                      >
+                        <CloseCircleFilled style={{ fontSize: "1.4rem" }} />
+                      </div>
+                    </WrapperItemFilter>
+                  ))}
               </WrapperFilter>
               <WrapperProducts>
                 {sortDate(productGenre)

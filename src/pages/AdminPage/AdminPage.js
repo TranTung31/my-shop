@@ -6,7 +6,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
   PhoneOutlined,
-  TeamOutlined
+  TeamOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import React, { useEffect, useState } from "react";
@@ -55,15 +55,11 @@ const AdminPage = () => {
     getItem("Thể loại", "genre", <AccountBookOutlined />),
     getItem("Liên hệ", "contact", <PhoneOutlined />),
   ];
-  const [keySelected, setKeySelected] = useState("");
+  const [keySelected, setKeySelected] = useState("home");
 
   const handleClick = ({ item, key }) => {
     setKeySelected(key);
   };
-
-  useEffect(() => {
-    setKeySelected("home");
-  }, []);
 
   return (
     <>
