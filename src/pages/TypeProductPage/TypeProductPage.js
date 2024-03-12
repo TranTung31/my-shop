@@ -423,7 +423,7 @@ const TypeProductPage = () => {
                 </WrapperPagination>
               </div>
               <WrapperFilter>
-                {selectedFilter.length &&
+                {!!selectedFilter.length &&
                   selectedFilter.map((item, index) => (
                     <WrapperItemFilter key={index}>
                       <div>{item.name}</div>

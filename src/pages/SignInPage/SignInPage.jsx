@@ -1,28 +1,30 @@
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { Image } from "antd";
+import jwt_decode from "jwt-decode";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import imageForm from "../../assets/images/logo-signin.png";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import InputForm from "../../components/InputForm/InputForm";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import * as Message from "../../components/Message/Message";
+import useMutationHook from "../../hooks/useMutationHook";
+import { updateUser } from "../../redux/slides/userSlice";
+import * as UserService from "../../services/UserService";
 import {
+  WrapperContainer,
   WrapperContainerLeft,
   WrapperContainerRight,
   WrapperForm,
   WrapperTextLight,
 } from "./styles";
-import imageForm from "../../assets/images/logo-signin.png";
-import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import * as UserService from "../../services/UserService";
-import useMutationHook from "../../hooks/useMutationHook";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import * as Message from "../../components/Message/Message";
-import jwt_decode from "jwt-decode";
-import { useDispatch } from "react-redux";
-import { updateUser } from "../../redux/slides/userSlice";
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -30,14 +32,6 @@ const SignInPage = () => {
 
   const handleNavigateSignUp = () => {
     navigate("/sign-up");
-  };
-
-  const handleOnChangeEmail = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleOnChangePassword = (e) => {
-    setPassword(e.target.value);
   };
 
   const mutation = useMutationHook((data) => UserService.loginUser(data));
@@ -86,7 +80,7 @@ const SignInPage = () => {
     }
 
     if (data?.status === "ERR") {
-      Message.error("Đăng nhập thất bại");
+      Message.error("Đăng nhập thất bại!");
     }
   }, [data?.status]);
 
@@ -107,34 +101,36 @@ const SignInPage = () => {
     mutation.mutate({ email, password });
   };
 
+  const handleKeyDown = (e) => {
+    if (email && password) {
+      if (e.key === "Enter") {
+        mutation.mutate({ email, password });
+      }
+    }
+  };
+
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#ccc",
-        height: "100vh",
-      }}
-    >
+    <WrapperContainer>
       <WrapperForm>
         <WrapperContainerLeft>
           <h1 style={{ fontSize: "24px", fontWeight: "590" }}>Xin chào</h1>
           <span style={{ fontSize: "16px", lineHeight: "20px" }}>
             Đăng nhập và tạo tài khoản
           </span>
+
           <InputForm
             placeholder="abc@gmail.com"
             style={{ margin: "10px 0" }}
+            type="email"
             size="large"
             value={email}
-            onChange={handleOnChangeEmail}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
+
           <div style={{ position: "relative" }}>
             <span
-              onClick={() => {
-                setIsShowPassword(!isShowPassword);
-              }}
+              onClick={() => setIsShowPassword(!isShowPassword)}
               style={{
                 fontSize: "16px",
                 position: "absolute",
@@ -151,7 +147,8 @@ const SignInPage = () => {
               size="large"
               type={isShowPassword ? "text" : "password"}
               value={password}
-              onChange={handleOnChangePassword}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             {data?.status === "ERR" && (
               <span
@@ -206,7 +203,7 @@ const SignInPage = () => {
           </h4>
         </WrapperContainerRight>
       </WrapperForm>
-    </div>
+    </WrapperContainer>
   );
 };
 

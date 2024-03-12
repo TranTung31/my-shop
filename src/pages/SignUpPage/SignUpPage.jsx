@@ -1,20 +1,37 @@
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { Image } from "antd";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import imageForm from "../../assets/images/logo-signin.png";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import InputForm from "../../components/InputForm/InputForm";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import * as Message from "../../components/Message/Message";
+import useMutationHook from "../../hooks/useMutationHook";
+import * as UserService from "../../services/UserService";
 import {
+  WrapperContainer,
   WrapperContainerLeft,
   WrapperContainerRight,
   WrapperForm,
   WrapperTextLight,
 } from "./styles";
-import imageForm from "../../assets/images/logo-signin.png";
-import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import * as UserService from "../../services/UserService";
-import useMutationHook from "../../hooks/useMutationHook";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import * as Message from "../../components/Message/Message";
+
+const STYLES_ICON = {
+  fontSize: "16px",
+  position: "absolute",
+  zIndex: "10",
+  top: "14px",
+  right: "16px",
+  cursor: "pointer",
+};
+
+const STYLES_MESSAGE = {
+  fontSize: "15px",
+  color: "red",
+  display: "block",
+  paddingTop: "10px",
+};
 
 const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -22,6 +39,7 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const navigate = useNavigate();
 
   const mutation = useMutationHook((data) => UserService.signupUser(data));
@@ -30,27 +48,23 @@ const SignUpPage = () => {
 
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {
-      Message.success("Sign up success!");
+      Message.success("Đăng ký tài khoản thành công!");
       handleNavigateLogin();
     } else if (isError) {
       Message.error(data?.message);
     }
-  }, [data]);
+  }, [isSuccess]);
 
   const handleNavigateLogin = () => {
     navigate("/sign-in");
   };
 
-  const handleOnChangeEmail = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleOnChangePassword = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleOnChangeConfirmPassword = (e) => {
-    setConfirmPassword(e.target.value);
+  const handleKeyDown = (e) => {
+    if (email && password && confirmPassword) {
+      if (e.key === "Enter") {
+        mutation.mutate({ email, password, confirmPassword });
+      }
+    }
   };
 
   const handleSignUp = () => {
@@ -58,27 +72,21 @@ const SignUpPage = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#ccc",
-        height: "100vh",
-      }}
-    >
+    <WrapperContainer>
       <WrapperForm>
         <WrapperContainerLeft>
-          <h1 style={{ fontSize: "24px", fontWeight: "590" }}>Xin chào</h1>
-          <span style={{ fontSize: "16px", lineHeight: "20px" }}>
+          <h1 style={{ fontSize: "2.4rem", fontWeight: "590" }}>Xin chào</h1>
+          <span style={{ fontSize: "1.6rem", lineHeight: "20px" }}>
             Đăng nhập và tạo tài khoản
           </span>
           <InputForm
             placeholder="abc@gmail.com"
             style={{ margin: "10px 0" }}
+            type="email"
             size="large"
             value={email}
-            onChange={handleOnChangeEmail}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
 
           <div style={{ position: "relative" }}>
@@ -86,14 +94,7 @@ const SignUpPage = () => {
               onClick={() => {
                 setIsShowPassword(!isShowPassword);
               }}
-              style={{
-                fontSize: "16px",
-                position: "absolute",
-                zIndex: "10",
-                top: "14px",
-                right: "16px",
-                cursor: "pointer",
-              }}
+              style={STYLES_ICON}
             >
               {isShowPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
             </span>
@@ -101,7 +102,8 @@ const SignUpPage = () => {
               placeholder="password"
               size="large"
               type={isShowPassword ? "text" : "password"}
-              onChange={handleOnChangePassword}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
           </div>
 
@@ -110,14 +112,7 @@ const SignUpPage = () => {
               onClick={() => {
                 setIsShowConfirm(!isShowConfirm);
               }}
-              style={{
-                fontSize: "16px",
-                position: "absolute",
-                zIndex: "10",
-                top: "14px",
-                right: "16px",
-                cursor: "pointer",
-              }}
+              style={STYLES_ICON}
             >
               {isShowConfirm ? <EyeOutlined /> : <EyeInvisibleOutlined />}
             </span>
@@ -125,19 +120,11 @@ const SignUpPage = () => {
               placeholder="confirm password"
               size="large"
               type={isShowConfirm ? "text" : "password"}
-              onChange={handleOnChangeConfirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             {data?.status === "ERROR" && (
-              <span
-                style={{
-                  fontSize: "15px",
-                  color: "red",
-                  display: "block",
-                  paddingTop: "10px",
-                }}
-              >
-                {data?.message}
-              </span>
+              <span style={STYLES_MESSAGE}>{data?.message}</span>
             )}
           </div>
 
@@ -167,6 +154,7 @@ const SignUpPage = () => {
             </WrapperTextLight>
           </p>
         </WrapperContainerLeft>
+
         <WrapperContainerRight>
           <Image src={imageForm} width="203px" height="203px" preview={false} />
           <h4
@@ -180,7 +168,7 @@ const SignUpPage = () => {
           </h4>
         </WrapperContainerRight>
       </WrapperForm>
-    </div>
+    </WrapperContainer>
   );
 };
 

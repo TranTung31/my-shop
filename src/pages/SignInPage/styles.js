@@ -1,5 +1,13 @@
 import styled from "styled-components";
 
+export const WrapperContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(204, 204, 204);
+  height: 100vh;
+`;
+
 export const WrapperForm = styled.div`
   width: 800px;
   height: 442px;
