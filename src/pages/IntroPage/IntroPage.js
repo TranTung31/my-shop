@@ -20,11 +20,11 @@ function IntroPage() {
         </WrapperIntroNavigate>
 
         <div>
-          <h2 style={{ margin: 0 }}>Giới thiệu nhà sách TungBooks</h2>
+          <h2 style={{ margin: 0 }}>Giới thiệu nhà sách PeggyBooks</h2>
           <div style={{ fontSize: "1.6rem" }}>
             <br />
             My-shop-sandy-two.vercel.app là trang thương mại điện tử của Nhà
-            Sách TungBooks, hệ thống nhà sách thân thuộc của nhiều gia đình
+            Sách PeggyBooks, hệ thống nhà sách thân thuộc của nhiều gia đình
             Việt.
             <br />
             <br />
@@ -34,49 +34,49 @@ function IntroPage() {
             dụng cụ học tập, văn phòng phẩm, quà lưu niệm, đồ chơi giáo dục
             chính hãng của những thương hiệu uy tín. Cùng tiêu chí không ngừng
             hoàn thiện, nâng cao chất lượng sản phẩm, dịch vụ, Nhà Sách
-            TungBooks cam kết mang đến cho khách hàng trải nghiệm mua sắm trực
+            PeggyBooks cam kết mang đến cho khách hàng trải nghiệm mua sắm trực
             tuyến an toàn, tiện lợi: cách đặt hàng đơn giản, phương thức thanh
             toán đa dạng, dịch vụ chăm sóc khách hàng tận tình, chu đáo.
             <br />
             <br />
             Ngoài danh mục sách đa dạng và phong phú của nhiều nhà xuất bản,
-            công ty sách lớn nhỏ cả nước, TungBooks còn chủ động khai thác bản
+            công ty sách lớn nhỏ cả nước, PeggyBooks còn chủ động khai thác bản
             quyền và liên kết xuất bản hàng ngàn đầu sách hay và giá trị với
-            thương hiệu TungBooks, trong đó nhiều tựa được đánh giá cao và lọt
+            thương hiệu PeggyBooks, trong đó nhiều tựa được đánh giá cao và lọt
             vào danh mục bán chạy của các hệ thống phát hành sách lớn nhất Việt
             Nam.
             <br />
             <br />
-            Nhà Sách TungBooks chủ động chọn lọc và phát hành tại Việt Nam danh
+            Nhà Sách PeggyBooks chủ động chọn lọc và phát hành tại Việt Nam danh
             mục sách tiếng Anh đa dạng của những nhà xuất bản lớn trên thế giới
             như Penguin Random House, Hachette Livre, HarperCollins, Macmillan
             Publishers, Simon & Schuster,… Nhiều tựa chỉ có duy nhất tại Nhà
-            Sách TungBooks, nhiều tựa được phát hành cùng thời điểm ra mắt của
+            Sách PeggyBooks, nhiều tựa được phát hành cùng thời điểm ra mắt của
             sách tại Anh và Mỹ.
             <br />
             <br />
-            TungBooks là thương hiệu hàng đầu trong ngành Phát hành sách Việt
+            PeggyBooks là thương hiệu hàng đầu trong ngành Phát hành sách Việt
             Nam, ngay từ thời bao cấp cho đến thời kỳ kinh tế thị trường, đổi
-            mới, hội nhập quốc tế, Nhà sách TungBooks luôn khẳng định vị thế đầu
+            mới, hội nhập quốc tế, Nhà sách PeggyBooks luôn khẳng định vị thế đầu
             ngành và được đánh giá cao trong quá trình xây dựng đời sống văn
             hóa, trước hết là văn hóa đọc của nước nhà. Là doanh nghiệp kinh
-            doanh trên lĩnh vực văn hóa, Nhà sách TungBooks có vai trò và vị thế
+            doanh trên lĩnh vực văn hóa, Nhà sách PeggyBooks có vai trò và vị thế
             trong việc giữ vững định hướng tư tưởng văn hóa của Nhà nước, góp
             phần tích cực vào việc đáp ứng nhu cầu đọc sách của Nhân dân Thành
             phố Hà Nội và cả nước; thể hiện toàn diện các chức năng kinh tế -
             văn hóa - xã hội. Thông qua các chủ trương và hoạt động như: duy trì
             một số Nhà sách ở các tỉnh có nền kinh tế chưa phát triển, công
-            trình Xe sách Lưu động TungBooks phục vụ bạn đọc ngoại thành tại các
+            trình Xe sách Lưu động PeggyBooks phục vụ bạn đọc ngoại thành tại các
             huyện vùng sâu, vùng xa, định kỳ tổ chức các Hội sách với nhiều quy
-            mô lớn nhỏ khác nhau… chứng minh rằng TungBooks không chỉ quan tâm
+            mô lớn nhỏ khác nhau… chứng minh rằng PeggyBooks không chỉ quan tâm
             đến việc kinh doanh mà còn mang đến mọi người nguồn tri thức quý
             báu, góp phần không ngừng nâng cao dân trí cho người dân ở mọi miền
             đất nước, thể hiện sự hài hòa giữa các mục tiêu kinh doanh và hoạt
-            động phục vụ xã hội của TungBooks.
+            động phục vụ xã hội của PeggyBooks.
             <br />
             <br />
             Hi vọng với trang thương mại điện tử my-shop-sandy-two.vercel.app,
-            Nhà Sách TungBooks có thể gia tăng tiện ích cho khách hàng, đồng
+            Nhà Sách PeggyBooks có thể gia tăng tiện ích cho khách hàng, đồng
             thời mang những sản phẩm của hệ thống nhà sách đến với mọi khách
             hàng trên cả nước.
             <br />

@@ -1,18 +1,19 @@
-import { Card, Col, Row } from "antd";
 import {
-  UserOutlined,
   AppstoreOutlined,
-  ShoppingCartOutlined,
   DollarOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import * as UserService from "../../services/UserService";
-import * as ProductService from "../../services/ProductService";
+import { Card, Col, Row, Select } from "antd";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import * as OrderService from "../../services/OrderService";
-import { useEffect, useState } from "react";
+import * as ProductService from "../../services/ProductService";
+import * as UserService from "../../services/UserService";
 import { convertPrice } from "../../utils/utils";
-import ContentOfTooltip from "./ContentOfTooltip";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
+import ContentOfTooltip from "./ContentOfTooltip";
+import { WrapperSelect } from "./styles";
 
 const AdminHome = () => {
   const user = useSelector((state) => state.user);
@@ -22,6 +23,8 @@ const AdminHome = () => {
   const [orderAll, setOrderAll] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [isLoadingOrder, setIsLoadingOrder] = useState(false);
+  const [year, setYear] = useState("2024");
+
   const getCountUser = async (access_token) => {
     const res = await UserService.getCountUser(access_token);
     setCountUser(res?.data);
@@ -61,6 +64,10 @@ const AdminHome = () => {
     getOrderAll(user?.access_token);
     getTotalPrice(user?.access_token);
   }, []);
+
+  const handleOnChangeSelect = (value) => {
+    setYear(value);
+  };
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -132,9 +139,28 @@ const AdminHome = () => {
           </Col>
         </Row>
       </div>
+      <WrapperSelect>
+        <Select
+          defaultValue={year}
+          style={{
+            width: 120,
+          }}
+          onChange={handleOnChangeSelect}
+          options={[
+            {
+              value: "2024",
+              label: "2024",
+            },
+            {
+              value: "2023",
+              label: "2023",
+            },
+          ]}
+        />
+      </WrapperSelect>
       <LoadingComponent isLoading={isLoadingOrder}>
         <div style={{ width: "100%", height: "500px", marginTop: "30px" }}>
-          <ContentOfTooltip dataOrder={orderAll} />
+          <ContentOfTooltip dataOrder={orderAll} dataYear={year}/>
         </div>
       </LoadingComponent>
     </div>

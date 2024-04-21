@@ -1,67 +1,67 @@
 import React from "react";
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
+  BarChart,
   CartesianGrid,
-  Tooltip,
   Legend,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 import { convertDataContentOfTooltip, convertPrice } from "../../utils/utils";
 
 const ContentOfTooltip = (props) => {
-  const { dataOrder } = props;
+  const { dataOrder, dataYear } = props;
 
   const data = [
     {
       name: "Tháng 1",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 1),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 1, dataYear),
     },
     {
       name: "Tháng 2",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 2),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 2, dataYear),
     },
     {
       name: "Tháng 3",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 3),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 3, dataYear),
     },
     {
       name: "Tháng 4",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 4),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 4, dataYear),
     },
     {
       name: "Tháng 5",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 5),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 5, dataYear),
     },
     {
       name: "Tháng 6",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 6),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 6, dataYear),
     },
     {
       name: "Tháng 7",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 7),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 7, dataYear),
     },
     {
       name: "Tháng 8",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 8),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 8, dataYear),
     },
     {
       name: "Tháng 9",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 9),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 9, dataYear),
     },
     {
       name: "Tháng 10",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 10),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 10, dataYear),
     },
     {
       name: "Tháng 11",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 11),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 11, dataYear),
     },
     {
       name: "Tháng 12",
-      priceOfMonth: convertDataContentOfTooltip(dataOrder, 12),
+      priceOfMonth: convertDataContentOfTooltip(dataOrder, 12, dataYear),
     },
   ];
 
