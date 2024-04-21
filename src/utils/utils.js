@@ -106,13 +106,22 @@ export const convertMonth = (inputDateRaw) => {
   return month;
 };
 
-export const convertDataContentOfTooltip = (dataContent, month) => {
+export const convertYear = (inputDateRaw) => {
+  const inputDate = new Date(inputDateRaw);
+
+  const year = inputDate.getUTCFullYear();
+
+  return year;
+};
+
+export const convertDataContentOfTooltip = (dataContent, month, year) => {
   const totalPriceOfMonth = dataContent?.reduce((total, item) => {
     return (total =
       total +
       (item?.isPaid === true &&
       item?.isDelivered === true &&
-      convertMonth(item?.createdAt) === month
+      convertMonth(item?.createdAt) === month &&
+      (convertYear(item?.createdAt) + "") === year
         ? item?.totalPrice
         : 0));
   }, 0);
