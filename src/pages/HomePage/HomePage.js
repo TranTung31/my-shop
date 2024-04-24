@@ -59,6 +59,7 @@ const HomePage = () => {
       retry: 3,
       retryDelay: 1000,
       keepPreviousData: true,
+      refetchOnWindowFocus: false
     }
   );
 

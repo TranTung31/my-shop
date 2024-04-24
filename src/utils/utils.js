@@ -119,7 +119,7 @@ export const convertDataContentOfTooltip = (dataContent, month, year) => {
     return (total =
       total +
       (item?.isPaid === true &&
-      item?.isDelivered === true &&
+      item?.isDelivered === "Đã giao hàng" &&
       convertMonth(item?.createdAt) === month &&
       (convertYear(item?.createdAt) + "") === year
         ? item?.totalPrice

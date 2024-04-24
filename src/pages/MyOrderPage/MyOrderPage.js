@@ -21,24 +21,29 @@ import useMutationHook from "../../hooks/useMutationHook";
 import { useSelector } from "react-redux";
 import * as Message from "../../components/Message/Message";
 import { sortDate } from "../../utils/sorts";
+import { Segmented } from "antd";
 
 const MyOrderPage = () => {
+  const [selectedValue, setSelectedValue] = useState("Tất cả");
+  const [dataOrders, setDataOrders] = useState([]);
+  const [isLoadingDataOrders, setIsLoadingDataOrders] = useState(false);
   const user = useSelector((state) => state.user);
   const location = useLocation();
   const navigate = useNavigate();
   const { id, token } = location.state;
-  const fetchAllOrder = async () => {
-    const res = await OrderService.getOrder(id, token);
-    return res.data;
-  };
 
-  const queryOrder = useQuery(
-    { queryKey: ["orders"], queryFn: fetchAllOrder },
-    {
-      enabled: id && token,
-    }
-  );
-  const { isLoading, data } = queryOrder;
+  useEffect(() => {
+    const fetchAllOrder = async () => {
+      setIsLoadingDataOrders(true);
+      const res = await OrderService.getOrder(id, token, selectedValue);
+      setIsLoadingDataOrders(false);
+      setDataOrders(res?.data);
+    };
+
+    fetchAllOrder();
+  }, [selectedValue]);
+
+  console.log(dataOrders);
 
   const handleOrderDetail = (id) => {
     navigate(`/order-detail/${id}`, {
@@ -113,29 +118,39 @@ const MyOrderPage = () => {
   const handleDeleteOrder = (order) => {
     const orderId = order?._id;
     if (window.confirm(`Bạn có muốn xóa đơn hàng có mã DH${orderId} không?`)) {
-      mutationDelete.mutate(
-        {
-          id: orderId,
-          access_token: user?.access_token,
-          orderItems: order?.orderItems,
-        },
-        {
-          onSuccess: () => {
-            queryOrder.refetch();
-          },
-        }
-      );
+      mutationDelete.mutate({
+        id: orderId,
+        access_token: user?.access_token,
+        orderItems: order?.orderItems,
+      });
     }
   };
 
+  const handleOnChangeSegmented = (value) => {
+    setSelectedValue(value);
+  };
+
   return (
-    <Loading isLoading={isLoading || isLoadingDelete}>
+    <Loading isLoading={isLoadingDataOrders || isLoadingDelete}>
       <WrapperContainer>
         <WrapperMyOrderPage>
           <WrapperStyleTitle>Đơn hàng của tôi</WrapperStyleTitle>
           <WrapperListOrder>
-            {data?.length > 0 ? (
-              sortDate(data)?.map((item, index) => {
+            <div>
+              <Segmented
+                defaultValue={selectedValue}
+                options={[
+                  "Tất cả",
+                  "Chờ giao hàng",
+                  "Đang giao hàng",
+                  "Đã giao hàng",
+                ]}
+                onChange={handleOnChangeSegmented}
+                size="large"
+              />
+            </div>
+            {dataOrders?.length > 0 ? (
+              sortDate(dataOrders)?.map((item, index) => {
                 return (
                   <WrapperItemOrder key={item?._id}>
                     <WrapperStatus>
@@ -146,13 +161,7 @@ const MyOrderPage = () => {
                       </WrapperStatusContent>
                       <WrapperStatusContent>
                         <span>Giao hàng: </span>
-                        <span>
-                          {`${
-                            item?.isDelivered
-                              ? "Đã giao hàng"
-                              : "Chưa giao hàng"
-                          }`}
-                        </span>
+                        <span>{item?.isDelivered}</span>
                       </WrapperStatusContent>
                       <WrapperStatusContent>
                         <span>Thanh toán: </span>
@@ -190,7 +199,7 @@ const MyOrderPage = () => {
                         </span>
                       </div>
                       <div style={{ display: "flex", gap: "10px" }}>
-                        {item?.isDelivered ? null : (
+                        {item?.isDelivered === "Chờ giao hàng" ? (
                           <ButtonComponent
                             onClick={() => handleDeleteOrder(item)}
                             size={40}
@@ -205,7 +214,7 @@ const MyOrderPage = () => {
                               fontSize: "14px",
                             }}
                           ></ButtonComponent>
-                        )}
+                        ) : null}
                         <ButtonComponent
                           onClick={() => handleOrderDetail(item?._id)}
                           size={40}

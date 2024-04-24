@@ -13,15 +13,34 @@ export const createOrder = async (data, access_token) => {
   return res.data;
 };
 
-export const getOrder = async (id, access_token) => {
+export const getOrder = async (id, access_token, delivery) => {
+  let typeDelivery = "";
+
+  if (delivery === "Tất cả") {
+    typeDelivery = "all";
+  }
+
+  if (delivery === "Chờ giao hàng") {
+    typeDelivery = "wait";
+  }
+
+  if (delivery === "Đang giao hàng") {
+    typeDelivery = "delivering";
+  }
+
+  if (delivery === "Đã giao hàng") {
+    typeDelivery = "delivered";
+  }
+
   const res = await axiosJWT.get(
-    `${process.env.REACT_APP_API}/order/get-order/${id}`,
+    `${process.env.REACT_APP_API}/order/get-order/${id}?delivery=${typeDelivery}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
       },
     }
   );
+
   return res.data;
 };
 

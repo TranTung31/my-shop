@@ -23,7 +23,12 @@ const AdminOrder = () => {
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
-  const [typeBoolean, setTypeBoolean] = useState(["true", "false"]);
+  const [typeBoolean, setTypeBoolean] = useState(["true, false"]);
+  const [typeDelivery, setTypeDelivery] = useState([
+    "Chờ giao hàng",
+    "Đang giao hàng",
+    "Đã giao hàng",
+  ]);
   const [isCodeOrder, setIsCodeOrder] = useState("");
 
   const [searchText, setSearchText] = useState("");
@@ -49,7 +54,7 @@ const AdminOrder = () => {
     city: "",
     deliveryMethod: "",
     isPaided: false,
-    isDelivered: false,
+    isDelivered: "",
   });
 
   const stateOrderDetailPut = {
@@ -126,7 +131,7 @@ const AdminOrder = () => {
         address: order.shippingAddress.address,
         city: order.shippingAddress.city,
         isPaid: order.isPaid ? "Đã thanh toán" : "Chưa thanh toán",
-        isDelivered: order.isDelivered ? "Đã giao hàng" : "Chưa giao hàng",
+        isDelivered: order.isDelivered,
         orderItems: order.orderItems,
         totalPrice: convertPrice(order.totalPrice),
         paymentMethod: order.paymentMethod,
@@ -406,8 +411,18 @@ const AdminOrder = () => {
     });
   };
 
-  const renderType = () => {
+  const renderTypeBoolean = () => {
     let result = typeBoolean.map((type) => {
+      return {
+        value: type,
+        label: type,
+      };
+    });
+    return result;
+  };
+
+  const renderTypeDelivery = () => {
+    let result = typeDelivery.map((type) => {
       return {
         value: type,
         label: type,
@@ -565,7 +580,7 @@ const AdminOrder = () => {
                 style={{
                   width: "100%",
                 }}
-                options={renderType()}
+                options={renderTypeBoolean()}
               />
             </Form.Item>
 
@@ -586,7 +601,7 @@ const AdminOrder = () => {
                 style={{
                   width: "100%",
                 }}
-                options={renderType()}
+                options={renderTypeDelivery()}
               />
             </Form.Item>
 
