@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Loading from "../../components/LoadingComponent/LoadingComponent";
-import { useQuery } from "@tanstack/react-query";
 import * as OrderService from "../../services/OrderService";
 import { convertDate, convertPrice } from "../../utils/utils";
 import {
@@ -42,8 +41,6 @@ const MyOrderPage = () => {
 
     fetchAllOrder();
   }, [selectedValue]);
-
-  console.log(dataOrders);
 
   const handleOrderDetail = (id) => {
     navigate(`/order-detail/${id}`, {
