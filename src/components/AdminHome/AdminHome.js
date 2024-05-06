@@ -25,44 +25,39 @@ const AdminHome = () => {
   const [isLoadingOrder, setIsLoadingOrder] = useState(false);
   const [year, setYear] = useState("2024");
 
-  const getCountUser = async (access_token) => {
-    const res = await UserService.getCountUser(access_token);
+  const getCountUser = async () => {
+    const res = await UserService.getCountUser(user?.access_token);
     setCountUser(res?.data);
-    return res;
   };
 
-  const getCountProduct = async (access_token) => {
-    const res = await ProductService.getCountProduct(access_token);
+  const getCountProduct = async () => {
+    const res = await ProductService.getCountProduct(user?.access_token);
     setCountProduct(res?.data);
-    return res;
   };
 
-  const getCountOrder = async (access_token) => {
-    const res = await OrderService.getCountOrder(access_token);
+  const getCountOrder = async () => {
+    const res = await OrderService.getCountOrder(user?.access_token);
     setCountOrder(res?.data);
-    return res;
   };
 
-  const getOrderAll = async (access_token) => {
+  const getOrderAll = async () => {
     setIsLoadingOrder(true);
-    const res = await OrderService.getAllOrder(access_token);
+    const res = await OrderService.getAllOrder(user?.access_token);
     setOrderAll(res?.data);
     setIsLoadingOrder(false);
-    return res;
   };
 
-  const getTotalPrice = async (access_token) => {
-    const res = await OrderService.getTotalPrice(access_token);
+  const getTotalPrice = async () => {
+    const res = await OrderService.getTotalPrice(user?.access_token);
     setTotalPrice(res?.data);
-    return res;
   };
 
   useEffect(() => {
-    getCountUser(user?.access_token);
-    getCountProduct(user?.access_token);
-    getCountOrder(user?.access_token);
-    getOrderAll(user?.access_token);
-    getTotalPrice(user?.access_token);
+    getCountUser();
+    getCountProduct();
+    getCountOrder();
+    getOrderAll();
+    getTotalPrice();
   }, []);
 
   const handleOnChangeSelect = (value) => {

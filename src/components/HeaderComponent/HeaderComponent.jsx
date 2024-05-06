@@ -8,12 +8,12 @@ import { Badge, Popover } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { searchProduct } from "../../redux/slides/productSlice";
 import { resetUser } from "../../redux/slides/userSlice";
 import * as UserService from "../../services/UserService";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import {
   WrapperCart,
+  WrapperContainer,
   WrapperContentPopover,
   WrapperHeader,
   WrapperLogo,
@@ -29,10 +29,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [valueName, setValueName] = useState("");
   const [valueAvatar, setValueAvatar] = useState("");
-
-  const handleNavigateLogin = () => {
-    navigate("/sign-in");
-  };
+  const [valueSearch, setValueSearch] = useState("");
 
   const user = useSelector((state) => state.user);
   const order = useSelector((state) => state.order);
@@ -107,100 +104,107 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     </div>
   );
 
-  const handleProductSearch = (e) => {
-    dispatch(searchProduct({ search: e.target.value }));
+  const handleOnChangeSearch = (e) => {
+    setValueSearch(e.target.value);
+  };
+
+  const handleSearch = () => {
+    if (!valueSearch) {
+      alert("Vui lòng nhập giá trị để tìm kiếm!");
+    } else {
+      navigate(`/search?q=${valueSearch}`);
+    }
+  };
+
+  const handelOnKeyPressSearch = (e) => {
+    if (e.keyCode === 13) {
+      handleSearch();
+    }
   };
 
   return (
-    <>
-      <div
-        style={{
-          width: "100%",
-          backgroundColor: "#189eff",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <WrapperHeader>
+    <WrapperContainer>
+      <WrapperHeader>
+        <div>
+          <WrapperLogo onClick={() => navigate("/")}>
+            PeggyBooks Shop
+          </WrapperLogo>
+        </div>
+
+        {!isHiddenSearch && (
           <div>
-            <WrapperLogo onClick={() => navigate("/")}>My Shop</WrapperLogo>
-          </div>
-
-          {!isHiddenSearch && (
-            <div>
-              <WrapperSearch
-                placeholder="Vui lòng nhập..."
-                allowClear
-                enterButton={
-                  <div>
-                    <SearchOutlined /> Tìm kiếm
-                  </div>
-                }
-                size="large"
-                onChange={handleProductSearch}
-              />
-            </div>
-          )}
-
-          <WrapperUserAll>
-            <WrapperUser>
-              {valueAvatar ? (
-                <img
-                  src={valueAvatar}
-                  alt="avatar"
-                  style={{
-                    width: "36px",
-                    height: "36px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <div style={{ fontSize: "30px", color: "#fff" }}>
-                  <UserOutlined />
+            <WrapperSearch
+              placeholder="Vui lòng nhập..."
+              allowClear
+              enterButton={
+                <div onClick={handleSearch}>
+                  <SearchOutlined /> Tìm kiếm
                 </div>
-              )}
+              }
+              size="large"
+              value={valueSearch}
+              onKeyUp={handelOnKeyPressSearch}
+              onChange={handleOnChangeSearch}
+            />
+          </div>
+        )}
 
-              {user?.access_token ? (
-                <LoadingComponent isLoading={isLoading}>
-                  <Popover content={content} trigger="hover">
-                    <span
-                      style={{
-                        color: "rgba(255, 255, 255)",
-                        display: "block",
-                        cursor: "pointer",
-                        marginLeft: "4px",
-                      }}
-                    >
-                      {valueName || user?.email || "User"}
-                    </span>
-                  </Popover>
-                </LoadingComponent>
-              ) : (
-                <WrapperUserText onClick={handleNavigateLogin}>
-                  <span>Đăng nhập/Đăng ký</span>
-                  <span>
-                    Tài khoản <CaretDownOutlined />
-                  </span>
-                </WrapperUserText>
-              )}
-            </WrapperUser>
-            {!isHiddenCart && (
-              <WrapperCart onClick={() => navigate("/order")}>
-                <Badge count={order.orderItems?.length} size="small">
-                  <div style={{ fontSize: "30px", color: "#fff" }}>
-                    <ShoppingCartOutlined />
-                  </div>
-                </Badge>
-                <span style={{ color: "#fff", marginLeft: "6px" }}>
-                  Giỏ hàng
-                </span>
-              </WrapperCart>
+        <WrapperUserAll>
+          <WrapperUser>
+            {valueAvatar ? (
+              <img
+                src={valueAvatar}
+                alt="avatar"
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            ) : (
+              <div style={{ fontSize: "30px", color: "#fff" }}>
+                <UserOutlined />
+              </div>
             )}
-          </WrapperUserAll>
-        </WrapperHeader>
-      </div>
-    </>
+
+            {user?.access_token ? (
+              <LoadingComponent isLoading={isLoading}>
+                <Popover content={content} trigger="hover">
+                  <span
+                    style={{
+                      color: "rgba(255, 255, 255)",
+                      display: "block",
+                      cursor: "pointer",
+                      marginLeft: "4px",
+                    }}
+                  >
+                    {valueName || user?.email}
+                  </span>
+                </Popover>
+              </LoadingComponent>
+            ) : (
+              <WrapperUserText onClick={() => navigate("/sign-in")}>
+                <span>Đăng nhập/Đăng ký</span>
+                <span>
+                  Tài khoản <CaretDownOutlined />
+                </span>
+              </WrapperUserText>
+            )}
+          </WrapperUser>
+          {!isHiddenCart && (
+            <WrapperCart onClick={() => navigate("/order")}>
+              <Badge count={order.orderItems?.length} size="small">
+                <div style={{ fontSize: "30px", color: "#fff" }}>
+                  <ShoppingCartOutlined />
+                </div>
+              </Badge>
+              <span style={{ color: "#fff", marginLeft: "6px" }}>Giỏ hàng</span>
+            </WrapperCart>
+          )}
+        </WrapperUserAll>
+      </WrapperHeader>
+    </WrapperContainer>
   );
 };
 
