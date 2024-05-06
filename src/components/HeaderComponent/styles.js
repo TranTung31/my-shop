@@ -1,6 +1,13 @@
 import Search from "antd/es/input/Search";
 import { styled } from "styled-components";
 
+export const WrapperContainer = styled.div`
+  width: 100%;
+  background-color: rgb(24, 158, 255);
+  display: flex;
+  justify-content: center;
+`;
+
 export const WrapperHeader = styled.div`
   width: 1285px;
   height: 70px;
@@ -55,7 +62,7 @@ export const WrapperCart = styled.div`
 export const WrapperSearch = styled(Search)`
   & .ant-input-wrapper .ant-input-affix-wrapper {
     width: 300px;
-  };
+  }
   & .ant-input-wrapper .ant-input-group-addon .ant-btn {
     background-color: #1465d6;
   }

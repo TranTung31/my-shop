@@ -16,6 +16,7 @@ import IntroPage from "../pages/IntroPage/IntroPage";
 import ContactPage from "../pages/ContactPage/ContactPage";
 import MyContactPage from "../pages/MyContactPage/MyContactPage";
 import ProductAuthorPage from "../pages/ProductAuthorPage/ProductAuthorPage";
+import ProductSearchPage from "../pages/ProductSearchPage/ProductSearchPage";
 
 export const routes = [
   {
@@ -118,6 +119,12 @@ export const routes = [
   {
     path: "/my-contact",
     page: MyContactPage,
+    isShowHeader: true,
+    isShowFooter: false,
+  },
+  {
+    path: "/search",
+    page: ProductSearchPage,
     isShowHeader: true,
     isShowFooter: false,
   },

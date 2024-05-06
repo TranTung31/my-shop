@@ -23,7 +23,7 @@ const AdminOrder = () => {
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
-  const [typeBoolean, setTypeBoolean] = useState(["true, false"]);
+  const [typeBoolean, setTypeBoolean] = useState(["true", "false"]);
   const [typeDelivery, setTypeDelivery] = useState([
     "Chờ giao hàng",
     "Đang giao hàng",

@@ -64,7 +64,7 @@ const AdminPage = () => {
   return (
     <>
       <HeaderComponent isHiddenSearch isHiddenCart />
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", height: "100%" }}>
         <Menu
           mode="inline"
           theme="dark"
@@ -73,7 +73,6 @@ const AdminPage = () => {
             backgroundColor: "#34495e",
             minWidth: 256,
             maxWidth: 256,
-            height: "100vh",
             borderRight: "2px solid #ccc",
           }}
           items={items}

@@ -125,3 +125,10 @@ export const getProductAuthor = async (
   );
   return res.data;
 };
+
+export const getProductSearch = async (query) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/product/search?q=${query}`
+  );
+  return res.data;
+};
