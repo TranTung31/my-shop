@@ -331,15 +331,6 @@ const ProductAuthorPage = () => {
               <WrapperContent>
                 {renderContent("rating", [5, 4, 3])}
               </WrapperContent>
-              <WrapperTitleText>Giá</WrapperTitleText>
-              <WrapperContent>
-                {renderContent("price", [
-                  "Dưới 50.000",
-                  "Từ 50.000 -> 120.000",
-                  "120.000 -> 280.000",
-                  "Trên 280.000",
-                ])}
-              </WrapperContent>
             </WrapperNavbar>
           </Col>
           <Col span={20}>

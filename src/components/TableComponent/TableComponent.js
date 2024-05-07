@@ -1,8 +1,8 @@
 import { Table } from "antd";
-import LoadingComponent from "../LoadingComponent/LoadingComponent";
-import ButtonComponent from "../ButtonComponent/ButtonComponent";
-import { useRef, useState } from "react";
 import { Excel } from "antd-table-saveas-excel";
+import { useRef, useState } from "react";
+import ButtonComponent from "../ButtonComponent/ButtonComponent";
+import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
 const TableComponent = (props) => {
   const [isSelectedRowKeys, setIsSelectedRowKeys] = useState([]);
@@ -15,8 +15,7 @@ const TableComponent = (props) => {
   } = props;
 
   const newColumns = () => {
-    const filter = columns?.filter((col) => col.dataIndex !== "action");
-    return filter;
+    return columns?.filter((col) => col.dataIndex !== "action");
   };
 
   const rowSelection = {

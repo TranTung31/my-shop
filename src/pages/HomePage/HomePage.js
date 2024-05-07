@@ -36,10 +36,6 @@ const HomePage = () => {
   const [productVN, setProductVN] = useState([]);
   const [productNuocNgoai, setProductNuocNgoai] = useState([]);
   const [productKhoaHoc, setProductKhoaHoc] = useState([]);
-  const [pageProduct, setPageProduct] = useState({
-    limit: 6,
-    page: 0,
-  });
 
   const navigate = useNavigate();
 
@@ -59,7 +55,7 @@ const HomePage = () => {
       retry: 3,
       retryDelay: 1000,
       keepPreviousData: true,
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -75,40 +71,28 @@ const HomePage = () => {
   const fetchAllBookVN = async (genre, limit, page) => {
     setIsLoadingBookVN(true);
     const res = await ProductService.getAllProductType(genre, limit, page);
-    if (res?.status === "OK") {
-      setProductVN(res?.data);
-    }
+    setProductVN(res?.data);
     setIsLoadingBookVN(false);
-    return res.data;
   };
 
   const fetchAllBookNuocNgoai = async (genre, limit, page) => {
     setIsLoadingBookNN(true);
     const res = await ProductService.getAllProductType(genre, limit, page);
-    if (res?.status === "OK") {
-      setProductNuocNgoai(res?.data);
-    }
+    setProductNuocNgoai(res?.data);
     setIsLoadingBookNN(false);
-    return res.data;
   };
 
   const fetchAllBookKhoaHoc = async (genre, limit, page) => {
     setIsLoadingBookKT(true);
     const res = await ProductService.getAllProductType(genre, limit, page);
-    if (res?.status === "OK") {
-      setProductKhoaHoc(res?.data);
-    }
+    setProductKhoaHoc(res?.data);
     setIsLoadingBookKT(false);
-    return res.data;
   };
 
   useEffect(() => {
-    fetchAllBookVN("65b36e4471282a077bff5239", 12, pageProduct.page);
-    fetchAllBookNuocNgoai("65b36e9e71282a077bff523f", 12, pageProduct.page);
-    fetchAllBookKhoaHoc("65b6252b39026dfbaca3ec97", 12, pageProduct.page);
-  }, []);
-
-  useEffect(() => {
+    fetchAllBookVN("65b36e4471282a077bff5239", 12);
+    fetchAllBookNuocNgoai("65b36e9e71282a077bff523f", 12);
+    fetchAllBookKhoaHoc("65b6252b39026dfbaca3ec97", 12);
     fetchAllGenreProduct();
   }, []);
 
@@ -126,10 +110,7 @@ const HomePage = () => {
               items,
             }}
           >
-            <Space>
-              {/* <UnorderedListOutlined /> */}
-              Danh Mục Sản Phẩm
-            </Space>
+            <Space>Danh Mục Sản Phẩm</Space>
           </WrapperDropdown>
           <WrapperNav onClick={() => navigate("/intro")}>Giới thiệu</WrapperNav>
           <WrapperNav onClick={() => navigate("/contact")}>Liên hệ</WrapperNav>

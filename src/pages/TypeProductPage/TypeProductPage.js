@@ -1,12 +1,10 @@
 import { CloseCircleFilled } from "@ant-design/icons";
 import { Checkbox, Col, Pagination, Rate, Row, Select } from "antd";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardProduct from "../../components/CardProduct/CardProduct";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import { useDebounceHook } from "../../hooks/useDebounceHook";
 import * as GenreService from "../../services/GenreService";
 import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
@@ -24,22 +22,15 @@ import {
   WrapperTitleText,
   WrapperTypeProduct,
 } from "./styles";
-import { sortDate } from "../../utils/sorts";
 
 const TypeProductPage = () => {
   const { state: genre } = useLocation();
-  const { search: valueSearch } = useSelector((state) => state.product);
-  const searchDebound = useDebounceHook(valueSearch, 1000);
-  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const [productGenre, setProductGenre] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [totalProduct, setTotalProduct] = useState(1);
-  const [pageProduct, setPageProduct] = useState({
-    limit: 10,
-    page: 0,
-  });
+  const [pageValue, setPageValue] = useState(1);
   const [ratingValue, setRatingValue] = useState("");
   const [sortValue, setSortValue] = useState("");
   const [genreProduct, setGenreProduct] = useState([]);
@@ -66,12 +57,12 @@ const TypeProductPage = () => {
     }
   };
 
-  const fetchAllProductGenre = async (
+  const fetchNewAllProductGenre = async (
     genre,
     limit,
     page,
-    selectedValues,
-    sortValue,
+    publisher,
+    typeSort,
     ratingValue
   ) => {
     setIsLoading(true);
@@ -79,52 +70,28 @@ const TypeProductPage = () => {
       genre,
       limit,
       page,
-      selectedValues,
-      sortValue,
+      publisher,
+      typeSort,
       ratingValue
     );
-    if (res?.status === "OK") {
-      setProductGenre(res?.data);
-    }
+    setProductGenre(res?.data);
+    setTotalProduct(res?.totalProduct);
     setIsLoading(false);
-    return res.data;
-  };
-
-  const fetchNewAllProductGenre = async (genre) => {
-    const res = await ProductService.getAllProductType(genre);
-    if (res?.status === "OK") {
-      setTotalProduct(res?.data?.length);
-    }
-    return res.data;
   };
 
   useEffect(() => {
-    fetchAllProductGenre(
+    fetchNewAllProductGenre(
       genre,
-      pageProduct.limit,
-      pageProduct.page,
+      10,
+      pageValue,
       selectedValues,
       sortValue,
       ratingValue
     );
-  }, [
-    genre,
-    pageProduct,
-    selectedFilter,
-    selectedValues,
-    ratingValue,
-    sortValue,
-  ]);
+  }, [genre, pageValue, ratingValue, sortValue, selectedValues]);
 
-  useEffect(() => {
-    fetchNewAllProductGenre(genre);
-  }, [genre]);
-
-  const onChange = (page, pageSize) => {
-    setPageProduct({
-      ...pageProduct,
-      page: page - 1,
-    });
+  const onChange = (page) => {
+    setPageValue(page);
   };
 
   const renderContent = (type, option) => {
@@ -307,16 +274,12 @@ const TypeProductPage = () => {
 
   const fetchAllGenreProduct = async () => {
     const res = await GenreService.getAllGenre();
-    if (res?.status === "OK") {
-      setGenreProduct(res?.data);
-    }
+    setGenreProduct(res?.data);
   };
 
   const fetchAllPublisher = async () => {
     const res = await PublisherService.getAllPublisher();
-    if (res?.status === "OK") {
-      setPublisher(res?.data);
-    }
+    setPublisher(res?.data);
   };
 
   useEffect(() => {
@@ -368,15 +331,6 @@ const TypeProductPage = () => {
               <WrapperContent>
                 {renderContent("rating", [5, 4, 3])}
               </WrapperContent>
-              <WrapperTitleText>Giá</WrapperTitleText>
-              <WrapperContent>
-                {renderContent("price", [
-                  "Dưới 50.000",
-                  "Từ 50.000 -> 120.000",
-                  "120.000 -> 280.000",
-                  "Trên 280.000",
-                ])}
-              </WrapperContent>
             </WrapperNavbar>
           </Col>
           <Col span={20}>
@@ -397,7 +351,7 @@ const TypeProductPage = () => {
                 </ButtonComponent>
                 <WrapperPagination>
                   <Pagination
-                    defaultCurrent={1}
+                    defaultCurrent={pageValue}
                     total={totalProduct}
                     pageSize={10}
                     onChange={onChange}
@@ -452,27 +406,21 @@ const TypeProductPage = () => {
                   ))}
               </WrapperFilter>
               <WrapperProducts>
-                {sortDate(productGenre)
-                  ?.filter((product) =>
-                    product.name
-                      .toLowerCase()
-                      .includes(searchDebound.toLowerCase())
-                  )
-                  .map((product, index) => (
-                    <CardProduct
-                      key={product._id}
-                      name={product.name}
-                      price={product.price}
-                      image={product.image}
-                      rating={product.rating}
-                      description={product.description}
-                      countInStock={product.countInStock}
-                      type={product.type}
-                      discount={product.discount}
-                      selled={product.selled}
-                      id={product._id}
-                    />
-                  ))}
+                {productGenre.map((product, index) => (
+                  <CardProduct
+                    key={product._id}
+                    name={product.name}
+                    price={product.price}
+                    image={product.image}
+                    rating={product.rating}
+                    description={product.description}
+                    countInStock={product.countInStock}
+                    type={product.type}
+                    discount={product.discount}
+                    selled={product.selled}
+                    id={product._id}
+                  />
+                ))}
               </WrapperProducts>
             </LoadingComponent>
           </Col>
