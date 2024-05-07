@@ -1,31 +1,33 @@
+import { Pagination, Segmented } from "antd";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import Loading from "../../components/LoadingComponent/LoadingComponent";
+import * as Message from "../../components/Message/Message";
+import useMutationHook from "../../hooks/useMutationHook";
 import * as OrderService from "../../services/OrderService";
+import { sortDate } from "../../utils/sorts";
 import { convertDate, convertPrice } from "../../utils/utils";
 import {
+  WrapperContainer,
+  WrapperFooterItem,
+  WrapperHeaderItem,
   WrapperItemOrder,
   WrapperListOrder,
-  WrapperHeaderItem,
-  WrapperFooterItem,
-  WrapperContainer,
-  WrapperStatus,
   WrapperMyOrderPage,
-  WrapperStyleTitle,
-  WrapperStatusTitle,
+  WrapperStatus,
   WrapperStatusContent,
+  WrapperStatusTitle,
+  WrapperStyleTitle,
 } from "./styles";
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
-import { useLocation, useNavigate } from "react-router-dom";
-import useMutationHook from "../../hooks/useMutationHook";
-import { useSelector } from "react-redux";
-import * as Message from "../../components/Message/Message";
-import { sortDate } from "../../utils/sorts";
-import { Segmented } from "antd";
 
 const MyOrderPage = () => {
   const [selectedValue, setSelectedValue] = useState("Tất cả");
   const [dataOrders, setDataOrders] = useState([]);
   const [isLoadingDataOrders, setIsLoadingDataOrders] = useState(false);
+  const [pageValue, setPageValue] = useState(1);
+  const [totalOrder, setTotalOrder] = useState(10);
   const user = useSelector((state) => state.user);
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,13 +36,19 @@ const MyOrderPage = () => {
   useEffect(() => {
     const fetchAllOrder = async () => {
       setIsLoadingDataOrders(true);
-      const res = await OrderService.getOrder(id, token, selectedValue);
-      setIsLoadingDataOrders(false);
+      const res = await OrderService.getOrder(
+        id,
+        token,
+        selectedValue,
+        pageValue
+      );
       setDataOrders(res?.data);
+      setTotalOrder(res?.totalOrder);
+      setIsLoadingDataOrders(false);
     };
 
     fetchAllOrder();
-  }, [selectedValue]);
+  }, [selectedValue, pageValue]);
 
   const handleOrderDetail = (id) => {
     navigate(`/order-detail/${id}`, {
@@ -127,24 +135,44 @@ const MyOrderPage = () => {
     setSelectedValue(value);
   };
 
+  const handleOnChangePage = (page, pageSize) => {
+    setPageValue(page);
+  };
+
   return (
     <Loading isLoading={isLoadingDataOrders || isLoadingDelete}>
       <WrapperContainer>
         <WrapperMyOrderPage>
           <WrapperStyleTitle>Đơn hàng của tôi</WrapperStyleTitle>
           <WrapperListOrder>
-            <div>
-              <Segmented
-                defaultValue={selectedValue}
-                options={[
-                  "Tất cả",
-                  "Chờ giao hàng",
-                  "Đang giao hàng",
-                  "Đã giao hàng",
-                ]}
-                onChange={handleOnChangeSegmented}
-                size="large"
-              />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                <Segmented
+                  defaultValue={selectedValue}
+                  options={[
+                    "Tất cả",
+                    "Chờ giao hàng",
+                    "Đang giao hàng",
+                    "Đã giao hàng",
+                  ]}
+                  onChange={handleOnChangeSegmented}
+                  size="large"
+                />
+              </div>
+              <div>
+                <Pagination
+                  defaultCurrent={pageValue}
+                  total={totalOrder}
+                  pageSize={5}
+                  onChange={handleOnChangePage}
+                />
+              </div>
             </div>
             {dataOrders?.length > 0 ? (
               sortDate(dataOrders)?.map((item, index) => {

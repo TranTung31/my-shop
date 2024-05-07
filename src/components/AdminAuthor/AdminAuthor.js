@@ -11,7 +11,6 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import * as Message from "../../components/Message/Message";
 import useMutationHook from "../../hooks/useMutationHook";
-import * as ContactService from "../../services/ContactService";
 import * as AuthorService from "../../services/AuthorService";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import InputComponent from "../InputComponent/InputComponent";
@@ -355,7 +354,7 @@ const AdminAuthor = () => {
       title: "Tên tác giả",
       dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,
-      ...getColumnSearchProps('name'),
+      ...getColumnSearchProps("name"),
     },
     {
       title: "Tiểu sử",

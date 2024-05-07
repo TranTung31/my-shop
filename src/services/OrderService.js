@@ -13,7 +13,7 @@ export const createOrder = async (data, access_token) => {
   return res.data;
 };
 
-export const getOrder = async (id, access_token, delivery) => {
+export const getOrder = async (id, access_token, delivery, page) => {
   let typeDelivery = "";
 
   if (delivery === "Tất cả") {
@@ -33,7 +33,7 @@ export const getOrder = async (id, access_token, delivery) => {
   }
 
   const res = await axiosJWT.get(
-    `${process.env.REACT_APP_API}/order/get-order/${id}?delivery=${typeDelivery}`,
+    `${process.env.REACT_APP_API}/order/get-order/${id}?delivery=${typeDelivery}&page=${page}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
