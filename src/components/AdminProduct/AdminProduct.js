@@ -4,17 +4,16 @@ import {
   PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
 import { Button, Form, Select, Space } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import * as Message from "../../components/Message/Message";
 import useMutationHook from "../../hooks/useMutationHook";
+import * as AuthorService from "../../services/AuthorService";
 import * as GenreService from "../../services/GenreService";
 import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
-import * as AuthorService from "../../services/AuthorService";
 import { getBase64 } from "../../utils/utils";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import InputComponent from "../InputComponent/InputComponent";
@@ -33,15 +32,21 @@ const AdminProduct = () => {
   const [isRowSelected, setIsRowSelected] = useState("");
   const [isNameProduct, setIsNameProduct] = useState("");
   const [typeProduct, setTypeProduct] = useState([]);
-
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [pageValue, setPageValue] = useState(1);
+  const [dataProductAdmin, setDataProductAdmin] = useState([]);
+  const [totalProduct, setTotalProduct] = useState(10);
+  const [isLoadingProduct, setIsLoadingProduct] = useState(false);
+
   const searchInput = useRef(null);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
@@ -112,54 +117,48 @@ const AdminProduct = () => {
     return res;
   });
 
-  const mutation = useMutationHook((data) => {
+  const mutationCreate = useMutationHook((data) => {
     const res = ProductService.createProduct(data);
     return res;
   });
 
-  const { data, isSuccess } = mutation;
+  const { data: dataCreateProduct, isSuccess: isSuccessCreateProduct } =
+    mutationCreate;
 
   const {
     data: dataUpdateProduct,
-    isError: isErrorUpdateProduct,
     isSuccess: isSuccessUpdateProduct,
     isLoading: isLoadingUpdateProduct,
   } = mutationUpdate;
 
   const {
     data: dataDeleteProduct,
-    isError: isErrorDeleteProduct,
     isSuccess: isSuccessDeleteProduct,
     isLoading: isLoadingDeleteProduct,
   } = mutationDelete;
 
-  const {
-    data: dataDeleteManyProduct,
-    isError: isErrorDeleteManyProduct,
-    isSuccess: isSuccessDeleteManyProduct,
-    isLoading: isLoadingDeleteManyProduct,
-  } = mutationDeleteMany;
+  const { data: dataDeleteManyProduct, isSuccess: isSuccessDeleteManyProduct } =
+    mutationDeleteMany;
 
-  const getAllProduct = async () => {
-    const res = await ProductService.getAllProduct();
-    return res;
+  const getProductAdmin = async () => {
+    setIsLoadingProduct(true);
+    const res = await ProductService.getProductAdmin(pageValue, 10);
+    setDataProductAdmin(res?.data);
+    setTotalProduct(res?.totalProduct);
+    setIsLoadingProduct(false);
   };
 
-  const queryGetAllProduct = useQuery({
-    queryKey: ["products"],
-    queryFn: getAllProduct,
-  });
-
-  const { isLoading: isLoadingProducts, data: products } = queryGetAllProduct;
-
-  const dataProducts = products?.data
-    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    ?.map((product) => {
-      return { ...product, key: product._id };
-    });
+  useEffect(() => {
+    getProductAdmin();
+  }, [
+    pageValue,
+    isSuccessCreateProduct,
+    isSuccessUpdateProduct,
+    isSuccessDeleteProduct,
+  ]);
 
   useEffect(() => {
-    if (isSuccess && data?.status === "OK") {
+    if (isSuccessCreateProduct && dataCreateProduct?.status === "OK") {
       Message.success("Tạo sản phẩm mới thành công!");
       setStateProduct({
         name: "",
@@ -175,7 +174,7 @@ const AdminProduct = () => {
       });
       formCreate.resetFields();
       setIsOpenModalCreate(false);
-    } else if (data?.status === "ERROR") {
+    } else if (dataCreateProduct?.status === "ERROR") {
       Message.error("Tạo sản phẩm mới thất bại!");
       setStateProduct({
         name: "",
@@ -192,7 +191,7 @@ const AdminProduct = () => {
       formCreate.resetFields();
       setIsOpenModalCreate(false);
     }
-  }, [isSuccess]);
+  }, [isSuccessCreateProduct]);
 
   useEffect(() => {
     if (isSuccessUpdateProduct && dataUpdateProduct?.status === "OK") {
@@ -251,12 +250,8 @@ const AdminProduct = () => {
     authorID: stateProduct.authorID,
   };
 
-  const handleCreateProduct = () => {
-    mutation.mutate(newStateProduct, {
-      onSettled: () => {
-        queryGetAllProduct.refetch();
-      },
-    });
+  const handleCreateProduct = async () => {
+    await mutationCreate.mutate(newStateProduct);
   };
 
   const handleOnChangeAvatar = async ({ fileList }) => {
@@ -337,29 +332,18 @@ const AdminProduct = () => {
   };
 
   const handleUpdateProduct = () => {
-    mutationUpdate.mutate(
-      {
-        id: isRowSelected,
-        data: stateDetailProduct,
-        access_token: user?.access_token,
-      },
-      {
-        onSettled: () => {
-          queryGetAllProduct.refetch();
-        },
-      }
-    );
+    mutationUpdate.mutate({
+      id: isRowSelected,
+      data: stateDetailProduct,
+      access_token: user?.access_token,
+    });
   };
 
   const handleDelete = () => {
-    mutationDelete.mutate(
-      { id: isRowSelected, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllProduct.refetch();
-        },
-      }
-    );
+    mutationDelete.mutate({
+      id: isRowSelected,
+      access_token: user?.access_token,
+    });
   };
 
   const renderIcons = () => {
@@ -544,14 +528,7 @@ const AdminProduct = () => {
   ];
 
   const handleDeleteManyProduct = (ids) => {
-    mutationDeleteMany.mutate(
-      { ids: ids, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllProduct.refetch();
-        },
-      }
-    );
+    mutationDeleteMany.mutate({ ids: ids, access_token: user?.access_token });
   };
 
   const fetchAllTypeProduct = async () => {
@@ -690,6 +667,10 @@ const AdminProduct = () => {
       };
     });
     return result;
+  };
+
+  const handleOnChangePage = (page, pageSize) => {
+    setPageValue(page);
   };
 
   return (
@@ -1020,7 +1001,7 @@ const AdminProduct = () => {
         <LoadingComponent isLoading={isLoadingDeleteProduct}>
           <div
             style={{ marginTop: "12px", fontWeight: 600, height: "50px" }}
-          >{`Bạn có chắc chắn muốn xóa sản phẩm có name "${isNameProduct}" này không?`}</div>
+          >{`Bạn có chắc chắn muốn xóa sản phẩm có tên "${isNameProduct}" này không?`}</div>
         </LoadingComponent>
       </ModalComponent>
 
@@ -1301,10 +1282,13 @@ const AdminProduct = () => {
 
       <div style={{ marginTop: "20px" }}>
         <TableComponent
-          isLoading={isLoadingProducts}
+          isLoading={isLoadingProduct}
           columns={columns}
-          data={dataProducts}
+          data={dataProductAdmin}
+          pageValue={pageValue}
+          totalPagination={totalProduct}
           handleDelete={handleDeleteManyProduct}
+          handleOnChangePage={handleOnChangePage}
           onRow={(record) => {
             return {
               onClick: (event) => {

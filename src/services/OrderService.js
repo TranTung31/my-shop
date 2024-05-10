@@ -1,3 +1,4 @@
+import axios from "axios";
 import { axiosJWT } from "./UserService";
 
 export const createOrder = async (data, access_token) => {
@@ -124,6 +125,18 @@ export const getCountOrder = async (access_token) => {
 export const getTotalPrice = async (access_token) => {
   const res = await axiosJWT.get(
     `${process.env.REACT_APP_API}/order/get-total-price`,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const getOrderAdmin = async (access_token, page, limit) => {
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API}/order?page=${page}&limit=${limit}`,
     {
       headers: {
         token: `Bearer ${access_token}`,

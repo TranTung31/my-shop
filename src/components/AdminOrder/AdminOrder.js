@@ -1,23 +1,23 @@
-import { WrapperHeader } from "./styles";
-import TableComponent from "../TableComponent/TableComponent";
-import { Button, Form, Select, Space } from "antd";
-import { useEffect, useRef, useState } from "react";
-import ModalComponent from "../ModalComponent/ModalComponent";
-import InputComponent from "../InputComponent/InputComponent";
-import LoadingComponent from "../LoadingComponent/LoadingComponent";
-import DrawerComponent from "../DrawerComponent/DrawerComponent";
-import { useSelector } from "react-redux";
-import * as OrderService from "../../services/OrderService";
-import useMutationHook from "../../hooks/useMutationHook";
-import * as Message from "../../components/Message/Message";
-import { useQuery } from "@tanstack/react-query";
 import {
   DeleteOutlined,
   EditOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
+import { Button, Form, Select, Space } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import * as Message from "../../components/Message/Message";
+import useMutationHook from "../../hooks/useMutationHook";
+import * as OrderService from "../../services/OrderService";
 import { convertPrice } from "../../utils/utils";
+import DrawerComponent from "../DrawerComponent/DrawerComponent";
+import InputComponent from "../InputComponent/InputComponent";
+import LoadingComponent from "../LoadingComponent/LoadingComponent";
+import ModalComponent from "../ModalComponent/ModalComponent";
+import TableComponent from "../TableComponent/TableComponent";
 import PieChartComponent from "./PieChartComponent";
+import { WrapperHeader } from "./styles";
 
 const AdminOrder = () => {
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
@@ -30,9 +30,13 @@ const AdminOrder = () => {
     "Đã giao hàng",
   ]);
   const [isCodeOrder, setIsCodeOrder] = useState("");
-
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [pageValue, setPageValue] = useState(1);
+  const [dataOrderAdmin, setDataOrderAdmin] = useState([]);
+  const [totalOrder, setTotalOrder] = useState(10);
+  const [isLoadingOrder, setIsLoadingOrder] = useState(false);
+
   const searchInput = useRef(null);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -40,6 +44,7 @@ const AdminOrder = () => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
@@ -95,14 +100,12 @@ const AdminOrder = () => {
 
   const {
     data: dataDeleteOrder,
-    isError: isErrorDeleteOrder,
     isSuccess: isSuccessDeleteOrder,
     isLoading: isLoadingDeleteOrder,
   } = mutationDelete;
 
   const {
     data: dataDeleteManyOrder,
-    isError: isErrorDeleteManyOrder,
     isSuccess: isSuccessDeleteManyOrder,
     isLoading: isLoadingDeleteManyOrder,
   } = mutationDeleteMany;
@@ -112,14 +115,26 @@ const AdminOrder = () => {
     return res;
   };
 
+  const getOrderAdmin = async () => {
+    setIsLoadingOrder(true);
+    const res = await OrderService.getOrderAdmin(user?.access_token, pageValue, 10);
+    setDataOrderAdmin(res?.data);
+    setTotalOrder(res?.totalOrder);
+    setIsLoadingOrder(false);
+  };
+
+  useEffect(() => {
+    getOrderAdmin();
+  }, [pageValue, isSuccessUpdateOrder, isSuccessDeleteOrder]);
+
   const queryGetAllOrder = useQuery({
-    queryKey: ["order"],
+    queryKey: ["orders"],
     queryFn: getAll,
   });
 
-  const { isLoading: isLoadingProducts, data: orders } = queryGetAllOrder;
+  const { data: orders } = queryGetAllOrder;
 
-  const dataOrder = orders?.data
+  const dataOrder = dataOrderAdmin
     ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     ?.map((order) => {
       return {
@@ -262,82 +277,6 @@ const AdminOrder = () => {
     );
   };
 
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <InputComponent
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: "block",
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1677ff" : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-  });
-
   const columns = [
     {
       title: "Mã đơn hàng",
@@ -429,6 +368,10 @@ const AdminOrder = () => {
       };
     });
     return result;
+  };
+
+  const handleOnChangePage = (page, pageSize) => {
+    setPageValue(page);
   };
 
   return (
@@ -622,10 +565,13 @@ const AdminOrder = () => {
       <div style={{ marginTop: "20px" }}>
         <LoadingComponent isLoading={isLoadingDeleteManyOrder}>
           <TableComponent
-            isLoading={isLoadingProducts}
+            isLoading={isLoadingOrder}
             columns={columns}
             data={dataOrder}
+            pageValue={pageValue}
+            totalPagination={totalOrder}
             handleDelete={handleDeleteManyOrder}
+            handleOnChangePage={handleOnChangePage}
             onRow={(record) => {
               return {
                 onClick: (event) => {

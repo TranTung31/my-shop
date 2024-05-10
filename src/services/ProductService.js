@@ -18,6 +18,13 @@ export const getAllProduct = async (limit, search) => {
   }
 };
 
+export const getProductAdmin = async (page, limit) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/product?page=${page}&limit=${limit}`
+  );
+  return res.data;
+};
+
 export const createProduct = async (data) => {
   const res = await axios.post(
     `${process.env.REACT_APP_API}/product/create`,
