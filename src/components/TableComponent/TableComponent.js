@@ -1,17 +1,21 @@
-import { Table } from "antd";
+import { Pagination, Table } from "antd";
 import { Excel } from "antd-table-saveas-excel";
 import { useRef, useState } from "react";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
+import { WrapperPagination } from "./styles";
 
 const TableComponent = (props) => {
   const [isSelectedRowKeys, setIsSelectedRowKeys] = useState([]);
   const {
+    pageValue,
+    totalPagination,
     selectionType = "checkbox",
     isLoading = false,
     columns = [],
     data: dataSource = [],
     handleDelete,
+    handleOnChangePage,
   } = props;
 
   const newColumns = () => {
@@ -87,8 +91,19 @@ const TableComponent = (props) => {
         }}
         columns={columns}
         dataSource={dataSource}
+        pagination={{
+          position: ["none", "none"],
+        }}
         {...props}
       />
+      <WrapperPagination>
+        <Pagination
+          defaultCurrent={pageValue}
+          total={totalPagination}
+          pageSize={10}
+          onChange={handleOnChangePage}
+        />
+      </WrapperPagination>
     </LoadingComponent>
   );
 };

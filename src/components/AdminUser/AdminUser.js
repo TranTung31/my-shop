@@ -24,7 +24,7 @@ const AdminUser = () => {
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
-  const [isNameUser, setIsNameUser] = useState("");
+  const [isEmailUser, setIsEmailUser] = useState("");
 
   const [searchText, setSearchText] = useState("");
   const [typeBoolean, setTypeBoolean] = useState(["true", "false"]);
@@ -456,11 +456,11 @@ const AdminUser = () => {
     <div>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
 
-      <WrapperButton type="dashed" onClick={() => setIsOpenModalCreate(true)}>
+      {/* <WrapperButton type="dashed" onClick={() => setIsOpenModalCreate(true)}>
         Thêm <PlusOutlined />
-      </WrapperButton>
+      </WrapperButton> */}
 
-      <ModalComponent
+      {/* <ModalComponent
         title="Tạo người dùng mới"
         open={isOpenModalCreate}
         onCancel={handleCancelModalCreate}
@@ -550,7 +550,7 @@ const AdminUser = () => {
             </Form.Item>
           </Form>
         </LoadingComponent>
-      </ModalComponent>
+      </ModalComponent> */}
 
       <ModalComponent
         title="Xóa người dùng"
@@ -561,7 +561,7 @@ const AdminUser = () => {
         <LoadingComponent isLoading={isLoadingDeleteUser}>
           <div
             style={{ marginTop: "12px", fontWeight: 600, height: "50px" }}
-          >{`Bạn có chắc chắn muốn xóa người dùng có tên "${isNameUser}" này không?`}</div>
+          >{`Bạn có chắc chắn muốn xóa người dùng có email "${isEmailUser}" này không?`}</div>
         </LoadingComponent>
       </ModalComponent>
 
@@ -753,7 +753,7 @@ const AdminUser = () => {
             return {
               onClick: (event) => {
                 setIsRowSelected(record._id);
-                setIsNameUser(record.name);
+                setIsEmailUser(record.email);
               },
             };
           }}
