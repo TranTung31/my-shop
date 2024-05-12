@@ -15,6 +15,13 @@ export const getDetailGenre = async (id) => {
   return res.data;
 };
 
+export const getGenreAdmin = async (page, limit) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/genre?page=${page}&limit=${limit}`
+  );
+  return res.data;
+};
+
 export const createGenre = async (data, access_token) => {
   const res = await axiosJWT.post(
     `${process.env.REACT_APP_API}/genre/create-genre`,

@@ -4,7 +4,6 @@ import {
   PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
 import { Button, Form, Space } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useRef, useState } from "react";
@@ -24,16 +23,22 @@ const AdminAuthor = () => {
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
-
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [nameAuthor, setNameAuthor] = useState("");
+  const [pageValue, setPageValue] = useState(1);
+  const [dataAuthorAdmin, setDataAuthorAdmin] = useState([]);
+  const [totalAuthor, setTotalAuthor] = useState(10);
+  const [isLoadingAuthor, setIsLoadingAuthor] = useState(false);
+
   const searchInput = useRef(null);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
@@ -89,22 +94,28 @@ const AdminAuthor = () => {
     isLoading: isLoadingDeleteAuthor,
   } = mutationDelete;
 
-  const { data: dataDeleteManyContact, isSuccess: isSuccessDeleteManyContact } =
+  const { data: dataDeleteManyContact, isSuccess: isSuccessDeleteManyAuthor } =
     mutationDeleteMany;
 
-  const getAllAuthor = async () => {
-    const res = await AuthorService.getAllAuthor();
-    return res;
+  const getAuthorAdmin = async () => {
+    setIsLoadingAuthor(true);
+    const res = await AuthorService.getAuthorAdmin(pageValue, 10);
+    setDataAuthorAdmin(res?.data);
+    setTotalAuthor(res?.totalAuthor);
+    setIsLoadingAuthor(false);
   };
 
-  const queryGetAllAuthor = useQuery({
-    queryKey: ["author"],
-    queryFn: getAllAuthor,
-  });
+  useEffect(() => {
+    getAuthorAdmin();
+  }, [
+    pageValue,
+    isSuccessCreateAuthor,
+    isSuccessUpdateAuthor,
+    isSuccessDeleteAuthor,
+    isSuccessDeleteManyAuthor,
+  ]);
 
-  const { isLoading: isLoadingAuthor, data: authors } = queryGetAllAuthor;
-
-  const dataAuthors = authors?.data?.map((author) => {
+  const dataAuthorTable = dataAuthorAdmin.map((author) => {
     return { ...author, key: author._id };
   });
 
@@ -149,12 +160,12 @@ const AdminAuthor = () => {
   }, [isSuccessDeleteAuthor]);
 
   useEffect(() => {
-    if (isSuccessDeleteManyContact && dataDeleteManyContact?.status === "OK") {
+    if (isSuccessDeleteManyAuthor && dataDeleteManyContact?.status === "OK") {
       Message.success("Xóa nhiều tác giả thành công!");
     } else if (dataDeleteAuthor?.status === "ERROR") {
       Message.success("Xóa nhiều tác giả thất bại!");
     }
-  }, [isSuccessDeleteManyContact]);
+  }, [isSuccessDeleteManyAuthor]);
 
   const showModal = () => {
     setIsOpenModalCreate(true);
@@ -171,14 +182,10 @@ const AdminAuthor = () => {
   };
 
   const handleCreateAuthor = () => {
-    mutationCreate.mutate(
-      { data: newStateAuthor, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllAuthor.refetch();
-        },
-      }
-    );
+    mutationCreate.mutate({
+      data: newStateAuthor,
+      access_token: user?.access_token,
+    });
   };
 
   const handleOnChange = (e) => {
@@ -225,28 +232,17 @@ const AdminAuthor = () => {
   };
 
   const handleUpdateAuthor = () => {
-    mutationUpdate.mutate(
-      {
-        id: isRowSelected,
-        data: stateDetailAuthor,
-      },
-      {
-        onSettled: () => {
-          queryGetAllAuthor.refetch();
-        },
-      }
-    );
+    mutationUpdate.mutate({
+      id: isRowSelected,
+      data: stateDetailAuthor,
+    });
   };
 
   const handleDeleteAuthor = () => {
-    mutationDelete.mutate(
-      { id: isRowSelected, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllAuthor.refetch();
-        },
-      }
-    );
+    mutationDelete.mutate({
+      id: isRowSelected,
+      access_token: user?.access_token,
+    });
   };
 
   const renderIcons = () => {
@@ -368,14 +364,11 @@ const AdminAuthor = () => {
   ];
 
   const handleDeleteManyAuthor = (ids) => {
-    mutationDeleteMany.mutate(
-      { ids: ids, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllAuthor.refetch();
-        },
-      }
-    );
+    mutationDeleteMany.mutate({ ids: ids, access_token: user?.access_token });
+  };
+
+  const handleOnChangePage = (page, pageSize) => {
+    setPageValue(page);
   };
 
   return (
@@ -548,8 +541,11 @@ const AdminAuthor = () => {
         <TableComponent
           isLoading={isLoadingAuthor}
           columns={columns}
-          data={dataAuthors}
+          data={dataAuthorTable}
+          pageValue={pageValue}
+          totalPagination={totalAuthor}
           handleDelete={handleDeleteManyAuthor}
+          handleOnChangePage={handleOnChangePage}
           onRow={(record) => {
             return {
               onClick: (event) => {

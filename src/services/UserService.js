@@ -75,6 +75,13 @@ export const getAllUser = async (access_token) => {
   return res.data;
 };
 
+export const getUserAdmin = async (page, limit) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/user?page=${page}&limit=${limit}`
+  );
+  return res.data;
+};
+
 export const deleteUser = async (id, access_token) => {
   const res = await axiosJWT.delete(
     `${process.env.REACT_APP_API}/user/delete-user/${id}`,
