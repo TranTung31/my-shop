@@ -1,10 +1,9 @@
 import {
-  DeleteOutlined,
   PlusOutlined,
+  DeleteOutlined,
   EditOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
 import { Button, Form, Select, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -25,16 +24,22 @@ const AdminUser = () => {
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
   const [isEmailUser, setIsEmailUser] = useState("");
-
   const [searchText, setSearchText] = useState("");
   const [typeBoolean, setTypeBoolean] = useState(["true", "false"]);
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [pageValue, setPageValue] = useState(1);
+  const [dataUserAdmin, setDataUserAdmin] = useState([]);
+  const [totalUser, setTotalUser] = useState(10);
+  const [isLoadingUser, setIsLoadingUser] = useState(false);
+
   const searchInput = useRef(null);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
@@ -105,27 +110,31 @@ const AdminUser = () => {
     isLoading: isLoadingDeleteManyUser,
   } = mutationDeleteMany;
 
-  const getAllUser = async () => {
-    const res = await UserService.getAllUser(user?.access_token);
-    return res;
+  const getUserAdmin = async () => {
+    setIsLoadingUser(true);
+    const res = await UserService.getUserAdmin(pageValue, 10);
+    setDataUserAdmin(res?.data);
+    setTotalUser(res?.totalUser);
+    setIsLoadingUser(false);
   };
 
-  const queryGetAllUser = useQuery({
-    queryKey: ["users"],
-    queryFn: getAllUser,
+  useEffect(() => {
+    getUserAdmin();
+  }, [
+    pageValue,
+    isSuccessCreateUser,
+    isSuccessUpdateUser,
+    isSuccessDeleteUser,
+    isSuccessDeleteManyUser,
+  ]);
+
+  const dataUserTable = dataUserAdmin.map((user) => {
+    return {
+      ...user,
+      key: user._id,
+      isAdmin: user.isAdmin ? "TRUE" : "FALSE",
+    };
   });
-
-  const { isLoading: isLoadingProducts, data: users } = queryGetAllUser;
-
-  const dataUsers = users?.data
-    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    ?.map((user) => {
-      return {
-        ...user,
-        key: user._id,
-        isAdmin: user.isAdmin ? "TRUE" : "FALSE",
-      };
-    });
 
   useEffect(() => {
     if (isSuccessCreateUser && dataCreateUser?.status === "OK") {
@@ -242,40 +251,22 @@ const AdminUser = () => {
   };
 
   const handleCreateUser = () => {
-    mutationCreate.mutate(
-      { data: stateUser },
-      {
-        onSettled: () => {
-          queryGetAllUser.refetch();
-        },
-      }
-    );
+    mutationCreate.mutate({ data: stateUser });
   };
 
   const handleUpdateUser = () => {
-    mutationUpdate.mutate(
-      {
-        id: isRowSelected,
-        data: stateUserDetail,
-        access_token: user?.access_token,
-      },
-      {
-        onSettled: () => {
-          queryGetAllUser.refetch();
-        },
-      }
-    );
+    mutationUpdate.mutate({
+      id: isRowSelected,
+      data: stateUserDetail,
+      access_token: user?.access_token,
+    });
   };
 
   const handleDelete = () => {
-    mutationDelete.mutate(
-      { id: isRowSelected, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllUser.refetch();
-        },
-      }
-    );
+    mutationDelete.mutate({
+      id: isRowSelected,
+      access_token: user?.access_token,
+    });
   };
 
   const renderIcons = () => {
@@ -435,14 +426,7 @@ const AdminUser = () => {
   ];
 
   const handleDeleteManyUser = (ids) => {
-    mutationDeleteMany.mutate(
-      { ids: ids, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllUser.refetch();
-        },
-      }
-    );
+    mutationDeleteMany.mutate({ ids: ids, access_token: user?.access_token });
   };
 
   const handleOnChangeIsAdmin = (e) => {
@@ -450,6 +434,10 @@ const AdminUser = () => {
       ...stateUserDetail,
       isAdmin: e,
     });
+  };
+
+  const handleOnChangePage = (page, pageSize) => {
+    setPageValue(page);
   };
 
   return (
@@ -745,10 +733,13 @@ const AdminUser = () => {
 
       <div style={{ marginTop: "20px" }}>
         <TableComponent
-          isLoading={isLoadingProducts}
+          isLoading={isLoadingUser}
           columns={columns}
-          data={dataUsers}
+          data={dataUserTable}
+          pageValue={pageValue}
+          totalPagination={totalUser}
           handleDelete={handleDeleteManyUser}
+          handleOnChangePage={handleOnChangePage}
           onRow={(record) => {
             return {
               onClick: (event) => {

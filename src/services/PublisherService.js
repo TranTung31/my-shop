@@ -20,6 +20,13 @@ export const getDetailPublisher = async (id, access_token) => {
   return res.data;
 };
 
+export const getPublisherAdmin = async (page, limit) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/publisher?page=${page}&limit=${limit}`
+  );
+  return res.data;
+};
+
 export const createPublisher = async (data, access_token) => {
   const res = await axiosJWT.post(
     `${process.env.REACT_APP_API}/publisher/create-publisher`,

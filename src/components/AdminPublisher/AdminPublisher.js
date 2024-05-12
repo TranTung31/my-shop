@@ -4,7 +4,6 @@ import {
   PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
 import { Button, Form, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -24,15 +23,21 @@ const AdminPublisher = () => {
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
   const [isNamePublisher, setIsNamePublisher] = useState("");
-
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [pageValue, setPageValue] = useState(1);
+  const [dataPublisherAdmin, setDataPublisherAdmin] = useState([]);
+  const [totalPublisher, setTotalPublisher] = useState(10);
+  const [isLoadingPublisher, setIsLoadingPublisher] = useState(false);
+
   const searchInput = useRef(null);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
@@ -93,20 +98,25 @@ const AdminPublisher = () => {
     isSuccess: isSuccessDeleteManyPublisher,
   } = mutationDeleteMany;
 
-  const getAllPublisher = async () => {
-    const res = await PublisherService.getAllPublisher();
-    return res;
+  const getPublisherAdmin = async () => {
+    setIsLoadingPublisher(true);
+    const res = await PublisherService.getPublisherAdmin(pageValue, 10);
+    setDataPublisherAdmin(res?.data);
+    setTotalPublisher(res?.totalPublisher);
+    setIsLoadingPublisher(false);
   };
 
-  const queryGetAllPublisher = useQuery({
-    queryKey: ["publisher"],
-    queryFn: getAllPublisher,
-  });
+  useEffect(() => {
+    getPublisherAdmin();
+  }, [
+    pageValue,
+    isSuccessCreatePublisher,
+    isSuccessUpdatePublisher,
+    isSuccessDeletePublisher,
+    isSuccessDeleteManyPublisher,
+  ]);
 
-  const { isLoading: isLoadingPublisher, data: publishers } =
-    queryGetAllPublisher;
-
-  const dataPublishers = publishers?.data?.map((publisher) => {
+  const dataPulisherTable = dataPublisherAdmin.map((publisher) => {
     return { ...publisher, key: publisher._id };
   });
 
@@ -151,7 +161,10 @@ const AdminPublisher = () => {
   }, [isSuccessDeletePublisher]);
 
   useEffect(() => {
-    if (isSuccessDeleteManyPublisher && dataDeleteManyPublisher?.status === "OK") {
+    if (
+      isSuccessDeleteManyPublisher &&
+      dataDeleteManyPublisher?.status === "OK"
+    ) {
       Message.success("Xóa nhiều nhà xuất bản thành công!");
     } else if (dataDeletePublisher?.status === "ERROR") {
       Message.success("Xóa nhiều nhà xuất bản thất bại!");
@@ -173,14 +186,10 @@ const AdminPublisher = () => {
   };
 
   const handleCreatePublisher = () => {
-    mutationCreate.mutate(
-      { data: newStatePublisher, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllPublisher.refetch();
-        },
-      }
-    );
+    mutationCreate.mutate({
+      data: newStatePublisher,
+      access_token: user?.access_token,
+    });
   };
 
   const handleOnChange = (e) => {
@@ -231,29 +240,18 @@ const AdminPublisher = () => {
   };
 
   const handleUpdatePublisher = () => {
-    mutationUpdate.mutate(
-      {
-        id: isRowSelected,
-        data: stateDetailPublisher,
-        access_token: user?.access_token,
-      },
-      {
-        onSettled: () => {
-          queryGetAllPublisher.refetch();
-        },
-      }
-    );
+    mutationUpdate.mutate({
+      id: isRowSelected,
+      data: stateDetailPublisher,
+      access_token: user?.access_token,
+    });
   };
 
   const handleDeletePublisher = () => {
-    mutationDelete.mutate(
-      { id: isRowSelected, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllPublisher.refetch();
-        },
-      }
-    );
+    mutationDelete.mutate({
+      id: isRowSelected,
+      access_token: user?.access_token,
+    });
   };
 
   const renderIcons = () => {
@@ -355,7 +353,7 @@ const AdminPublisher = () => {
   const columns = [
     {
       title: "Mã nhà xuất bản",
-      dataIndex: "_id"
+      dataIndex: "_id",
     },
     {
       title: "Tên nhà xuất bản",
@@ -375,14 +373,11 @@ const AdminPublisher = () => {
   ];
 
   const handleDeleteManyPublisher = (ids) => {
-    mutationDeleteMany.mutate(
-      { ids: ids, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllPublisher.refetch();
-        },
-      }
-    );
+    mutationDeleteMany.mutate({ ids: ids, access_token: user?.access_token });
+  };
+
+  const handleOnChangePage = (page, pageSize) => {
+    setPageValue(page);
   };
 
   return (
@@ -553,8 +548,11 @@ const AdminPublisher = () => {
         <TableComponent
           isLoading={isLoadingPublisher}
           columns={columns}
-          data={dataPublishers}
+          data={dataPulisherTable}
+          pageValue={pageValue}
+          totalPagination={totalPublisher}
           handleDelete={handleDeleteManyPublisher}
+          handleOnChangePage={handleOnChangePage}
           onRow={(record) => {
             return {
               onClick: (event) => {

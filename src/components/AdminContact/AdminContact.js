@@ -25,15 +25,21 @@ const AdminContact = () => {
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
-
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [pageValue, setPageValue] = useState(1);
+  const [dataContactAdmin, setDataContactAdmin] = useState([]);
+  const [totalContact, setTotalContact] = useState(10);
+  const [isLoadingContact, setIsLoadingContact] = useState(false);
+
   const searchInput = useRef(null);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
@@ -96,19 +102,25 @@ const AdminContact = () => {
   const { data: dataDeleteManyContact, isSuccess: isSuccessDeleteManyContact } =
     mutationDeleteMany;
 
-  const getAllContact = async () => {
-    const res = await ContactService.getAllContact();
-    return res;
+  const getContactAdmin = async () => {
+    setIsLoadingContact(true);
+    const res = await ContactService.getContactAdmin(pageValue, 10);
+    setDataContactAdmin(res?.data);
+    setTotalContact(res?.totalContact);
+    setIsLoadingContact(false);
   };
 
-  const queryGetAllContact = useQuery({
-    queryKey: ["contact"],
-    queryFn: getAllContact,
-  });
+  useEffect(() => {
+    getContactAdmin();
+  }, [
+    pageValue,
+    isSuccessCreateContact,
+    isSuccessUpdateContact,
+    isSuccessDeleteContact,
+    isSuccessDeleteManyContact,
+  ]);
 
-  const { isLoading: isLoadingContact, data: contacts } = queryGetAllContact;
-
-  const dataContacts = contacts?.data?.map((contact) => {
+  const dataContactTable = dataContactAdmin.map((contact) => {
     return { ...contact, key: contact._id };
   });
 
@@ -182,14 +194,10 @@ const AdminContact = () => {
   };
 
   const handleCreateContact = () => {
-    mutationCreate.mutate(
-      { data: newStateContact, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllContact.refetch();
-        },
-      }
-    );
+    mutationCreate.mutate({
+      data: newStateContact,
+      access_token: user?.access_token,
+    });
   };
 
   const handleOnChange = (e) => {
@@ -239,28 +247,17 @@ const AdminContact = () => {
   };
 
   const handleUpdateContact = () => {
-    mutationUpdate.mutate(
-      {
-        id: isRowSelected,
-        data: stateDetailContact,
-      },
-      {
-        onSettled: () => {
-          queryGetAllContact.refetch();
-        },
-      }
-    );
+    mutationUpdate.mutate({
+      id: isRowSelected,
+      data: stateDetailContact,
+    });
   };
 
   const handleDeleteContact = () => {
-    mutationDelete.mutate(
-      { id: isRowSelected, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllContact.refetch();
-        },
-      }
-    );
+    mutationDelete.mutate({
+      id: isRowSelected,
+      access_token: user?.access_token,
+    });
   };
 
   const renderIcons = () => {
@@ -395,14 +392,11 @@ const AdminContact = () => {
   ];
 
   const handleDeleteManyContact = (ids) => {
-    mutationDeleteMany.mutate(
-      { ids: ids, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllContact.refetch();
-        },
-      }
-    );
+    mutationDeleteMany.mutate({ ids: ids, access_token: user?.access_token });
+  };
+
+  const handleOnChangePage = (page, pageSize) => {
+    setPageValue(page);
   };
 
   return (
@@ -643,8 +637,11 @@ const AdminContact = () => {
         <TableComponent
           isLoading={isLoadingContact}
           columns={columns}
-          data={sortDate(dataContacts)}
+          data={dataContactTable}
+          pageValue={pageValue}
+          totalPagination={totalContact}
           handleDelete={handleDeleteManyContact}
+          handleOnChangePage={handleOnChangePage}
           onRow={(record) => {
             return {
               onClick: (event) => {

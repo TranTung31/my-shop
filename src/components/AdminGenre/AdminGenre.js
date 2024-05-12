@@ -4,13 +4,11 @@ import {
   PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
 import { Button, Form, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import * as Message from "../../components/Message/Message";
 import useMutationHook from "../../hooks/useMutationHook";
-import * as PublisherService from "../../services/PublisherService";
 import * as GenreService from "../../services/GenreService";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import InputComponent from "../InputComponent/InputComponent";
@@ -25,15 +23,21 @@ const AdminGenre = () => {
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isRowSelected, setIsRowSelected] = useState("");
   const [isNameGenre, setIsNameGenre] = useState("");
-
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [pageValue, setPageValue] = useState(1);
+  const [dataGenreAdmin, setDataGenreAdmin] = useState([]);
+  const [totalGenre, setTotalGenre] = useState(10);
+  const [isLoadingGenre, setIsLoadingGenre] = useState(false);
+
   const searchInput = useRef(null);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
@@ -90,19 +94,25 @@ const AdminGenre = () => {
   const { data: dataDeleteManyGenre, isSuccess: isSuccessDeleteManyGenre } =
     mutationDeleteMany;
 
-  const getAllGenre = async () => {
-    const res = await GenreService.getAllGenre();
-    return res;
+  const getGenreAdmin = async () => {
+    setIsLoadingGenre(true);
+    const res = await GenreService.getGenreAdmin(pageValue, 10);
+    setDataGenreAdmin(res?.data);
+    setTotalGenre(res?.totalGenre);
+    setIsLoadingGenre(false);
   };
 
-  const queryGetAllGenre = useQuery({
-    queryKey: ["genre"],
-    queryFn: getAllGenre,
-  });
+  useEffect(() => {
+    getGenreAdmin();
+  }, [
+    pageValue,
+    isSuccessCreateGenre,
+    isSuccessUpdateGenre,
+    isSuccessDeleteGenre,
+    isSuccessDeleteManyGenre,
+  ]);
 
-  const { isLoading: isLoadingGenre, data: genres } = queryGetAllGenre;
-
-  const dataGenres = genres?.data?.map((genre) => {
+  const dataGenreTable = dataGenreAdmin.map((genre) => {
     return { ...genre, key: genre._id };
   });
 
@@ -166,14 +176,10 @@ const AdminGenre = () => {
   };
 
   const handleCreateGenre = () => {
-    mutationCreate.mutate(
-      { data: newStateGenre, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllGenre.refetch();
-        },
-      }
-    );
+    mutationCreate.mutate({
+      data: newStateGenre,
+      access_token: user?.access_token,
+    });
   };
 
   const handleOnChange = (e) => {
@@ -220,28 +226,17 @@ const AdminGenre = () => {
   };
 
   const handleUpdateGenre = () => {
-    mutationUpdate.mutate(
-      {
-        id: isRowSelected,
-        data: stateDetailGenre,
-      },
-      {
-        onSettled: () => {
-          queryGetAllGenre.refetch();
-        },
-      }
-    );
+    mutationUpdate.mutate({
+      id: isRowSelected,
+      data: stateDetailGenre,
+    });
   };
 
   const handleDeleteGenre = () => {
-    mutationDelete.mutate(
-      { id: isRowSelected, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllGenre.refetch();
-        },
-      }
-    );
+    mutationDelete.mutate({
+      id: isRowSelected,
+      access_token: user?.access_token,
+    });
   };
 
   const renderIcons = () => {
@@ -359,14 +354,11 @@ const AdminGenre = () => {
   ];
 
   const handleDeleteManyPublisher = (ids) => {
-    mutationDeleteMany.mutate(
-      { ids: ids, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllGenre.refetch();
-        },
-      }
-    );
+    mutationDeleteMany.mutate({ ids: ids, access_token: user?.access_token });
+  };
+
+  const handleOnChangePage = (page, pageSize) => {
+    setPageValue(page);
   };
 
   return (
@@ -503,8 +495,11 @@ const AdminGenre = () => {
         <TableComponent
           isLoading={isLoadingGenre}
           columns={columns}
-          data={dataGenres}
+          data={dataGenreTable}
+          pageValue={pageValue}
+          totalPagination={totalGenre}
           handleDelete={handleDeleteManyPublisher}
+          handleOnChangePage={handleOnChangePage}
           onRow={(record) => {
             return {
               onClick: (event) => {

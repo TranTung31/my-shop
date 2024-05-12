@@ -15,6 +15,13 @@ export const getDetailAuthor = async (id) => {
   return res.data;
 };
 
+export const getAuthorAdmin = async (page, limit) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/author?page=${page}&limit=${limit}`
+  );
+  return res.data;
+};
+
 export const createAuthor = async (data, access_token) => {
   const res = await axiosJWT.post(
     `${process.env.REACT_APP_API}/author/create-author`,

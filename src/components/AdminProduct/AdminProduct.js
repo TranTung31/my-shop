@@ -157,6 +157,10 @@ const AdminProduct = () => {
     isSuccessDeleteProduct,
   ]);
 
+  const dataProductTable = dataProductAdmin.map((product) => {
+    return { ...product, key: product._id };
+  });
+
   useEffect(() => {
     if (isSuccessCreateProduct && dataCreateProduct?.status === "OK") {
       Message.success("Tạo sản phẩm mới thành công!");
@@ -1284,7 +1288,7 @@ const AdminProduct = () => {
         <TableComponent
           isLoading={isLoadingProduct}
           columns={columns}
-          data={dataProductAdmin}
+          data={dataProductTable}
           pageValue={pageValue}
           totalPagination={totalProduct}
           handleDelete={handleDeleteManyProduct}
