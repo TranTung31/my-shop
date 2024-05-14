@@ -7,6 +7,7 @@ import { WrapperPagination } from "./styles";
 
 const TableComponent = (props) => {
   const [isSelectedRowKeys, setIsSelectedRowKeys] = useState([]);
+
   const {
     pageValue,
     totalPagination,
@@ -19,7 +20,9 @@ const TableComponent = (props) => {
   } = props;
 
   const newColumns = () => {
-    return columns?.filter((col) => col.dataIndex !== "action");
+    return columns?.filter(
+      (col) => col.dataIndex !== "action" && col.dataIndex !== "image"
+    );
   };
 
   const rowSelection = {
@@ -35,6 +38,7 @@ const TableComponent = (props) => {
 
   const handleDeleteMany = () => {
     handleDelete(isSelectedRowKeys);
+    setIsSelectedRowKeys([]);
   };
 
   const tableRef = useRef(null);

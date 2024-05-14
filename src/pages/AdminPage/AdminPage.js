@@ -7,6 +7,7 @@ import {
   UserOutlined,
   PhoneOutlined,
   TeamOutlined,
+  ReadOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import React, { useEffect, useState } from "react";
@@ -21,6 +22,7 @@ import { getItem } from "../../utils/utils";
 import { WrapperContent } from "./styles";
 import AdminContact from "../../components/AdminContact/AdminContact";
 import AdminAuthor from "../../components/AdminAuthor/AdminAuthor";
+import AdminNews from "../../components/AdminNews/AdminNews";
 
 const AdminPage = () => {
   const renderKey = (key) => {
@@ -39,6 +41,8 @@ const AdminPage = () => {
         return <AdminPublisher />;
       case "genre":
         return <AdminGenre />;
+      case "news":
+        return <AdminNews />;
       case "contact":
         return <AdminContact />;
       default:
@@ -53,6 +57,7 @@ const AdminPage = () => {
     getItem("Tác giả", "author", <TeamOutlined />),
     getItem("Nhà xuất bản", "publisher", <FormOutlined />),
     getItem("Thể loại", "genre", <AccountBookOutlined />),
+    getItem("Tin tức", "news", <ReadOutlined />),
     getItem("Liên hệ", "contact", <PhoneOutlined />),
   ];
   const [keySelected, setKeySelected] = useState("home");
