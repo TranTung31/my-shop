@@ -92,7 +92,7 @@ export const convertDate = (inputDateRaw) => {
   const year = inputDate.getUTCFullYear();
 
   // Tạo chuỗi ngày tháng mới
-  const outputDateString = day + "-" + month + "-" + year;
+  const outputDateString = day + "/" + month + "/" + year;
   return outputDateString;
 };
 

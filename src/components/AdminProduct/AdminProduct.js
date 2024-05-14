@@ -260,9 +260,11 @@ const AdminProduct = () => {
 
   const handleOnChangeAvatar = async ({ fileList }) => {
     const file = fileList[0];
+
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
+
     setStateProduct({
       ...stateProduct,
       image: file.preview,
@@ -452,6 +454,13 @@ const AdminProduct = () => {
       dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
+    },
+    {
+      title: "Hình ảnh",
+      dataIndex: "image",
+      render: (image) => (
+        <img alt={image} src={image} width="150px" height="150px" />
+      ),
     },
     {
       title: "Số trang",
@@ -689,17 +698,18 @@ const AdminProduct = () => {
         open={isOpenModalCreate}
         onCancel={handleCancelModalCreate}
         footer={null}
+        width={1200}
       >
         <Form
           name="basic"
           labelCol={{
-            span: 8,
+            span: 4,
           }}
           wrapperCol={{
-            span: 22,
+            span: 26,
           }}
           style={{
-            maxWidth: 600,
+            maxWidth: 1100,
           }}
           initialValues={{
             remember: true,
@@ -985,7 +995,7 @@ const AdminProduct = () => {
 
           <Form.Item
             wrapperCol={{
-              offset: 20,
+              offset: 22,
               span: 16,
             }}
           >
