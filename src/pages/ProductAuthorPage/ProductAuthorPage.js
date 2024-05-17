@@ -39,7 +39,6 @@ const ProductAuthorPage = () => {
     limit: 10,
     page: 0,
   });
-
   const [ratingValue, setRatingValue] = useState("");
   const [sortValue, setSortValue] = useState("");
   const [publisher, setPublisher] = useState([]);
@@ -65,26 +64,26 @@ const ProductAuthorPage = () => {
     }
   };
 
-  const fetchGetProductAuthor = async () => {
-    setIsLoading(true);
-    const res = await ProductService.getProductAuthor(
-      authorId,
-      pageProduct.limit,
-      pageProduct.page,
-      selectedValues,
-      sortValue,
-      ratingValue
-    );
-    if (res?.data) {
-      setProductAuthor(res?.data);
-      setTotalProduct(res?.data?.length);
-    }
-    setIsLoading(false);
-    return res.data;
-  };
-
   useEffect(() => {
-    fetchGetProductAuthor();
+    const fetchProductAuthor = async () => {
+      setIsLoading(true);
+      const res = await ProductService.getProductAuthor(
+        authorId,
+        pageProduct.limit,
+        pageProduct.page,
+        selectedValues,
+        sortValue,
+        ratingValue
+      );
+      if (res?.data) {
+        setProductAuthor(res?.data);
+        setTotalProduct(res?.data?.length);
+      }
+      setIsLoading(false);
+      return res.data;
+    };
+
+    fetchProductAuthor();
   }, [authorId, pageProduct, selectedFilter, selectedValues, sortValue]);
 
   const fetchGetAuthor = async () => {

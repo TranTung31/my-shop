@@ -152,7 +152,7 @@ const OrderPage = () => {
 
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {
-      Message.success("Update user success!");
+      Message.success("Cập nhật thông tin người dùng thành công!");
       dispatch(
         updateUser({
           ...data?.data,

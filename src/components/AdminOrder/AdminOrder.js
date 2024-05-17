@@ -117,7 +117,11 @@ const AdminOrder = () => {
 
   const getOrderAdmin = async () => {
     setIsLoadingOrder(true);
-    const res = await OrderService.getOrderAdmin(user?.access_token, pageValue, 10);
+    const res = await OrderService.getOrderAdmin(
+      user?.access_token,
+      pageValue,
+      10
+    );
     setDataOrderAdmin(res?.data);
     setTotalOrder(res?.totalOrder);
     setIsLoadingOrder(false);
@@ -191,29 +195,36 @@ const AdminOrder = () => {
     });
   };
 
-  const fetchGetDetailOrder = async () => {
-    const res = await OrderService.getOrderDetail(
-      isRowSelected,
-      user?.access_token
-    );
-
-    if (res?.data) {
-      setStateOrderDetail({
-        fullName: res?.data?.shippingAddress?.fullName,
-        phone: res?.data?.shippingAddress?.phone,
-        address: res?.data?.shippingAddress?.address,
-        city: res?.data?.shippingAddress?.city,
-        deliveryMethod: res?.data?.deliveryMethod,
-        isPaided: String(res?.data?.isPaid),
-        isDelivered: String(res?.data?.isDelivered),
-      });
-    }
-    return res;
+  const handleOnChangeDetailDeliveryMethod = (value) => {
+    setStateOrderDetail({
+      ...stateOrderDetail,
+      deliveryMethod: value,
+    });
   };
 
   useEffect(() => {
+    const fetchDetailOrder = async () => {
+      const res = await OrderService.getOrderDetail(
+        isRowSelected,
+        user?.access_token
+      );
+
+      if (res?.data) {
+        setStateOrderDetail({
+          fullName: res?.data?.shippingAddress?.fullName,
+          phone: res?.data?.shippingAddress?.phone,
+          address: res?.data?.shippingAddress?.address,
+          city: res?.data?.shippingAddress?.city,
+          deliveryMethod: res?.data?.deliveryMethod,
+          isPaided: String(res?.data?.isPaid),
+          isDelivered: String(res?.data?.isDelivered),
+        });
+      }
+      return res;
+    };
+
     if (isRowSelected) {
-      fetchGetDetailOrder();
+      fetchDetailOrder();
     }
   }, [isRowSelected]);
 
@@ -499,10 +510,15 @@ const AdminOrder = () => {
                 },
               ]}
             >
-              <InputComponent
-                value={stateOrderDetail.deliveryMethod}
-                onChange={handleOnChangeDetail}
-                name="deliveryMethod"
+              <Select
+                onChange={handleOnChangeDetailDeliveryMethod}
+                style={{
+                  width: "100%",
+                }}
+                options={[
+                  { value: "GHTK", label: "GHTK" },
+                  { value: "J&T Express", label: "J&T Express" },
+                ]}
               />
             </Form.Item>
 

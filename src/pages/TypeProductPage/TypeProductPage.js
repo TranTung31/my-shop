@@ -307,7 +307,13 @@ const TypeProductPage = () => {
 
   return (
     <WrapperTypeProduct>
-      <div style={{ width: "1285px", height: "100%", margin: "0 auto" }}>
+      <div
+        style={{
+          width: "1285px",
+          minHeight: "calc(100vh - 90px)",
+          margin: "0 auto",
+        }}
+      >
         <WrapperNavigation>
           <WrapperNavigationHome onClick={() => navigate("/")}>
             Trang chủ

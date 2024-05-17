@@ -9,9 +9,7 @@ export const getAllAuthor = async () => {
 };
 
 export const getDetailAuthor = async (id) => {
-  const res = await axios.get(
-    `${process.env.REACT_APP_API}/author/get-author/${id}`
-  );
+  const res = await axios.get(`${process.env.REACT_APP_API}/author/${id}`);
   return res.data;
 };
 
@@ -23,21 +21,17 @@ export const getAuthorAdmin = async (page, limit) => {
 };
 
 export const createAuthor = async (data, access_token) => {
-  const res = await axiosJWT.post(
-    `${process.env.REACT_APP_API}/author/create-author`,
-    data,
-    {
-      headers: {
-        token: `Bearer ${access_token}`,
-      },
-    }
-  );
+  const res = await axiosJWT.post(`${process.env.REACT_APP_API}/author`, data, {
+    headers: {
+      token: `Bearer ${access_token}`,
+    },
+  });
   return res.data;
 };
 
 export const updateAuthor = async (id, data, access_token) => {
   const res = await axiosJWT.put(
-    `${process.env.REACT_APP_API}/author/update-author/${id}`,
+    `${process.env.REACT_APP_API}/author/${id}`,
     data,
     {
       headers: {
@@ -50,7 +44,7 @@ export const updateAuthor = async (id, data, access_token) => {
 
 export const deleteAuthor = async (id, access_token) => {
   const res = await axiosJWT.delete(
-    `${process.env.REACT_APP_API}/author/delete-author/${id}`,
+    `${process.env.REACT_APP_API}/author/${id}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
@@ -62,7 +56,7 @@ export const deleteAuthor = async (id, access_token) => {
 
 export const deleteManyAuthor = async (ids, access_token) => {
   const res = await axiosJWT.post(
-    `${process.env.REACT_APP_API}/author/delete-many-author`,
+    `${process.env.REACT_APP_API}/author/delete-many`,
     ids,
     {
       headers: {

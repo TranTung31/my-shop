@@ -6,7 +6,6 @@ const initialState = {
   shippingAddress: {},
   paymentMethod: "",
   itemsPrice: 0,
-  taxPrice: 0,
   totalPrice: 0,
   isPaid: false,
   paidAt: "",
@@ -20,11 +19,12 @@ export const orderSlice = createSlice({
   initialState,
   reducers: {
     addProductToCart: (state, action) => {
-      const { amount, image, name, price, discount, product, countInStock } =
-        action.payload;
+      const { amount, product } = action.payload;
+
       const findProduct = state.orderItems.find(
         (item) => item.product === product
       );
+
       if (findProduct) {
         if (findProduct.amount <= findProduct.countInStock) {
           findProduct.amount += amount;
@@ -59,18 +59,17 @@ export const orderSlice = createSlice({
     },
     increaseProduct: (state, action) => {
       const { productId } = action.payload;
+
       const findProduct = state.orderItems.find(
         (item) => item.product === productId
       );
+
       const findProductSelected = state.orderItemsSelected.find(
         (item) => item.product === productId
       );
-      if (findProduct) {
-        findProduct.amount++;
-      }
-      if (findProductSelected) {
-        findProductSelected.amount++;
-      }
+
+      if (findProduct) findProduct.amount++;
+      if (findProductSelected) findProductSelected.amount++;
     },
     decreaseProduct: (state, action) => {
       const { productId } = action.payload;
