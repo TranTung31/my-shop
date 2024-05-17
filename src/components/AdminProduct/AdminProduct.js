@@ -57,44 +57,38 @@ const AdminProduct = () => {
   const initialStateProduct = () => {
     return {
       name: "",
-      type: "",
+      image: "",
       price: "",
       countInStock: "",
       discount: "",
-      rating: "",
-      image: "",
-      newType: "",
-      author: "",
-      numberOfBook: "",
       description: "",
-      formatBook: "",
-      publisherID: "",
-      genreID: "",
-      authorID: "",
+      pageCount: "",
+      format: "",
+      weight: "",
+      authorId: "",
+      genreId: "",
+      publisherId: "",
     };
   };
 
   const initialStateDetailProduct = () => {
     return {
       name: "",
-      type: "",
+      image: "",
       price: "",
       countInStock: "",
       discount: "",
-      rating: "",
-      image: "",
-      author: "",
-      numberOfBook: "",
       description: "",
-      formatBook: "",
-      publisherID: "",
-      genreID: "",
-      authorID: "",
+      pageCount: "",
+      format: "",
+      weight: "",
+      authorId: "",
+      genreId: "",
+      publisherId: "",
     };
   };
 
   const [stateProduct, setStateProduct] = useState(initialStateProduct());
-
   const [stateDetailProduct, setStateDetailProduct] = useState(
     initialStateDetailProduct()
   );
@@ -171,9 +165,8 @@ const AdminProduct = () => {
         countInStock: "",
         rating: "",
         image: "",
-        author: "",
-        numberOfBook: "",
-        formatBook: "",
+        pageCount: "",
+        format: "",
         description: "",
       });
       formCreate.resetFields();
@@ -187,9 +180,8 @@ const AdminProduct = () => {
         countInStock: "",
         rating: "",
         image: "",
-        author: "",
-        numberOfBook: "",
-        formatBook: "",
+        pageCount: "",
+        format: "",
         description: "",
       });
       formCreate.resetFields();
@@ -236,26 +228,28 @@ const AdminProduct = () => {
 
   const newStateProduct = {
     name: stateProduct.name,
-    type:
-      stateProduct?.type === "add-type"
-        ? stateProduct?.newType
-        : stateProduct?.type,
+    image: stateProduct.image,
     price: stateProduct.price,
     countInStock: stateProduct.countInStock,
     discount: stateProduct.discount,
-    rating: stateProduct.rating,
-    image: stateProduct.image,
-    author: stateProduct.author,
-    numberOfBook: stateProduct.numberOfBook,
     description: stateProduct.description,
-    formatBook: stateProduct.formatBook,
-    publisherID: stateProduct.publisherID,
-    genreID: stateProduct.genreID,
-    authorID: stateProduct.authorID,
+    pageCount: stateProduct.pageCount,
+    format: stateProduct.format,
+    weight: stateProduct.weight,
+    authorId: stateProduct.authorId,
+    genreId: stateProduct.genreId,
+    publisherId: stateProduct.publisherId,
   };
 
   const handleCreateProduct = async () => {
     await mutationCreate.mutate(newStateProduct);
+  };
+
+  const handleOnChange = (e) => {
+    setStateProduct({
+      ...stateProduct,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleOnChangeAvatar = async ({ fileList }) => {
@@ -271,24 +265,6 @@ const AdminProduct = () => {
     });
   };
 
-  const handleOnChangeAvatarDetail = async ({ fileList }) => {
-    const file = fileList[0];
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setStateDetailProduct({
-      ...stateDetailProduct,
-      image: file.preview,
-    });
-  };
-
-  const handleOnChange = (e) => {
-    setStateProduct({
-      ...stateProduct,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const handleOnChangeDetail = (e) => {
     setStateDetailProduct({
       ...stateDetailProduct,
@@ -296,32 +272,41 @@ const AdminProduct = () => {
     });
   };
 
-  const fetchGetDetailProduct = async () => {
-    const res = await ProductService.getDetailProduct(isRowSelected);
-    if (res?.data) {
-      setStateDetailProduct({
-        name: res?.data?.name,
-        type: res?.data?.type,
-        price: res?.data?.price,
-        countInStock: res?.data?.countInStock,
-        discount: res?.data?.discount,
-        rating: res?.data?.rating,
-        image: res?.data?.image,
-        author: res?.data?.author,
-        numberOfBook: res?.data?.numberOfBook,
-        formatBook: res?.data?.formatBook,
-        description: res?.data?.description,
-        publisherID: res?.data?.publisherID,
-        genreID: res?.data?.genreID,
-        authorID: res?.data?.authorID,
-      });
+  const handleOnChangeAvatarDetail = async ({ fileList }) => {
+    const file = fileList[0];
+
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
     }
-    return res;
+
+    setStateDetailProduct({
+      ...stateDetailProduct,
+      image: file.preview,
+    });
   };
 
   useEffect(() => {
+    const fetchDetailProduct = async () => {
+      const res = await ProductService.getDetailProduct(isRowSelected);
+      setStateDetailProduct({
+        name: res?.data?.name,
+        image: res?.data?.image,
+        price: res?.data?.price,
+        countInStock: res?.data?.countInStock,
+        rating: res?.data?.rating,
+        discount: res?.data?.discount,
+        description: res?.data?.description,
+        pageCount: res?.data?.pageCount,
+        format: res?.data?.format,
+        weight: res?.data?.weight,
+        publisherId: res?.data?.publisherId,
+        genreId: res?.data?.genreId,
+        authorId: res?.data?.authorId,
+      });
+    };
+
     if (isRowSelected) {
-      fetchGetDetailProduct();
+      fetchDetailProduct();
     }
   }, [isRowSelected]);
 
@@ -459,16 +444,22 @@ const AdminProduct = () => {
       title: "Hình ảnh",
       dataIndex: "image",
       render: (image) => (
-        <img alt={image} src={image} width="150px" height="150px" />
+        <img
+          alt={image}
+          src={image}
+          width="150px"
+          height="150px"
+          style={{ objectFit: "cover" }}
+        />
       ),
     },
     {
       title: "Số trang",
-      dataIndex: "numberOfBook",
+      dataIndex: "pageCount",
     },
     {
       title: "Định dạng",
-      dataIndex: "formatBook",
+      dataIndex: "format",
     },
     {
       title: "Giá tiền",
@@ -513,25 +504,8 @@ const AdminProduct = () => {
       },
     },
     {
-      title: "Đánh giá",
-      dataIndex: "rating",
-      sorter: (a, b) => a.rating - b.rating,
-      filters: [
-        {
-          text: ">= 3",
-          value: ">=",
-        },
-        {
-          text: "< 3",
-          value: "<",
-        },
-      ],
-      onFilter: (value, record) => {
-        if (value === ">=") {
-          return record?.rating >= 3;
-        }
-        return record?.rating < 3;
-      },
+      title: "Trọng lượng",
+      dataIndex: "weight",
     },
     {
       title: "Hành động",
@@ -544,64 +518,71 @@ const AdminProduct = () => {
     mutationDeleteMany.mutate({ ids: ids, access_token: user?.access_token });
   };
 
-  const fetchAllTypeProduct = async () => {
-    const res = await ProductService.getAllType();
-    if (res?.status === "OK") {
-      setTypeProduct(res?.data);
-    }
-    return res.data;
-  };
-
   useEffect(() => {
+    const fetchAllTypeProduct = async () => {
+      const res = await ProductService.getAllType();
+      if (res?.status === "OK") {
+        setTypeProduct(res?.data);
+      }
+      return res.data;
+    };
+
     fetchAllTypeProduct();
   }, [stateProduct]);
-
-  const handleOnChangeType = (e) => {
-    setStateProduct({
-      ...stateProduct,
-      type: e,
-    });
-  };
 
   const handleOnChangePublisher = (e) => {
     setStateProduct({
       ...stateProduct,
-      publisherID: e,
+      publisherId: e,
     });
   };
 
   const handleOnChangeGenre = (e) => {
     setStateProduct({
       ...stateProduct,
-      genreID: e,
+      genreId: e,
     });
   };
 
   const handleOnChangeAuthor = (e) => {
     setStateProduct({
       ...stateProduct,
-      authorID: e,
+      authorId: e,
+    });
+  };
+
+  const handleOnChangeFormat = (value) => {
+    setStateProduct({
+      ...stateProduct,
+      format: value,
+    });
+  };
+
+  const handleOnChangeDetailFormat = (value) => {
+    setStateDetailProduct({
+      ...stateDetailProduct,
+      format: value,
     });
   };
 
   const handleOnChangeDetailPublisher = (e) => {
     setStateDetailProduct({
       ...stateDetailProduct,
-      publisherID: e,
+      publisherId: e,
     });
   };
 
   const handleOnChangeDetailGenre = (e) => {
     setStateDetailProduct({
       ...stateDetailProduct,
-      genreID: e,
+      genreId: e,
     });
   };
 
   const handleOnChangeDetailAuthor = (e) => {
     setStateDetailProduct({
       ...stateDetailProduct,
-      authorID: e,
+      authorId: e,
     });
   };
 
@@ -620,37 +601,17 @@ const AdminProduct = () => {
   };
 
   const fetchAllAuthor = async () => {
-    const res = await AuthorService.getAllAuthor(user?.access_token);
+    const res = await AuthorService.getAllAuthor();
     if (res?.status === "OK") {
       setAuthor(res?.data);
     }
   };
 
   useEffect(() => {
+    fetchAllAuthor();
+    fetchAllGenre();
     fetchAllPublisher();
   }, []);
-
-  useEffect(() => {
-    fetchAllGenre();
-  }, []);
-
-  useEffect(() => {
-    fetchAllAuthor();
-  }, []);
-
-  const renderTypeProduct = () => {
-    let result = typeProduct.map((type) => {
-      return {
-        value: type,
-        label: type,
-      };
-    });
-    result.push({
-      value: "add-type",
-      label: "Thêm type",
-    });
-    return result;
-  };
 
   const renderPublisher = () => {
     let result = publisher?.map((item, index) => {
@@ -737,7 +698,7 @@ const AdminProduct = () => {
 
           <Form.Item
             label="Tác giả"
-            name="authorID"
+            name="authorId"
             rules={[
               {
                 required: true,
@@ -747,7 +708,7 @@ const AdminProduct = () => {
           >
             <Select
               name="author"
-              value={stateProduct.authorID}
+              value={stateProduct.authorId}
               onChange={handleOnChangeAuthor}
               style={{
                 width: "100%",
@@ -758,7 +719,7 @@ const AdminProduct = () => {
 
           <Form.Item
             label="Số trang"
-            name="numberOfBook"
+            name="pageCount"
             rules={[
               {
                 required: true,
@@ -767,16 +728,34 @@ const AdminProduct = () => {
             ]}
           >
             <InputComponent
-              value={stateProduct.numberOfBook}
+              value={stateProduct.pageCount}
               onChange={handleOnChange}
-              name="numberOfBook"
+              name="pageCount"
               type="number"
             />
           </Form.Item>
 
           <Form.Item
+            label="Trọng lượng"
+            name="weight"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập trọng lượng!",
+              },
+            ]}
+          >
+            <InputComponent
+              value={stateProduct.weight}
+              onChange={handleOnChange}
+              name="weight"
+              type="string"
+            />
+          </Form.Item>
+
+          <Form.Item
             label="Định dạng"
-            name="formatBook"
+            name="format"
             rules={[
               {
                 required: true,
@@ -784,52 +763,17 @@ const AdminProduct = () => {
               },
             ]}
           >
-            <InputComponent
-              value={stateProduct.formatBook}
-              onChange={handleOnChange}
-              name="formatBook"
-            />
-          </Form.Item>
-
-          {/* <Form.Item
-            label="Type"
-            name="type"
-            rules={[
-              {
-                required: true,
-                message: "Please input book type!",
-              },
-            ]}
-          >
             <Select
-              name="type"
-              value={stateProduct.type}
-              onChange={handleOnChangeType}
+              onChange={handleOnChangeFormat}
               style={{
                 width: "100%",
               }}
-              options={renderTypeProduct()}
-            />
-          </Form.Item> */}
-
-          {/* {stateProduct.type === "add-type" && (
-            <Form.Item
-              label="New Type"
-              name="newType"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your new type!",
-                },
+              options={[
+                { value: "Bìa mềm", label: "Bìa mềm" },
+                { value: "Bìa cứng", label: "Bìa cứng" },
               ]}
-            >
-              <InputComponent
-                value={stateProduct.newType}
-                onChange={handleOnChange}
-                name="newType"
-              />
-            </Form.Item>
-          )} */}
+            />
+          </Form.Item>
 
           <Form.Item
             label="Mô tả"
@@ -851,7 +795,7 @@ const AdminProduct = () => {
 
           <Form.Item
             label="Nhà xuất bản"
-            name="publisherID"
+            name="publisherId"
             rules={[
               {
                 required: true,
@@ -860,8 +804,8 @@ const AdminProduct = () => {
             ]}
           >
             <Select
-              name="publisherID"
-              value={stateProduct.publisherID}
+              name="publisherId"
+              value={stateProduct.publisherId}
               onChange={handleOnChangePublisher}
               style={{
                 width: "100%",
@@ -872,7 +816,7 @@ const AdminProduct = () => {
 
           <Form.Item
             label="Thể loại"
-            name="genreID"
+            name="genreId"
             rules={[
               {
                 required: true,
@@ -882,7 +826,7 @@ const AdminProduct = () => {
           >
             <Select
               name="genre"
-              value={stateProduct.genreID}
+              value={stateProduct.genreId}
               onChange={handleOnChangeGenre}
               style={{
                 width: "100%",
@@ -941,24 +885,6 @@ const AdminProduct = () => {
               value={stateProduct.discount}
               onChange={handleOnChange}
               name="discount"
-              type="number"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Số sao đánh giá"
-            name="rating"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập số sao đánh giá!",
-              },
-            ]}
-          >
-            <InputComponent
-              value={stateProduct.rating}
-              onChange={handleOnChange}
-              name="rating"
               type="number"
             />
           </Form.Item>
@@ -1062,7 +988,7 @@ const AdminProduct = () => {
 
             <Form.Item
               label="Tác giả"
-              name="authorID"
+              name="authorId"
               rules={[
                 {
                   required: true,
@@ -1071,8 +997,8 @@ const AdminProduct = () => {
               ]}
             >
               <Select
-                name="authorID"
-                value={stateDetailProduct.authorID}
+                name="authorId"
+                value={stateDetailProduct.authorId}
                 onChange={handleOnChangeDetailAuthor}
                 style={{
                   width: "100%",
@@ -1083,7 +1009,7 @@ const AdminProduct = () => {
 
             <Form.Item
               label="Số trang"
-              name="numberOfBook"
+              name="pageCount"
               rules={[
                 {
                   required: true,
@@ -1093,15 +1019,15 @@ const AdminProduct = () => {
             >
               <InputComponent
                 type="number"
-                value={stateDetailProduct.numberOfBook}
+                value={stateDetailProduct.pageCount}
                 onChange={handleOnChangeDetail}
-                name="numberOfBook"
+                name="pageCount"
               />
             </Form.Item>
 
             <Form.Item
               label="Định dạng"
-              name="formatBook"
+              name="format"
               rules={[
                 {
                   required: true,
@@ -1109,10 +1035,32 @@ const AdminProduct = () => {
                 },
               ]}
             >
+              <Select
+                onChange={handleOnChangeDetailFormat}
+                style={{
+                  width: "100%",
+                }}
+                options={[
+                  { value: "Bìa mềm", label: "Bìa mềm" },
+                  { value: "Bìa cứng", label: "Bìa cứng" },
+                ]}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Trọng lượng"
+              name="weight"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập trọng lượng!",
+                },
+              ]}
+            >
               <InputComponent
-                name="formatBook"
-                value={stateDetailProduct.formatBook}
+                value={stateDetailProduct.weight}
                 onChange={handleOnChangeDetail}
+                name="weight"
               />
             </Form.Item>
 
@@ -1136,7 +1084,7 @@ const AdminProduct = () => {
 
             <Form.Item
               label="Nhà xuất bản"
-              name="publisherID"
+              name="publisherId"
               rules={[
                 {
                   required: true,
@@ -1145,8 +1093,8 @@ const AdminProduct = () => {
               ]}
             >
               <Select
-                name="publisherID"
-                value={stateDetailProduct.publisherID}
+                name="publisherId"
+                value={stateDetailProduct.publisherId}
                 onChange={handleOnChangeDetailPublisher}
                 style={{
                   width: "100%",
@@ -1157,7 +1105,7 @@ const AdminProduct = () => {
 
             <Form.Item
               label="Thể loại"
-              name="genreID"
+              name="genreId"
               rules={[
                 {
                   required: true,
@@ -1166,8 +1114,8 @@ const AdminProduct = () => {
               ]}
             >
               <Select
-                name="genreID"
-                value={stateDetailProduct.genreID}
+                name="genreId"
+                value={stateDetailProduct.genreId}
                 onChange={handleOnChangeDetailGenre}
                 style={{
                   width: "100%",
@@ -1227,24 +1175,6 @@ const AdminProduct = () => {
                 value={stateDetailProduct.discount}
                 onChange={handleOnChangeDetail}
                 name="discount"
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Số sao đánh giá"
-              name="rating"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập số sao đánh giá!",
-                },
-              ]}
-            >
-              <InputComponent
-                type="number"
-                value={stateDetailProduct.rating}
-                onChange={handleOnChangeDetail}
-                name="rating"
               />
             </Form.Item>
 

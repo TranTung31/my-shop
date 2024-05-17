@@ -33,6 +33,18 @@ const MyOrderPage = () => {
   const navigate = useNavigate();
   const { id, token } = location.state;
 
+  const mutationDelete = useMutationHook(({ id, access_token, orderItems }) => {
+    const res = OrderService.deleteOrder(id, access_token, orderItems);
+    return res;
+  });
+
+  const {
+    data: dataDelete,
+    isSuccess: isSuccessDelete,
+    isError: isErrorDelete,
+    isLoading: isLoadingDelete,
+  } = mutationDelete;
+
   useEffect(() => {
     const fetchAllOrder = async () => {
       setIsLoadingDataOrders(true);
@@ -48,7 +60,15 @@ const MyOrderPage = () => {
     };
 
     fetchAllOrder();
-  }, [selectedValue, pageValue]);
+  }, [selectedValue, pageValue, isSuccessDelete]);
+
+  useEffect(() => {
+    if (isSuccessDelete) {
+      Message.success("Xóa đơn hàng thành công!");
+    } else if (isErrorDelete && dataDelete?.status === "ERROR") {
+      Message.error("Xóa đơn hàng thất bại!");
+    }
+  }, [isSuccessDelete]);
 
   const handleOrderDetail = (id) => {
     navigate(`/order-detail/${id}`, {
@@ -99,26 +119,6 @@ const MyOrderPage = () => {
       );
     });
   };
-
-  const mutationDelete = useMutationHook(({ id, access_token, orderItems }) => {
-    const res = OrderService.deleteOrder(id, access_token, orderItems);
-    return res;
-  });
-
-  const {
-    data: dataDelete,
-    isSuccess: isSuccessDelete,
-    isError: isErrorDelete,
-    isLoading: isLoadingDelete,
-  } = mutationDelete;
-
-  useEffect(() => {
-    if (isSuccessDelete) {
-      Message.success("Xóa đơn hàng thành công!");
-    } else if (isErrorDelete && dataDelete?.status === "ERROR") {
-      Message.error("Xóa đơn hàng thất bại!");
-    }
-  }, [isSuccessDelete]);
 
   const handleDeleteOrder = (order) => {
     const orderId = order?._id;

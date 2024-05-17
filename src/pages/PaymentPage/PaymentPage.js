@@ -1,4 +1,23 @@
 import { Button, Form, Radio } from "antd";
+import { useEffect, useState } from "react";
+import { PayPalButton } from "react-paypal-button-v2";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
+import InputComponent from "../../components/InputComponent/InputComponent";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import * as Message from "../../components/Message/Message";
+import ModalComponent from "../../components/ModalComponent/ModalComponent";
+import useMutationHook from "../../hooks/useMutationHook";
+import {
+  addOrderItemsSelected,
+  removeMoreProduct,
+} from "../../redux/slides/orderSlice";
+import { updateUser } from "../../redux/slides/userSlice";
+import * as OrderService from "../../services/OrderService";
+import * as PaymentService from "../../services/PaymentService";
+import * as UserService from "../../services/UserService";
+import { convertPrice } from "../../utils/utils";
 import {
   WrapperCaculator,
   WrapperLeft,
@@ -11,31 +30,12 @@ import {
   WrapperTotal,
   WrapperTotalPrice,
 } from "./styles";
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  removeMoreProduct,
-  addOrderItemsSelected,
-} from "../../redux/slides/orderSlice";
-import { useEffect, useState } from "react";
-import { convertPrice } from "../../utils/utils";
-import * as Message from "../../components/Message/Message";
-import ModalComponent from "../../components/ModalComponent/ModalComponent";
-import InputComponent from "../../components/InputComponent/InputComponent";
-import useMutationHook from "../../hooks/useMutationHook";
-import * as UserService from "../../services/UserService";
-import * as PaymentService from "../../services/PaymentService";
-import * as OrderService from "../../services/OrderService";
-import { updateUser } from "../../redux/slides/userSlice";
-import { useLocation, useNavigate } from "react-router-dom";
-import { PayPalButton } from "react-paypal-button-v2";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 
 const PaymentPage = () => {
   const [checkedList, setCheckedList] = useState([]);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
-  const [value, setValue] = useState("FAST");
-  const [valuePayment, setValuePayment] = useState("Thanh toán khi nhận hàng");
+  const [deliveryMethod, setDeliveryMethod] = useState("GHTK");
+  const [paymentMethod, setPaymentMethod] = useState("Thanh toán khi nhận hàng");
   const [stateUserDetail, setStateUserDetail] = useState({
     name: "",
     phone: "",
@@ -71,8 +71,8 @@ const PaymentPage = () => {
     return res;
   });
 
-  const onChange = (e) => {
-    setValue(e.target.value);
+  const onChangeDeliveryMethod = (e) => {
+    setDeliveryMethod(e.target.value);
   };
 
   const { isSuccess, data } = mutationUpdate;
@@ -135,8 +135,8 @@ const PaymentPage = () => {
         state: {
           orderItemsSelected,
           priceTotalMemo,
-          paymentMethod: valuePayment,
-          delivery: value,
+          paymentMethod: paymentMethod,
+          delivery: deliveryMethod,
         },
       });
     } else if (data?.status === "ERROR") {
@@ -152,8 +152,8 @@ const PaymentPage = () => {
         address: user?.address,
         city: user?.city,
         phone: user?.phone,
-        paymentMethod: valuePayment,
-        deliveryMethod: value,
+        paymentMethod: paymentMethod,
+        deliveryMethod: deliveryMethod,
         itemsPrice: priceMemo,
         shippingPrice: priceDeliveryMemo,
         totalPrice: priceTotalMemo,
@@ -187,8 +187,8 @@ const PaymentPage = () => {
     setIsOpenModalUpdateInfo(true);
   };
 
-  const onChangePayment = (e) => {
-    setValuePayment(e.target.value);
+  const onChangePaymentMethod = (e) => {
+    setPaymentMethod(e.target.value);
   };
 
   const getConfig = async () => {
@@ -216,8 +216,8 @@ const PaymentPage = () => {
         address: user?.address,
         city: user?.city,
         phone: user?.phone,
-        paymentMethod: valuePayment,
-        deliveryMethod: value,
+        paymentMethod: paymentMethod,
+        deliveryMethod: deliveryMethod,
         itemsPrice: priceMemo,
         shippingPrice: priceDeliveryMemo,
         totalPrice: priceTotalMemo,
@@ -244,18 +244,17 @@ const PaymentPage = () => {
                   </span>
                   <WrapperMethodDelivery>
                     <Radio.Group
-                      onChange={onChange}
-                      value={value}
+                      onChange={onChangeDeliveryMethod}
+                      value={deliveryMethod}
                       style={{ height: "100%" }}
                     >
                       <WrapperRadioContent>
-                        <Radio value={`FAST`}>
-                          <WrapperRadioText>FAST</WrapperRadioText> Giao hàng tiết
+                        <Radio value={`GHTK`}>
+                          <WrapperRadioText>GHTK</WrapperRadioText> Giao hàng tiết
                           kiệm
                         </Radio>
-                        <Radio value={`GO_JEK`}>
-                          <WrapperRadioText>GO_JEK</WrapperRadioText> Giao hàng
-                          tiết kiệm
+                        <Radio value={`J&T Express`}>
+                          <WrapperRadioText>J&T Express</WrapperRadioText> J&T Express
                         </Radio>
                       </WrapperRadioContent>
                     </Radio.Group>
@@ -268,8 +267,8 @@ const PaymentPage = () => {
                   </span>
                   <WrapperMethodDelivery>
                     <Radio.Group
-                      onChange={onChangePayment}
-                      value={valuePayment}
+                      onChange={onChangePaymentMethod}
+                      value={paymentMethod}
                       style={{ height: "100%" }}
                     >
                       <WrapperRadioContent>
@@ -327,7 +326,7 @@ const PaymentPage = () => {
                 </WrapperTotalPrice>
               </WrapperRight>
               <div style={{ paddingTop: "30px" }}>
-                {valuePayment === "Thanh toán bằng Paypal" ? (
+                {paymentMethod === "Thanh toán bằng Paypal" ? (
                   <PayPalButton
                     amount={Math.ceil(priceTotalMemo / 24000)}
                     // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"

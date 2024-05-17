@@ -78,6 +78,7 @@ const AdminPage = () => {
             backgroundColor: "#34495e",
             minWidth: 256,
             maxWidth: 256,
+            minHeight: "calc(100vh - 90px)",
             borderRight: "2px solid #ccc",
           }}
           items={items}

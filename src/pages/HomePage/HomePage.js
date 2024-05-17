@@ -25,17 +25,17 @@ import {
 const HomePage = () => {
   const [genreProduct, setGenreProduct] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingBookVN, setIsLoadingBookVN] = useState(false);
-  const [isLoadingBookNN, setIsLoadingBookNN] = useState(false);
-  const [isLoadingBookKT, setIsLoadingBookKT] = useState(false);
+  const [isLoadingBookVanHocVietNam, setIsLoadingBookVanHocVietNam] = useState(false);
+  const [isLoadingBookTruyenTranh, setIsLoadingBookTruyenTranh] = useState(false);
+  const [isLoadingBookMangaComic, setIsLoadingBookMangaComic] = useState(false);
   const [limitProduct, setLimitProduct] = useState(6);
 
   const valueSearchInput = useSelector((state) => state.product.search);
   const valueDebounce = useDebounceHook(valueSearchInput, 800);
 
   const [productVN, setProductVN] = useState([]);
-  const [productNuocNgoai, setProductNuocNgoai] = useState([]);
-  const [productKhoaHoc, setProductKhoaHoc] = useState([]);
+  const [productTruyenTranh, setProductTruyenTranh] = useState([]);
+  const [productMangaComic, setProductMangaComic] = useState([]);
 
   const navigate = useNavigate();
 
@@ -68,31 +68,31 @@ const HomePage = () => {
     setGenreProduct(res?.data);
   };
 
-  const fetchAllBookVN = async (genre, limit, page) => {
-    setIsLoadingBookVN(true);
+  const fetchBookVanHocVietNam = async (genre, limit, page) => {
+    setIsLoadingBookVanHocVietNam(true);
     const res = await ProductService.getAllProductType(genre, limit, page);
     setProductVN(res?.data);
-    setIsLoadingBookVN(false);
+    setIsLoadingBookVanHocVietNam(false);
   };
 
-  const fetchAllBookNuocNgoai = async (genre, limit, page) => {
-    setIsLoadingBookNN(true);
+  const fetchBookTruyenTranh = async (genre, limit, page) => {
+    setIsLoadingBookTruyenTranh(true);
     const res = await ProductService.getAllProductType(genre, limit, page);
-    setProductNuocNgoai(res?.data);
-    setIsLoadingBookNN(false);
+    setProductTruyenTranh(res?.data);
+    setIsLoadingBookTruyenTranh(false);
   };
 
-  const fetchAllBookKhoaHoc = async (genre, limit, page) => {
-    setIsLoadingBookKT(true);
+  const fetchBookMangaComic = async (genre, limit, page) => {
+    setIsLoadingBookMangaComic(true);
     const res = await ProductService.getAllProductType(genre, limit, page);
-    setProductKhoaHoc(res?.data);
-    setIsLoadingBookKT(false);
+    setProductMangaComic(res?.data);
+    setIsLoadingBookMangaComic(false);
   };
 
   useEffect(() => {
-    fetchAllBookVN("65b36e4471282a077bff5239", 12);
-    fetchAllBookNuocNgoai("65b36e9e71282a077bff523f", 12);
-    fetchAllBookKhoaHoc("65b6252b39026dfbaca3ec97", 12);
+    fetchBookVanHocVietNam("6646bcdd97a1e099aa7b95da", 12);
+    fetchBookTruyenTranh("664621477b7a9f1af95d7473", 12);
+    fetchBookMangaComic("6646c46126ef6ab2ab486b0b", 12);
     fetchAllGenreProduct();
   }, []);
 
@@ -170,17 +170,17 @@ const HomePage = () => {
           <ListProducts
             products={productVN}
             title="SÁCH VĂN HỌC VIỆT NAM"
-            isLoading={isLoadingBookVN}
+            isLoading={isLoadingBookVanHocVietNam}
           />
           <ListProducts
-            products={productNuocNgoai}
-            title="SÁCH VĂN HỌC NƯỚC NGOÀI"
-            isLoading={isLoadingBookNN}
+            products={productTruyenTranh}
+            title="TRUYỆN TRANH"
+            isLoading={isLoadingBookTruyenTranh}
           />
           <ListProducts
-            products={productKhoaHoc}
-            title="SÁCH KIẾN THỨC KHOA HỌC"
-            isLoading={isLoadingBookKT}
+            products={productMangaComic}
+            title="MANGA - COMIC"
+            isLoading={isLoadingBookMangaComic}
           />
         </div>
       </div>

@@ -14,12 +14,10 @@ import {
 const CardProduct = (props) => {
   const {
     name,
-    price,
     image,
+    price,
     rating,
-    description,
     countInStock,
-    type,
     discount,
     selled,
     id,
@@ -41,7 +39,7 @@ const CardProduct = (props) => {
         width: 200,
       }}
       bodyStyle={{ padding: "10px" }}
-      cover={<img alt="example" src={image} />}
+      cover={<img alt="example" src={image} style={{ objectFit: "cover" }} />}
       onClick={() => countInStock !== 0 && handleProductDetail(id)}
       disabled={countInStock === 0}
     >
@@ -61,7 +59,7 @@ const CardProduct = (props) => {
       <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportProduct>
         <span style={{ marginRight: "5px" }}>
-          {rating} <StarFilled style={{ color: "#FFC400" }} />{" "}
+          {rating || 5} <StarFilled style={{ color: "#FFC400" }} />{" "}
         </span>
         <WrapperStyleTextSell> | Đã bán {selled || 100}+</WrapperStyleTextSell>
       </WrapperReportProduct>

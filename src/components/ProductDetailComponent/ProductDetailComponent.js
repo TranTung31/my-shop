@@ -91,8 +91,8 @@ const ProductDetailComponent = ({ id }) => {
         dispatch(
           addProductToCart({
             name: product?.name,
-            amount: numberProduct,
             image: product?.image,
+            amount: numberProduct,
             price: product?.price,
             discount: product?.discount,
             product: product?._id,
@@ -145,7 +145,7 @@ const ProductDetailComponent = ({ id }) => {
   }, []);
 
   const publisherBook = arrPublisher.find(
-    (item) => item._id === product?.publisherID
+    (item) => item._id === product?.publisherId
   );
 
   const fetchGetAllAuthor = async () => {
@@ -157,7 +157,7 @@ const ProductDetailComponent = ({ id }) => {
     fetchGetAllAuthor();
   }, []);
 
-  const authorBook = arrAuthor.find((item) => item._id === product?.authorID);
+  const authorBook = arrAuthor.find((item) => item._id === product?.authorId);
 
   return (
     <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
@@ -232,7 +232,7 @@ const ProductDetailComponent = ({ id }) => {
           {/* {renderStart(product?.rating)} */}
           <WrapperStyleTextSell>
             {" "}
-            | Đã bán {`${product?.selled || 10}+`}
+            | Đã bán {`${product?.selled || 100}+`}
           </WrapperStyleTextSell>
         </div>
         <div>
@@ -267,10 +267,13 @@ const ProductDetailComponent = ({ id }) => {
           )}
         </WrapperDetailBook>
         <WrapperDetailBook>
-          <span>Số trang: {product?.numberOfBook}</span>
+          <span>Số trang: {product?.pageCount}</span>
         </WrapperDetailBook>
         <WrapperDetailBook>
-          <span>Định dạng: {product?.formatBook}</span>
+          <span>Định dạng: {product?.format}</span>
+        </WrapperDetailBook>
+        <WrapperDetailBook>
+          <span>Trọng lượng: {product?.weight}</span>
         </WrapperDetailBook>
         <WrapperDetailBook>
           <span>Nhà xuất bản: {publisherBook?.name}</span>
