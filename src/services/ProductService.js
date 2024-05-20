@@ -26,10 +26,7 @@ export const getProductAdmin = async (page, limit) => {
 };
 
 export const createProduct = async (data) => {
-  const res = await axios.post(
-    `${process.env.REACT_APP_API}/product`,
-    data
-  );
+  const res = await axios.post(`${process.env.REACT_APP_API}/product`, data);
   return res.data;
 };
 
@@ -129,6 +126,14 @@ export const getProductAuthor = async (
   const rating = ratingValue ? `&rating=${ratingValue}` : "";
   const res = await axios.get(
     `${process.env.REACT_APP_API}/product/get-product-author?filter=authorId&filter=${authorId}&limit=${limit}&page=${page}&publisher=publisherID${publisherID}${sort}${rating}`
+  );
+  return res.data;
+};
+
+export const ratingProduct = async (productId, userId, rating) => {
+  const res = await axios.post(
+    `${process.env.REACT_APP_API}/product/${productId}/rate`,
+    { userId, rating }
   );
   return res.data;
 };

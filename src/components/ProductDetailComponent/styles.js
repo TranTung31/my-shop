@@ -79,8 +79,18 @@ export const WrapperTitleDescription = styled.h2`
   font-weight: 500;
 `;
 
-export const WrapperTitleComment = styled.h2`
+export const WrapperRating = styled.div`
+  width: 100%;
   margin: 20px 0 10px;
+`;
+
+export const WrapperTitleRating = styled.div`
+  font-size: 2rem;
+  font-weight: 500;
+`;
+
+export const WrapperTitleComment = styled.div`
+  margin-bottom: 10px;
   font-size: 2rem;
   font-weight: 500;
 `;
