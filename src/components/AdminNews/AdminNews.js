@@ -256,6 +256,19 @@ const AdminNews = () => {
       dataIndex: "_id",
     },
     {
+      title: "Hình ảnh",
+      dataIndex: "image",
+      render: (image) => (
+        <img
+          alt={image}
+          src={image}
+          width="150px"
+          height="150px"
+          style={{ objectFit: "cover" }}
+        />
+      ),
+    },
+    {
       title: "Tiêu đề tin tức",
       dataIndex: "title",
     },

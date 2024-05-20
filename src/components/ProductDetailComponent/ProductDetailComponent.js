@@ -20,17 +20,23 @@ import {
   WrapperDetailBook,
   WrapperDetailBookAuthor,
   WrapperImageProductSmall,
+  WrapperRating,
   WrapperStyleTextHeader,
   WrapperStyleTextSell,
   WrapperTextQuantity,
   WrapperTitleComment,
   WrapperTitleDescription,
+  WrapperTitleRating,
 } from "./styles";
+import useMutationHook from "../../hooks/useMutationHook";
 
 const ProductDetailComponent = ({ id }) => {
   const [numberProduct, setNumberProduct] = useState(1);
   const [arrPublisher, setArrPublisher] = useState([]);
   const [arrAuthor, setArrAuthor] = useState([]);
+  const [ratingValue, setRatingValue] = useState(1);
+  const [product, setProduct] = useState([]);
+
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -48,17 +54,6 @@ const ProductDetailComponent = ({ id }) => {
   }, [order?.isSuccessOrder]);
 
   const onChangeQuantityProduct = () => {};
-
-  const fetchProductDetail = async () => {
-    const res = await ProductService.getDetailProduct(id);
-    return res.data;
-  };
-
-  const { data: product } = useQuery(["product-detail"], fetchProductDetail, {
-    retry: 3,
-    retryDelay: 1000,
-    keepPreviousData: true,
-  });
 
   const handleChangeNumberProduct = (type, check) => {
     if (type === "increase") {
@@ -105,10 +100,6 @@ const ProductDetailComponent = ({ id }) => {
     }
   };
 
-  useEffect(() => {
-    initFacebookSDK();
-  }, []);
-
   const handleBuyProduct = () => {
     if (user?.id === "") {
       navigate("/sign-in", { state: location?.pathname });
@@ -135,29 +126,85 @@ const ProductDetailComponent = ({ id }) => {
     }
   };
 
-  const fetchGetAllPublisher = async () => {
-    const res = await PublisherService.getAllPublisher();
-    setArrPublisher(res.data);
-  };
+  const mutationRating = useMutationHook(({ productId, userId, rating }) => {
+    const res = ProductService.ratingProduct(productId, userId, rating);
+    return res;
+  });
+
+  const {
+    data: dataRating,
+    isSuccess: isSuccessRating,
+    isError: isErrorRating,
+  } = mutationRating;
 
   useEffect(() => {
+    if (dataRating?.status === "OK" && isSuccessRating) {
+      Message.success("Đánh giá sản phẩm thành công!");
+    } else if (isErrorRating) {
+      Message.error("Đánh giá sản phẩm thất bại");
+    }
+  }, [isSuccessRating]);
+
+  useEffect(() => {
+    const fetchGetAllAuthor = async () => {
+      const res = await AuthorService.getAllAuthor();
+      setArrAuthor(res.data);
+    };
+
+    const fetchGetAllPublisher = async () => {
+      const res = await PublisherService.getAllPublisher();
+      setArrPublisher(res.data);
+    };
+
     fetchGetAllPublisher();
+    fetchGetAllAuthor();
+    initFacebookSDK();
   }, []);
+
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      const res = await ProductService.getDetailProduct(id);
+      setProduct(res.data);
+    };
+
+    fetchProductDetail();
+  }, [isSuccessRating]);
+
+  const findUserRating = product?.ratings?.find(
+    (item) => item.userId.toString() === user.id
+  );
+
+  useEffect(() => {
+    setRatingValue(findUserRating?.rating);
+  }, [findUserRating]);
 
   const publisherBook = arrPublisher.find(
     (item) => item._id === product?.publisherId
   );
 
-  const fetchGetAllAuthor = async () => {
-    const res = await AuthorService.getAllAuthor();
-    setArrAuthor(res.data);
+  const authorBook = arrAuthor.find((item) => item._id === product?.authorId);
+
+  const handleOnChangeRating = (value) => {
+    setRatingValue(value);
   };
 
-  useEffect(() => {
-    fetchGetAllAuthor();
-  }, []);
-
-  const authorBook = arrAuthor.find((item) => item._id === product?.authorId);
+  const handleRatingProduct = () => {
+    if (user?.id === "") {
+      navigate("/sign-in", { state: location?.pathname });
+    } else {
+      if (
+        window.confirm(
+          `Bạn có chắc chắn muốn đánh giá sản phẩm này ${ratingValue} sao không?`
+        ) === true
+      ) {
+        mutationRating.mutate({
+          productId: id,
+          userId: user?.id,
+          rating: ratingValue,
+        });
+      }
+    }
+  };
 
   return (
     <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
@@ -226,13 +273,14 @@ const ProductDetailComponent = ({ id }) => {
         <div style={{ padding: "10px 0" }}>
           <Rate
             allowHalf
-            defaultValue={product?.rating}
-            value={product?.rating}
+            defaultValue={product?.averageRating}
+            value={product?.averageRating}
+            disabled
           />
-          {/* {renderStart(product?.rating)} */}
           <WrapperStyleTextSell>
             {" "}
-            | Đã bán {`${product?.selled || 100}+`}
+            (Số lượng đánh giá: {product?.ratings?.length || 0}) | Đã bán{" "}
+            {`${product?.selled || 100}+`}
           </WrapperStyleTextSell>
         </div>
         <div>
@@ -367,6 +415,21 @@ const ProductDetailComponent = ({ id }) => {
           {product?.description ? product?.description : "Đang cập nhật..."}
         </div>
       </WrapperDescription>
+      <WrapperRating>
+        <WrapperTitleRating>Đánh giá sản phẩm</WrapperTitleRating>
+        <div style={{ marginTop: "5px" }}>
+          <Rate
+            onChange={handleOnChangeRating}
+            defaultValue={ratingValue}
+            value={ratingValue}
+          />
+          &nbsp; &nbsp;
+          <ButtonComponent
+            buttonText="Gửi đánh giá"
+            onClick={handleRatingProduct}
+          />
+        </div>
+      </WrapperRating>
       <WrapperTitleComment>Viết bình luận</WrapperTitleComment>
       <CommentComponent
         dataHref={
