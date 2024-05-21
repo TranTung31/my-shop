@@ -37,7 +37,7 @@ export const getDetailUser = async (id, access_token) => {
 
 export const updateUser = async (id, data, access_token) => {
   const res = await axiosJWT.put(
-    `${process.env.REACT_APP_API}/user/update-user/${id}`,
+    `${process.env.REACT_APP_API}/user/${id}`,
     data,
     {
       headers: {

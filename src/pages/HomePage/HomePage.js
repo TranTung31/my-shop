@@ -25,14 +25,18 @@ import {
 const HomePage = () => {
   const [genreProduct, setGenreProduct] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingBookVanHocVietNam, setIsLoadingBookVanHocVietNam] = useState(false);
-  const [isLoadingBookTruyenTranh, setIsLoadingBookTruyenTranh] = useState(false);
+  const [isLoadingBookBestSeller, setIsLoadingBookBestSeller] = useState(false);
+  const [isLoadingBookVanHocVietNam, setIsLoadingBookVanHocVietNam] =
+    useState(false);
+  const [isLoadingBookTruyenTranh, setIsLoadingBookTruyenTranh] =
+    useState(false);
   const [isLoadingBookMangaComic, setIsLoadingBookMangaComic] = useState(false);
   const [limitProduct, setLimitProduct] = useState(6);
 
   const valueSearchInput = useSelector((state) => state.product.search);
   const valueDebounce = useDebounceHook(valueSearchInput, 800);
 
+  const [productBestSeller, setProductBestSeller] = useState([]);
   const [productVN, setProductVN] = useState([]);
   const [productTruyenTranh, setProductTruyenTranh] = useState([]);
   const [productMangaComic, setProductMangaComic] = useState([]);
@@ -68,6 +72,13 @@ const HomePage = () => {
     setGenreProduct(res?.data);
   };
 
+  const fetchBookBestSeller = async (page, limit) => {
+    setIsLoadingBookBestSeller(true);
+    const res = await ProductService.getBestSeller(page, limit);
+    setProductBestSeller(res?.data);
+    setIsLoadingBookBestSeller(false);
+  };
+
   const fetchBookVanHocVietNam = async (genre, limit, page) => {
     setIsLoadingBookVanHocVietNam(true);
     const res = await ProductService.getAllProductType(genre, limit, page);
@@ -90,6 +101,7 @@ const HomePage = () => {
   };
 
   useEffect(() => {
+    fetchBookBestSeller(1, 12);
     fetchBookVanHocVietNam("6646bcdd97a1e099aa7b95da", 12);
     fetchBookTruyenTranh("664621477b7a9f1af95d7473", 12);
     fetchBookMangaComic("6646c46126ef6ab2ab486b0b", 12);
@@ -130,7 +142,7 @@ const HomePage = () => {
           <SlitherComponent arrImages={[slider1, slider2, slider3]} />
           <LoadingComponent isLoading={isLoading}>
             <h2 style={{ margin: "20px 0 0", textAlign: "center" }}>
-              SÁCH BÁN CHẠY
+              TẤT CẢ SÁCH
             </h2>
             <WrapperProducts>
               {products?.data
@@ -167,6 +179,11 @@ const HomePage = () => {
             />
           </div>
 
+          <ListProducts
+            products={productBestSeller}
+            title="SÁCH BÁN CHẠY"
+            isLoading={isLoadingBookBestSeller}
+          />
           <ListProducts
             products={productVN}
             title="SÁCH VĂN HỌC VIỆT NAM"

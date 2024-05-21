@@ -11,7 +11,7 @@ export const WrapperHeader = styled.div`
 export const WrapperContent = styled.div`
   display: flex;
   flex-direction: column;
-  width: 600px;
+  width: 450px;
   height: 500px;
   border: 1px solid #ccc;
   border-radius: 20px;
