@@ -16,6 +16,7 @@ import {
   WrapperLable,
   WrapperUpload,
 } from "./styles";
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
@@ -110,11 +111,6 @@ const ProfilePage = () => {
             onChange={handleOnChangeName}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
-          <WrapperButtonComponent
-            buttonText="Cập nhật"
-            disabled={false}
-            onClick={handleUpdate}
-          ></WrapperButtonComponent>
         </WrapperInput>
 
         <WrapperInput>
@@ -124,11 +120,6 @@ const ProfilePage = () => {
             onChange={handleOnChangeEmail}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
-          <WrapperButtonComponent
-            buttonText="Cập nhật"
-            disabled={false}
-            onClick={handleUpdate}
-          ></WrapperButtonComponent>
         </WrapperInput>
 
         <WrapperInput>
@@ -139,11 +130,6 @@ const ProfilePage = () => {
             onChange={handleOnChangePhone}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
-          <WrapperButtonComponent
-            buttonText="Cập nhật"
-            disabled={false}
-            onClick={handleUpdate}
-          ></WrapperButtonComponent>
         </WrapperInput>
 
         <WrapperInput>
@@ -153,11 +139,6 @@ const ProfilePage = () => {
             onChange={handleOnChangeAddress}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
-          <WrapperButtonComponent
-            buttonText="Cập nhật"
-            disabled={false}
-            onClick={handleUpdate}
-          ></WrapperButtonComponent>
         </WrapperInput>
 
         <WrapperInput>
@@ -167,11 +148,6 @@ const ProfilePage = () => {
             onChange={handleOnChangeCity}
             style={{ width: "300px", border: "1px solid #ccc" }}
           ></InputForm>
-          <WrapperButtonComponent
-            buttonText="Cập nhật"
-            disabled={false}
-            onClick={handleUpdate}
-          ></WrapperButtonComponent>
         </WrapperInput>
 
         <WrapperInput>
@@ -192,12 +168,15 @@ const ProfilePage = () => {
               }}
             />
           )}
-          <WrapperButtonComponent
+        </WrapperInput>
+
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <ButtonComponent
             buttonText="Cập nhật"
             disabled={false}
             onClick={handleUpdate}
-          ></WrapperButtonComponent>
-        </WrapperInput>
+          />
+        </div>
       </WrapperContent>
     </div>
   );

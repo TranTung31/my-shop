@@ -59,9 +59,9 @@ const CardProduct = (props) => {
       <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportProduct>
         <span style={{ marginRight: "5px" }}>
-          {rating || 5} <StarFilled style={{ color: "#FFC400" }} />{" "}
+          {rating || 0} <StarFilled style={{ color: "#FFC400" }} />{" "}
         </span>
-        <WrapperStyleTextSell> | Đã bán {selled || 100}+</WrapperStyleTextSell>
+        <WrapperStyleTextSell> | Đã bán {selled || 0}</WrapperStyleTextSell>
       </WrapperReportProduct>
       <WrapperPriceProduct>
         <div>{`${convertPrice(price - price * (discount / 100))}₫`}</div>

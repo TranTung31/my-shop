@@ -31,9 +31,7 @@ export const createProduct = async (data) => {
 };
 
 export const getDetailProduct = async (id) => {
-  const res = await axios.get(
-    `${process.env.REACT_APP_API}/product/get-detail/${id}`
-  );
+  const res = await axios.get(`${process.env.REACT_APP_API}/product/${id}`);
   return res.data;
 };
 
@@ -125,7 +123,14 @@ export const getProductAuthor = async (
   const sort = typeSort ? `&sort=${typeSort}` : "";
   const rating = ratingValue ? `&rating=${ratingValue}` : "";
   const res = await axios.get(
-    `${process.env.REACT_APP_API}/product/get-product-author?filter=authorId&filter=${authorId}&limit=${limit}&page=${page}&publisher=publisherID${publisherID}${sort}${rating}`
+    `${process.env.REACT_APP_API}/product/get-product-author?filter=authorId&filter=${authorId}&limit=${limit}&page=${page}&publisher=publisherId${publisherID}${sort}${rating}`
+  );
+  return res.data;
+};
+
+export const getBestSeller = async (page, limit) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/product/get-product-best-seller?page=${page}&limit=${limit}`
   );
   return res.data;
 };

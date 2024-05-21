@@ -80,7 +80,6 @@ const ProductAuthorPage = () => {
         setTotalProduct(res?.data?.length);
       }
       setIsLoading(false);
-      return res.data;
     };
 
     fetchProductAuthor();
@@ -279,14 +278,12 @@ const ProductAuthorPage = () => {
     }
   };
 
-  const fetchAllPublisher = async () => {
-    const res = await PublisherService.getAllPublisher();
-    if (res?.status === "OK") {
-      setPublisher(res?.data);
-    }
-  };
-
   useEffect(() => {
+    const fetchAllPublisher = async () => {
+      const res = await PublisherService.getAllPublisher();
+      setPublisher(res?.data);
+    };
+
     fetchAllPublisher();
   }, []);
 

@@ -16,7 +16,7 @@ function ListProducts(props) {
             name={product.name}
             price={product.price}
             image={product.image}
-            rating={product.rating}
+            rating={product.averageRating}
             description={product.description}
             countInStock={product.countInStock}
             type={product.type}
