@@ -105,6 +105,7 @@ const OrderSuccessPage = () => {
                         alt="image"
                         width={60}
                         height={60}
+                        style={{ objectFit: "cover" }}
                       />
                     </div>
                     <WrapperProductName>{item.name}</WrapperProductName>

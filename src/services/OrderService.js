@@ -53,15 +53,16 @@ export const getOrderDetail = async (id, access_token) => {
   return res.data;
 };
 
-export const deleteOrder = async (id, access_token, orderItems) => {
+export const deleteOrder = async (id, access_token, orderItems, email) => {
   const res = await axiosJWT.delete(
     `${process.env.REACT_APP_API}/order/${id}`,
     {
-      data: orderItems,
-    },
-    {
       headers: {
         token: `Bearer ${access_token}`,
+      },
+      data: {
+        orderItems,
+        email,
       },
     }
   );
