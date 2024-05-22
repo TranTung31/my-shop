@@ -28,15 +28,18 @@ const MyOrderPage = () => {
   const [isLoadingDataOrders, setIsLoadingDataOrders] = useState(false);
   const [pageValue, setPageValue] = useState(1);
   const [totalOrder, setTotalOrder] = useState(10);
+
   const user = useSelector((state) => state.user);
   const location = useLocation();
   const navigate = useNavigate();
   const { id, token } = location.state;
 
-  const mutationDelete = useMutationHook(({ id, access_token, orderItems }) => {
-    const res = OrderService.deleteOrder(id, access_token, orderItems);
-    return res;
-  });
+  const mutationDelete = useMutationHook(
+    ({ id, access_token, orderItems, email }) => {
+      const res = OrderService.deleteOrder(id, access_token, orderItems, email);
+      return res;
+    }
+  );
 
   const {
     data: dataDelete,
@@ -127,6 +130,7 @@ const MyOrderPage = () => {
         id: orderId,
         access_token: user?.access_token,
         orderItems: order?.orderItems,
+        email: order?.shippingAddress?.email,
       });
     }
   };

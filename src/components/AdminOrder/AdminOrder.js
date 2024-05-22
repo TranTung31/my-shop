@@ -81,10 +81,12 @@ const AdminOrder = () => {
     return res;
   });
 
-  const mutationDelete = useMutationHook(({ id, access_token, orderItems }) => {
-    const res = OrderService.deleteOrder(id, access_token, orderItems);
-    return res;
-  });
+  const mutationDelete = useMutationHook(
+    ({ id, access_token, orderItems, email }) => {
+      const res = OrderService.deleteOrder(id, access_token, orderItems, email);
+      return res;
+    }
+  );
 
   const mutationDeleteMany = useMutationHook(({ ids, access_token }) => {
     const res = OrderService.deleteManyOrder(ids, access_token);
@@ -129,7 +131,12 @@ const AdminOrder = () => {
 
   useEffect(() => {
     getOrderAdmin();
-  }, [pageValue, isSuccessUpdateOrder, isSuccessDeleteOrder]);
+  }, [
+    pageValue,
+    isSuccessUpdateOrder,
+    isSuccessDeleteOrder,
+    isSuccessDeleteManyOrder,
+  ]);
 
   const queryGetAllOrder = useQuery({
     queryKey: ["orders"],
@@ -237,35 +244,22 @@ const AdminOrder = () => {
   };
 
   const handleUpdateOrder = () => {
-    mutationUpdate.mutate(
-      {
-        id: isRowSelected,
-        data: stateOrderDetailPut,
-        access_token: user?.access_token,
-      },
-      {
-        onSettled: () => {
-          queryGetAllOrder.refetch();
-        },
-      }
-    );
+    mutationUpdate.mutate({
+      id: isRowSelected,
+      data: stateOrderDetailPut,
+      access_token: user?.access_token,
+    });
   };
 
   const orderFind = dataOrder?.find((item) => isRowSelected === item.key);
 
   const handleDelete = () => {
-    mutationDelete.mutate(
-      {
-        id: isRowSelected,
-        access_token: user?.access_token,
-        orderItems: orderFind?.orderItems,
-      },
-      {
-        onSettled: () => {
-          queryGetAllOrder.refetch();
-        },
-      }
-    );
+    mutationDelete.mutate({
+      id: isRowSelected,
+      access_token: user?.access_token,
+      orderItems: orderFind?.orderItems,
+      email: orderFind?.shippingAddress?.email,
+    });
   };
 
   const renderIcons = () => {
@@ -337,14 +331,7 @@ const AdminOrder = () => {
   ];
 
   const handleDeleteManyOrder = (ids) => {
-    mutationDeleteMany.mutate(
-      { ids: ids, access_token: user?.access_token },
-      {
-        onSettled: () => {
-          queryGetAllOrder.refetch();
-        },
-      }
-    );
+    mutationDeleteMany.mutate({ ids: ids, access_token: user?.access_token });
   };
 
   const handleOnChangeDelivered = (e) => {

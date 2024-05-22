@@ -209,66 +209,24 @@ const ProductDetailComponent = ({ id }) => {
   return (
     <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
       <Col span={10}>
-        <Image
-          src={product?.image}
-          alt="image product"
-          style={{ width: "526px", height: "600px" }}
-          preview={false}
-        />
-        <div style={{ marginTop: "20px" }}>
-          <Row style={{ display: "flex", justifyContent: "space-between" }}>
-            <Col span={4} style={{ flex: "none" }}>
-              <WrapperImageProductSmall
-                style={{ width: "70px", height: "88px" }}
-                src={product?.image}
-                alt="image product small"
-                preview={true}
-              />
-            </Col>
-            <Col span={4} style={{ flex: "none" }}>
-              <WrapperImageProductSmall
-                style={{ width: "70px", height: "88px" }}
-                src={product?.image}
-                alt="image product small"
-                preview={true}
-              ></WrapperImageProductSmall>
-            </Col>
-            <Col span={4} style={{ flex: "none" }}>
-              <WrapperImageProductSmall
-                style={{ width: "70px", height: "88px" }}
-                src={product?.image}
-                alt="image product small"
-                preview={true}
-              ></WrapperImageProductSmall>
-            </Col>
-            <Col span={4} style={{ flex: "none" }}>
-              <WrapperImageProductSmall
-                style={{ width: "70px", height: "88px" }}
-                src={product?.image}
-                alt="image product small"
-                preview={true}
-              ></WrapperImageProductSmall>
-            </Col>
-            <Col span={4} style={{ flex: "none" }}>
-              <WrapperImageProductSmall
-                style={{ width: "70px", height: "88px" }}
-                src={product?.image}
-                alt="image product small"
-                preview={true}
-              ></WrapperImageProductSmall>
-            </Col>
-            <Col span={4} style={{ flex: "none" }}>
-              <WrapperImageProductSmall
-                style={{ width: "70px", height: "88px" }}
-                src={product?.image}
-                alt="image product small"
-                preview={true}
-              ></WrapperImageProductSmall>
-            </Col>
-          </Row>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <Col span={4} style={{ flex: "none" }}>
+            <WrapperImageProductSmall
+              style={{ width: "70px", height: "88px" }}
+              src={product?.image}
+              alt="image product small"
+              preview={true}
+            />
+          </Col>
+          <Image
+            src={product?.image}
+            alt="image product"
+            style={{ width: "526px", height: "600px", objectFit: "cover" }}
+            preview={false}
+          />
         </div>
       </Col>
-      <Col span={14} style={{ padding: "0 16px 16px" }}>
+      <Col span={14} style={{ padding: "0 16px 16px 100px" }}>
         <WrapperStyleTextHeader>{product?.name}</WrapperStyleTextHeader>
         <div style={{ padding: "10px 0" }}>
           <Rate
@@ -279,8 +237,8 @@ const ProductDetailComponent = ({ id }) => {
           />
           <WrapperStyleTextSell>
             {" "}
-            (Số lượng đánh giá: {product?.ratings?.length || 0}) | Đã bán{" "}
-            {`${product?.selled || 100}+`}
+            (Số lượng đánh giá: {product?.ratings?.length || 0}) | (Đã bán{" "}
+            {`${product?.selled || 0}+`})
           </WrapperStyleTextSell>
         </div>
         <div>
