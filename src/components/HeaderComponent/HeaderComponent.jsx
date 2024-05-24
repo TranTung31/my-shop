@@ -58,6 +58,9 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
       case "profile":
         navigate("/user-detail");
         break;
+      case "password":
+        navigate("/change-password");
+        break;
       case "admin":
         navigate("/system/admin");
         break;
@@ -86,6 +89,9 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     <div>
       <WrapperContentPopover onClick={() => handleClickNavigate("profile")}>
         Thông tin người dùng
+      </WrapperContentPopover>
+      <WrapperContentPopover onClick={() => handleClickNavigate("password")}>
+        Đổi mật khẩu
       </WrapperContentPopover>
       {user?.isAdmin === true && (
         <WrapperContentPopover onClick={() => handleClickNavigate("admin")}>

@@ -107,6 +107,19 @@ export const deleteManyUser = async (ids, access_token) => {
   return res.data;
 };
 
+export const changePassword = async (userId, data, access_token) => {
+  const res = await axiosJWT.put(
+    `${process.env.REACT_APP_API}/user/change-password/${userId}`,
+    data,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
 export const getCountUser = async (access_token) => {
   const res = await axiosJWT.get(
     `${process.env.REACT_APP_API}/user/get-count-user`,
