@@ -1,17 +1,17 @@
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
 import { Button, Col, Image, InputNumber, Rate, Row } from "antd";
 import { useEffect, useState } from "react";
+import { Comments, FacebookProvider } from "react-facebook";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as Message from "../../components/Message/Message";
+import useMutationHook from "../../hooks/useMutationHook";
 import { addProductToCart, resetOrder } from "../../redux/slides/orderSlice";
+import * as AuthorService from "../../services/AuthorService";
 import * as ProductService from "../../services/ProductService";
 import * as PublisherService from "../../services/PublisherService";
-import * as AuthorService from "../../services/AuthorService";
 import { convertPrice, initFacebookSDK } from "../../utils/utils";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
-import CommentComponent from "../CommentComponent/CommentComponent";
 import LikeButtonComponent from "../LikeButtonComponent/LikeButtonComponent";
 import {
   WrapperCurrentAddress,
@@ -28,7 +28,6 @@ import {
   WrapperTitleDescription,
   WrapperTitleRating,
 } from "./styles";
-import useMutationHook from "../../hooks/useMutationHook";
 
 const ProductDetailComponent = ({ id }) => {
   const [numberProduct, setNumberProduct] = useState(1);
@@ -308,64 +307,85 @@ const ProductDetailComponent = ({ id }) => {
               : window.location.href
           }
         />
-        <div style={{ marginTop: "20px" }}>
-          <WrapperTextQuantity>Số Lượng</WrapperTextQuantity>
-          <div style={{ marginTop: "10px" }}>
-            <Button
-              onClick={() => handleChangeNumberProduct("decrease")}
-              icon={<MinusOutlined />}
-            />
-            <InputNumber
-              defaultValue={numberProduct}
-              onChange={onChangeQuantityProduct}
-              value={numberProduct}
-              min={1}
-              max={product?.countInStock}
-              style={{ width: "40px", margin: "0px 5px" }}
-            />
-            <Button
-              onClick={() =>
-                handleChangeNumberProduct(
-                  "increase",
-                  numberProduct === product?.countInStock
-                )
-              }
-              icon={<PlusOutlined />}
+        {product?.countInStock !== 0 ? (
+          <div>
+            <div style={{ marginTop: "20px" }}>
+              <WrapperTextQuantity>Số Lượng</WrapperTextQuantity>
+              <div style={{ marginTop: "10px" }}>
+                <Button
+                  onClick={() => handleChangeNumberProduct("decrease")}
+                  icon={<MinusOutlined />}
+                />
+                <InputNumber
+                  defaultValue={numberProduct}
+                  onChange={onChangeQuantityProduct}
+                  value={numberProduct}
+                  min={1}
+                  max={product?.countInStock}
+                  style={{ width: "40px", margin: "0px 5px" }}
+                />
+                <Button
+                  onClick={() =>
+                    handleChangeNumberProduct(
+                      "increase",
+                      numberProduct === product?.countInStock
+                    )
+                  }
+                  icon={<PlusOutlined />}
+                />
+              </div>
+            </div>
+            <div style={{ marginTop: "20px", display: "flex", gap: "20px" }}>
+              <ButtonComponent
+                buttonText="Thêm vào giỏ"
+                styleButton={{
+                  backgroundColor: "rgb(255, 66, 78)",
+                  width: "220px",
+                  height: "48px",
+                  border: "none",
+                }}
+                styleTextButton={{
+                  color: "#fff",
+                  fontSize: "15px",
+                  fontWeight: "700",
+                }}
+                onClick={handleAddProductToCart}
+              />
+              <ButtonComponent
+                onClick={handleBuyProduct}
+                buttonText="Mua ngay"
+                styleButton={{
+                  backgroundColor: "#fff",
+                  width: "220px",
+                  height: "48px",
+                  border: "1px solid rgb(13, 92, 182)",
+                }}
+                styleTextButton={{
+                  color: "rgb(13, 92, 182)",
+                  fontSize: "15px",
+                  fontWeight: "700",
+                }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div style={{ marginTop: "20px" }}>
+            <ButtonComponent
+              buttonText="Tạm hết hàng"
+              styleButton={{
+                backgroundColor: "rgb(255, 66, 78)",
+                width: "220px",
+                height: "48px",
+                border: "none",
+              }}
+              styleTextButton={{
+                color: "#fff",
+                fontSize: "15px",
+                fontWeight: "700",
+              }}
             />
           </div>
-        </div>
-        <div style={{ marginTop: "20px", display: "flex", gap: "20px" }}>
-          <ButtonComponent
-            buttonText="Thêm vào giỏ"
-            styleButton={{
-              backgroundColor: "rgb(255, 66, 78)",
-              width: "220px",
-              height: "48px",
-              border: "none",
-            }}
-            styleTextButton={{
-              color: "#fff",
-              fontSize: "15px",
-              fontWeight: "700",
-            }}
-            onClick={handleAddProductToCart}
-          />
-          <ButtonComponent
-            onClick={handleBuyProduct}
-            buttonText="Mua ngay"
-            styleButton={{
-              backgroundColor: "#fff",
-              width: "220px",
-              height: "48px",
-              border: "1px solid rgb(13, 92, 182)",
-            }}
-            styleTextButton={{
-              color: "rgb(13, 92, 182)",
-              fontSize: "15px",
-              fontWeight: "700",
-            }}
-          />
-        </div>
+        )}
       </Col>
       <WrapperDescription>
         <WrapperTitleDescription>Mô tả sản phẩm</WrapperTitleDescription>
@@ -389,14 +409,11 @@ const ProductDetailComponent = ({ id }) => {
         </div>
       </WrapperRating>
       <WrapperTitleComment>Viết bình luận</WrapperTitleComment>
-      <CommentComponent
-        dataHref={
-          process.env.REACT_APP_CHECK_LOCAL || true
-            ? "https://developers.facebook.com/docs/plugins/comments#configurator"
-            : window.location.href
-        }
-        width={1270}
-      />
+      <div style={{ width: "1270px" }}>
+        <FacebookProvider appId="1473682613178203">
+          <Comments href={`www.facebook.com/post/${id}`} />
+        </FacebookProvider>
+      </div>
     </Row>
   );
 };

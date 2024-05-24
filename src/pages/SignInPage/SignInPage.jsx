@@ -182,7 +182,7 @@ const SignInPage = () => {
               onClick={handleSignIn}
             />
           </LoadingComponent>
-          <WrapperTextLight>Quên mật khẩu?</WrapperTextLight>
+          {/* <WrapperTextLight>Quên mật khẩu?</WrapperTextLight> */}
           <p style={{ fontSize: "1.5rem" }}>
             Chưa có tài khoản?{" "}
             <WrapperTextLight onClick={handleNavigateSignUp}>
@@ -199,7 +199,7 @@ const SignInPage = () => {
               fontWeight: "500",
             }}
           >
-            Mua sắm tại My Shop
+            Mua sắm tại PeggyBooks Shop
           </h4>
         </WrapperContainerRight>
       </WrapperForm>

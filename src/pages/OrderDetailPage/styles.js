@@ -8,7 +8,7 @@ export const WrapperHeaderUser = styled.div`
 
 export const WrapperOrderDetailPage = styled.div`
   width: 1285px;
-  height: 1000px;
+  height: 100vh;
   margin: 0 auto;
 `;
 
