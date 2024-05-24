@@ -1,4 +1,5 @@
 import AdminPage from "../pages/AdminPage/AdminPage";
+import ChangePasswordPage from "../pages/ChangePasswordPage/ChangePasswordPage";
 import ContactPage from "../pages/ContactPage/ContactPage";
 import HomePage from "../pages/HomePage/HomePage";
 import IntroPage from "../pages/IntroPage/IntroPage";
@@ -127,6 +128,12 @@ export const routes = [
   {
     path: "/search",
     page: ProductSearchPage,
+    isShowHeader: true,
+    isShowFooter: false,
+  },
+  {
+    path: "/change-password",
+    page: ChangePasswordPage,
     isShowHeader: true,
     isShowFooter: false,
   },
