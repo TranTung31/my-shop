@@ -164,7 +164,7 @@ const SignUpPage = () => {
               fontWeight: "500",
             }}
           >
-            Mua sắm tại My Shop
+            Mua sắm tại PeggysBook Shop
           </h4>
         </WrapperContainerRight>
       </WrapperForm>

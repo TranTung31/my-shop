@@ -26,7 +26,7 @@ const CardProduct = (props) => {
 
   const navigate = useNavigate();
 
-  const handleProductDetail = (id) => {
+  const handleProductDetail = () => {
     navigate(`/product-detail/${id}`);
   };
 
@@ -40,8 +40,9 @@ const CardProduct = (props) => {
       }}
       bodyStyle={{ padding: "10px" }}
       cover={<img alt="example" src={image} style={{ objectFit: "cover" }} />}
-      onClick={() => countInStock !== 0 && handleProductDetail(id)}
-      disabled={countInStock === 0}
+      onClick={handleProductDetail}
+      // onClick={() => countInStock !== 0 && handleProductDetail(id)}
+      // disabled={countInStock === 0}
     >
       <img
         src={logo}

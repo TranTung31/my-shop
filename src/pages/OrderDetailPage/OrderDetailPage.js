@@ -1,4 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import Loading from "../../components/LoadingComponent/LoadingComponent";
+import * as OrderService from "../../services/OrderService";
+import { convertDate, convertPrice } from "../../utils/utils";
 import {
   WrapperAllPrice,
   WrapperContentInfo,
@@ -14,13 +19,6 @@ import {
   WrapperStyleContent,
   WrapperStyleTitle,
 } from "./styles";
-import logo from "../../assets/images/logo.png";
-import { useLocation, useParams } from "react-router-dom";
-import { useEffect } from "react";
-import * as OrderService from "../../services/OrderService";
-import { useQuery } from "@tanstack/react-query";
-import { convertDate, convertPrice } from "../../utils/utils";
-import Loading from "../../components/LoadingComponent/LoadingComponent";
 
 const OrderDetailPage = () => {
   const params = useParams();
