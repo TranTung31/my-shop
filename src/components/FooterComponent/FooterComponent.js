@@ -1,4 +1,13 @@
 import { Col, Image, Row } from "antd";
+import Link from "antd/es/typography/Link";
+import atm from "../../assets/images/atm.png";
+import delivery from "../../assets/images/delivery.png";
+import facebook from "../../assets/images/facebook.png";
+import github from "../../assets/images/github.png";
+import paypal from "../../assets/images/paypal.png";
+import visa from "../../assets/images/visa.png";
+import vnpay from "../../assets/images/vnpay.png";
+import zalo from "../../assets/images/zalo.png";
 import {
   WrapperFooter,
   WrapperFooterColBody,
@@ -7,15 +16,6 @@ import {
   WrapperFooterContent,
   WrapperFooterCopyright,
 } from "./styles";
-import paypal from "../../assets/images/paypal.png";
-import visa from "../../assets/images/visa.png";
-import delivery from "../../assets/images/delivery.png";
-import atm from "../../assets/images/atm.png";
-import vnpay from "../../assets/images/vnpay.png";
-import facebook from "../../assets/images/facebook.png";
-import github from "../../assets/images/github.png";
-import zalo from "../../assets/images/zalo.png";
-import Link from "antd/es/typography/Link";
 
 const FooterComponent = () => {
   return (
@@ -43,8 +43,8 @@ const FooterComponent = () => {
             <WrapperFooterColBody>Gửi yêu cầu hỗ trợ</WrapperFooterColBody>
           </Col>
           <Col span={4}>
-            <WrapperFooterColHeading>Về TungBooks</WrapperFooterColHeading>
-            <WrapperFooterColBody>Giới thiệu về TungBooks</WrapperFooterColBody>
+            <WrapperFooterColHeading>Về PeggyBooks</WrapperFooterColHeading>
+            <WrapperFooterColBody>Giới thiệu về PeggyBooks</WrapperFooterColBody>
             <WrapperFooterColBody>Tuyển dụng</WrapperFooterColBody>
             <WrapperFooterColBody>
               Chính sách bảo mật thanh toán
@@ -60,7 +60,7 @@ const FooterComponent = () => {
             <WrapperFooterColBody>
               Quy chế hoạt động Sàn GDTMĐT
             </WrapperFooterColBody>
-            <WrapperFooterColBody>Bán hàng cùng TungBooks</WrapperFooterColBody>
+            <WrapperFooterColBody>Bán hàng cùng PeggyBooks</WrapperFooterColBody>
           </Col>
           <Col span={4}>
             <WrapperFooterColHeading>
