@@ -72,13 +72,12 @@ const SignUpPage = () => {
   };
 
   return (
-    <WrapperContainer>
-      <WrapperForm>
-        <WrapperContainerLeft>
-          <h1 style={{ fontSize: "2.4rem", fontWeight: "590" }}>Xin chào</h1>
-          <span style={{ fontSize: "1.6rem", lineHeight: "20px" }}>
-            Đăng nhập và tạo tài khoản
-          </span>
+    <div className="flex items-center justify-center bg-[#cccccc] h-[100vh]">
+      <div className="flex max-w-[800px] h-[410px] rounded-md bg-white">
+        <div className="min-w-[330px] lg:min-w-[500px] px-6 lg:p-10 flex flex-col justify-center">
+          <h1 className="text-lg font-semibold py-1">Xin chào</h1>
+          <span className="text-base py-1">Đăng nhập và tạo tài khoản</span>
+
           <InputForm
             placeholder="abc@gmail.com"
             style={{ margin: "10px 0" }}
@@ -89,12 +88,12 @@ const SignUpPage = () => {
             onKeyDown={handleKeyDown}
           />
 
-          <div style={{ position: "relative" }}>
+          <div className="relative">
             <span
               onClick={() => {
                 setIsShowPassword(!isShowPassword);
               }}
-              style={STYLES_ICON}
+              className="absolute z-10 top-[7px] right-3 cursor-pointer"
             >
               {isShowPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
             </span>
@@ -107,12 +106,12 @@ const SignUpPage = () => {
             />
           </div>
 
-          <div style={{ position: "relative", marginTop: "10px" }}>
+          <div className="relative mt-[10px]">
             <span
               onClick={() => {
                 setIsShowConfirm(!isShowConfirm);
               }}
-              style={STYLES_ICON}
+              className="absolute z-10 top-[7px] right-3 cursor-pointer"
             >
               {isShowConfirm ? <EyeOutlined /> : <EyeInvisibleOutlined />}
             </span>
@@ -134,9 +133,9 @@ const SignUpPage = () => {
               styleButton={{
                 backgroundColor: "rgb(255, 66, 78)",
                 width: "100%",
-                height: "48px",
+                height: "42px",
                 border: "none",
-                margin: "26px 0 10px",
+                margin: "26px 0",
               }}
               styleTextButton={{
                 color: "#fff",
@@ -147,28 +146,32 @@ const SignUpPage = () => {
               onClick={handleSignUp}
             />
           </LoadingComponent>
-          <p style={{ fontSize: "1.5rem" }}>
-            Đã có tài khoản?{" "}
-            <WrapperTextLight onClick={handleNavigateLogin}>
+          <div className="text-base flex gap-2">
+            <span>Đã có tài khoản?</span>
+            <span
+              className="text-[#0d5cb6] cursor-pointer"
+              onClick={handleNavigateLogin}
+            >
               Đăng nhập
-            </WrapperTextLight>
-          </p>
-        </WrapperContainerLeft>
+            </span>
+          </div>
+        </div>
 
-        <WrapperContainerRight>
-          <Image src={imageForm} width="203px" height="203px" preview={false} />
-          <h4
-            style={{
-              color: "rgb(11, 116, 229)",
-              fontSize: "1.7rem",
-              fontWeight: "500",
-            }}
-          >
-            Mua sắm tại PeggysBook Shop
-          </h4>
-        </WrapperContainerRight>
-      </WrapperForm>
-    </WrapperContainer>
+        <div className="hidden md:block md:min-w-[300px] bg-[#c7ecee]">
+          <div className="w-full h-full flex flex-col items-center justify-center">
+            <Image
+              src={imageForm}
+              width="203px"
+              height="203px"
+              preview={false}
+            />
+            <h4 className="text-base font-semibold py-5">
+              Mua sắm tại PeggyBooks Shop
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

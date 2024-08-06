@@ -1,21 +1,9 @@
-import { EllipsisOutlined, CalendarOutlined } from "@ant-design/icons";
+import { CalendarOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { Pagination } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import * as NewService from "../../services/NewService";
-import {
-  WrapperNews,
-  WrapperNewsItem,
-  WrapperNewsItemBody,
-  WrapperNewsItemBodyInfo,
-  WrapperNewsItemHeader,
-  WrapperNewsItemHeaderAuthor,
-  WrapperNewsItemThumb,
-  WrapperNewsList,
-  WrapperNewsNavigate,
-  WrapperNewsNavigateHome,
-} from "./styles";
 import { convertDate } from "../../utils/utils";
 
 function NewsPage() {
@@ -30,7 +18,6 @@ function NewsPage() {
     const fetchDataNew = async () => {
       setIsLoadingNew(true);
       const res = await NewService.getNew(pageValue, 5);
-      console.log("🚀 ~ fetchDataNew ~ res:", res);
       setDataNew(res?.data);
       setTotalNew(res?.totalNew);
       setIsLoadingNew(false);
@@ -44,49 +31,58 @@ function NewsPage() {
   };
 
   return (
-    <WrapperNews>
-      <div style={{ width: "1285px", height: "100%", margin: "0 auto" }}>
-        <WrapperNewsNavigate>
-          <WrapperNewsNavigateHome onClick={() => navigate("/")}>
+    <div className="w-full h-calc-100-minus-80">
+      <div className="w-[1285px] h-[100%] mx-auto my-0">
+        <div className="text-base py-4">
+          <span
+            className="font-semibold cursor-pointer"
+            onClick={() => navigate("/")}
+          >
             Trang chủ
-          </WrapperNewsNavigateHome>
-          <span> -- Tin tức</span>
-        </WrapperNewsNavigate>
+          </span>
+          <span> / Tin tức</span>
+        </div>
         <LoadingComponent isLoading={isLoadingNew}>
-          <WrapperNewsList>
+          <div className="flex flex-col gap-5 w-[50%] pb-5">
             {dataNew.map((item, index) => (
-              <WrapperNewsItem>
-                <WrapperNewsItemHeader>
-                  <WrapperNewsItemHeaderAuthor>
+              <div className="rounded-2xl p-6 border-2 border-gray-300">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
                     <img
                       src="https://files.fullstack.edu.vn/f8-prod/blog_posts/9976/65fa652ce3a64.jpg"
                       alt=""
+                      className="rounded-[50%] w-[30px] h-[30px] object-cover"
                     />
                     <span>Admin</span>
-                  </WrapperNewsItemHeaderAuthor>
-                  <div style={{ cursor: "pointer" }}>
-                    <EllipsisOutlined style={{ fontSize: "20px" }} />
                   </div>
-                </WrapperNewsItemHeader>
-                <WrapperNewsItemBody
+                  <div className="cursor-pointer">
+                    <EllipsisOutlined className="text-[20px]" />
+                  </div>
+                </div>
+                <div
+                  className="flex items-center justify-between mt-5 cursor-pointer"
                   onClick={() => navigate(`/new-detail/${item._id}`)}
                 >
-                  <WrapperNewsItemBodyInfo>
-                    <h2>{item.title}</h2>
-                    <div style={{ fontSize: "1.6rem" }}>
-                      <span><CalendarOutlined /> {convertDate(item.createdAt)}</span>
+                  <div className="pr-3">
+                    <h2 className="pb-2 font-semibold">{item.title}</h2>
+                    <div className="text-base flex items-center gap-2">
+                      <CalendarOutlined />
+                      <span>{convertDate(item.createdAt)}</span>
                     </div>
-                  </WrapperNewsItemBodyInfo>
-                  <WrapperNewsItemThumb>
-                    <img src={item.image} alt="" />
-                  </WrapperNewsItemThumb>
-                </WrapperNewsItemBody>
-                <WrapperNewsItemBody></WrapperNewsItemBody>
-              </WrapperNewsItem>
+                  </div>
+                  <div>
+                    <img
+                      src={item.image}
+                      alt=""
+                      className="w-[200px] max-h-[120px] rounded-2xl block object-cover overflow-hidden"
+                    />
+                  </div>
+                </div>
+              </div>
             ))}
-          </WrapperNewsList>
+          </div>
         </LoadingComponent>
-        <div style={{ marginBottom: "20px" }}>
+        <div className="mb-5">
           <Pagination
             defaultCurrent={pageValue}
             total={totalNew}
@@ -95,7 +91,7 @@ function NewsPage() {
           />
         </div>
       </div>
-    </WrapperNews>
+    </div>
   );
 }
 

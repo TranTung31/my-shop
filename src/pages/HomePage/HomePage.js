@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Space } from "antd";
+import { Dropdown, Space } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -8,19 +8,13 @@ import slider2 from "../../assets/images/slider2.webp";
 import slider3 from "../../assets/images/slider3.webp";
 import CardProduct from "../../components/CardProduct/CardProduct";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import SlitherComponent from "../../components/SliderComponent/SliderComponent";
+import SliderComponent from "../../components/SliderComponent/SliderComponent";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import { useDebounceHook } from "../../hooks/useDebounceHook";
 import * as GenreService from "../../services/GenreService";
 import * as ProductService from "../../services/ProductService";
 import ListProducts from "./ListProducts/ListProducts";
-import {
-  WrapperButtonComponent,
-  WrapperDropdown,
-  WrapperNav,
-  WrapperProducts,
-  WrapperTypeProduct,
-} from "./styles";
+import { WrapperButtonComponent, WrapperProducts } from "./styles";
 
 const HomePage = () => {
   const [genreProduct, setGenreProduct] = useState([]);
@@ -115,19 +109,35 @@ const HomePage = () => {
 
   return (
     <>
-      <div style={{ width: "1285px", margin: "0 auto" }}>
-        <WrapperTypeProduct>
-          <WrapperDropdown
+      <div className="flex justify-center">
+        <div className="w-[1285px] flex items-center gap-[10px] overflow-x-auto whitespace-nowrap">
+          <Dropdown
             menu={{
               items,
             }}
+            className="text-base p-3 cursor-pointer hover:bg-[#189eff] hover:text-white transition"
           >
             <Space>Danh Mục Sản Phẩm</Space>
-          </WrapperDropdown>
-          <WrapperNav onClick={() => navigate("/intro")}>Giới thiệu</WrapperNav>
-          <WrapperNav onClick={() => navigate("/news")}>Tin tức</WrapperNav>
-          <WrapperNav onClick={() => navigate("/contact")}>Liên hệ</WrapperNav>
-        </WrapperTypeProduct>
+          </Dropdown>
+          <div
+            className="text-base p-3 cursor-pointer hover:bg-[#189eff] hover:text-white transition"
+            onClick={() => navigate("/intro")}
+          >
+            Giới thiệu
+          </div>
+          <div
+            className="text-base p-3 cursor-pointer hover:bg-[#189eff] hover:text-white transition"
+            onClick={() => navigate("/news")}
+          >
+            Tin tức
+          </div>
+          <div
+            className="text-base p-3 cursor-pointer hover:bg-[#189eff] hover:text-white transition"
+            onClick={() => navigate("/contact")}
+          >
+            Liên hệ
+          </div>
+        </div>
       </div>
 
       <div
@@ -138,46 +148,49 @@ const HomePage = () => {
         }}
         className="body"
       >
-        <div style={{ width: "1285px", margin: "0 auto" }}>
-          <SlitherComponent arrImages={[slider1, slider2, slider3]} />
+        <div className="w-[1285px] mx-auto my-0">
+          <SliderComponent arrImages={[slider1, slider2, slider3]} />
+
           <LoadingComponent isLoading={isLoading}>
-            <h2 style={{ margin: "20px 0 0", textAlign: "center" }}>
-              TẤT CẢ SÁCH
-            </h2>
-            <WrapperProducts>
-              {products?.data
-                ?.filter((product) =>
-                  product.name
-                    .toLowerCase()
-                    .includes(valueDebounce.toLowerCase())
-                )
-                .map((product, index) => (
-                  <CardProduct
-                    key={product._id}
-                    name={product.name}
-                    price={product.price}
-                    image={product.image}
-                    rating={product.averageRating}
-                    description={product.description}
-                    countInStock={product.countInStock}
-                    type={product.type}
-                    discount={product.discount}
-                    selled={product.selled}
-                    id={product._id}
-                  />
-                ))}
-            </WrapperProducts>
+            <div className="hidden lg:block">
+              <h2 className="mt-5 text-center text-lg font-semibold">
+                TẤT CẢ SÁCH
+              </h2>
+              <WrapperProducts>
+                {products?.data
+                  ?.filter((product) =>
+                    product.name
+                      .toLowerCase()
+                      .includes(valueDebounce.toLowerCase())
+                  )
+                  .map((product, index) => (
+                    <CardProduct
+                      key={product._id}
+                      name={product.name}
+                      price={product.price}
+                      image={product.image}
+                      rating={product.averageRating}
+                      description={product.description}
+                      countInStock={product.countInStock}
+                      type={product.type}
+                      discount={product.discount}
+                      selled={product.selled}
+                      id={product._id}
+                    />
+                  ))}
+              </WrapperProducts>
+              <div className="text-center">
+                <WrapperButtonComponent
+                  buttonText={"Xem thêm"}
+                  disabled={
+                    products?.totalProduct === products?.data?.length ||
+                    products?.totalPage === 1
+                  }
+                  onClick={handleLoadMore}
+                />
+              </div>
+            </div>
           </LoadingComponent>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <WrapperButtonComponent
-              buttonText={"Xem thêm"}
-              disabled={
-                products?.totalProduct === products?.data?.length ||
-                products?.totalPage === 1
-              }
-              onClick={handleLoadMore}
-            />
-          </div>
 
           <ListProducts
             products={productBestSeller}

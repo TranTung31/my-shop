@@ -36,8 +36,8 @@ function ContactPage() {
 
   const user = useSelector((state) => state.user);
 
-  const mutationCreate = useMutationHook(({ data, access_token }) => {
-    const res = ContactService.createContact(data, access_token);
+  const mutationCreate = useMutationHook(({ data }) => {
+    const res = ContactService.createContact(data);
     return res;
   });
 
@@ -58,7 +58,6 @@ function ContactPage() {
     if (user.id !== "") {
       mutationCreate.mutate({
         data: { userName, email, address, content, userId: user?.id },
-        access_token: user?.access_token,
       });
     } else {
       navigate("/sign-in");
@@ -66,51 +65,50 @@ function ContactPage() {
   };
 
   return (
-    <div style={{ backgroundColor: "#f5f5fa" }}>
-      <WrapperContact>
-        <WrapperContactNavigate>
-          <WrapperContactNavigateHome onClick={() => navigate("/")}>
+    <div className="bg-[#f5f5fa]">
+      <div className="w-[1285px] h-[100%] mx-auto my-0">
+        <div className="text-base py-4">
+          <span
+            className="font-semibold cursor-pointer"
+            onClick={() => navigate("/")}
+          >
             Trang chủ
-          </WrapperContactNavigateHome>
-          <span> -- Liên hệ</span>
-        </WrapperContactNavigate>
+          </span>
+          <span> / Liên hệ</span>
+        </div>
 
         <div>
-          <h2 style={{ margin: 0, paddingBottom: "20px" }}>Liên hệ</h2>
-
-          <WrapperContactList>
-            <WrapperContactItems>
-              <WrapperContactItemsIcon>
+          <div className="flex justify-between gap-5 pb-5">
+            <div className="flex w-[410px] bg-white p-3 rounded-lg">
+              <div className="w-10 h-10 leading-[34px] bg-[#228b22] rounded-[50%] text-center text-white">
                 <EnvironmentOutlined />
-              </WrapperContactItemsIcon>
-              <WrapperContactItemsContent>
-                <WrapperContactItemsTitle>Địa chỉ:</WrapperContactItemsTitle>
+              </div>
+              <div className="w-calc-100-minus-40 pl-3 text-base">
+                <div className="font-semibold">Địa chỉ:</div>
                 <div>Hải Trung, Hải Hậu, Nam Định</div>
-              </WrapperContactItemsContent>
-            </WrapperContactItems>
+              </div>
+            </div>
 
-            <WrapperContactItems>
-              <WrapperContactItemsIcon>
+            <div className="flex w-[410px] bg-white p-3 rounded-lg">
+              <div className="w-10 h-10 leading-[34px] bg-[#228b22] rounded-[50%] text-center text-white">
                 <QuestionOutlined />
-              </WrapperContactItemsIcon>
-              <WrapperContactItemsContent>
-                <WrapperContactItemsTitle>
-                  Gửi thắc mắc:
-                </WrapperContactItemsTitle>
+              </div>
+              <div className="w-calc-100-minus-40 pl-3 text-base">
+                <div className="font-semibold">Gửi thắc mắc:</div>
                 <div>trantung310502@gmail.com</div>
-              </WrapperContactItemsContent>
-            </WrapperContactItems>
+              </div>
+            </div>
 
-            <WrapperContactItems>
-              <WrapperContactItemsIcon>
+            <div className="flex w-[410px] bg-white p-3 rounded-lg">
+              <div className="w-10 h-10 leading-[34px] bg-[#228b22] rounded-[50%] text-center text-white">
                 <PhoneOutlined />
-              </WrapperContactItemsIcon>
-              <WrapperContactItemsContent>
-                <WrapperContactItemsTitle>Điện thoại:</WrapperContactItemsTitle>
+              </div>
+              <div className="w-calc-100-minus-40 pl-3 text-base">
+                <div className="font-semibold">Điện thoại:</div>
                 <div>0369554336</div>
-              </WrapperContactItemsContent>
-            </WrapperContactItems>
-          </WrapperContactList>
+              </div>
+            </div>
+          </div>
 
           <LoadingComponent isLoading={isLoadingCreate}>
             <WrapperContactForm>
@@ -147,7 +145,10 @@ function ContactPage() {
                     },
                   ]}
                 >
-                  <Input onChange={(e) => setEmail(e.target.value)} type="email"/>
+                  <Input
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                  />
                 </Form.Item>
 
                 <Form.Item
@@ -184,7 +185,7 @@ function ContactPage() {
                     textAlign: "center",
                   }}
                 >
-                  <Button type="primary" htmlType="submit">
+                  <Button type="primary" htmlType="submit" className="mb-5">
                     Gửi liên hệ
                   </Button>
                 </Form.Item>
@@ -192,7 +193,7 @@ function ContactPage() {
             </WrapperContactForm>
           </LoadingComponent>
         </div>
-      </WrapperContact>
+      </div>
     </div>
   );
 }

@@ -12,13 +12,6 @@ import * as Message from "../../components/Message/Message";
 import useMutationHook from "../../hooks/useMutationHook";
 import { updateUser } from "../../redux/slides/userSlice";
 import * as UserService from "../../services/UserService";
-import {
-  WrapperContainer,
-  WrapperContainerLeft,
-  WrapperContainerRight,
-  WrapperForm,
-  WrapperTextLight,
-} from "./styles";
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -110,13 +103,11 @@ const SignInPage = () => {
   };
 
   return (
-    <WrapperContainer>
-      <WrapperForm>
-        <WrapperContainerLeft>
-          <h1 style={{ fontSize: "24px", fontWeight: "590" }}>Xin chào</h1>
-          <span style={{ fontSize: "16px", lineHeight: "20px" }}>
-            Đăng nhập và tạo tài khoản
-          </span>
+    <div className="flex items-center justify-center bg-[#cccccc] h-[100vh]">
+      <div className="flex max-w-[800px] h-[410px] rounded-md bg-white">
+        <div className="min-w-[330px] lg:min-w-[500px] px-6 lg:p-10 flex flex-col justify-center">
+          <h1 className="text-lg font-semibold py-1">Xin chào</h1>
+          <span className="text-base py-1">Đăng nhập và tạo tài khoản</span>
 
           <InputForm
             placeholder="abc@gmail.com"
@@ -128,17 +119,10 @@ const SignInPage = () => {
             onKeyDown={handleKeyDown}
           />
 
-          <div style={{ position: "relative" }}>
+          <div className="relative">
             <span
               onClick={() => setIsShowPassword(!isShowPassword)}
-              style={{
-                fontSize: "16px",
-                position: "absolute",
-                zIndex: "10",
-                top: "10px",
-                right: "16px",
-                cursor: "pointer",
-              }}
+              className="absolute z-10 top-[7px] right-3 cursor-pointer"
             >
               {isShowPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
             </span>
@@ -151,14 +135,7 @@ const SignInPage = () => {
               onKeyDown={handleKeyDown}
             />
             {data?.status === "ERR" && (
-              <span
-                style={{
-                  fontSize: "15px",
-                  color: "red",
-                  display: "block",
-                  paddingTop: "10px",
-                }}
-              >
+              <span className="text-base text-red-500 block pt-3">
                 {data?.message}
               </span>
             )}
@@ -169,9 +146,9 @@ const SignInPage = () => {
               styleButton={{
                 backgroundColor: "rgb(255, 66, 78)",
                 width: "100%",
-                height: "48px",
+                height: "42px",
                 border: "none",
-                margin: "26px 0 30px",
+                margin: "26px 0",
               }}
               styleTextButton={{
                 color: "#fff",
@@ -182,28 +159,32 @@ const SignInPage = () => {
               onClick={handleSignIn}
             />
           </LoadingComponent>
-          {/* <WrapperTextLight>Quên mật khẩu?</WrapperTextLight> */}
-          <p style={{ fontSize: "1.5rem" }}>
-            Chưa có tài khoản?{" "}
-            <WrapperTextLight onClick={handleNavigateSignUp}>
+          <div className="text-base flex gap-2">
+            <span>Chưa có tài khoản?</span>
+            <span
+              className="text-[#0d5cb6] cursor-pointer"
+              onClick={handleNavigateSignUp}
+            >
               Tạo tài khoản
-            </WrapperTextLight>
-          </p>
-        </WrapperContainerLeft>
-        <WrapperContainerRight>
-          <Image src={imageForm} width="203px" height="203px" preview={false} />
-          <h4
-            style={{
-              color: "rgb(11, 116, 229)",
-              fontSize: "1.7rem",
-              fontWeight: "500",
-            }}
-          >
-            Mua sắm tại PeggyBooks Shop
-          </h4>
-        </WrapperContainerRight>
-      </WrapperForm>
-    </WrapperContainer>
+            </span>
+          </div>
+        </div>
+
+        <div className="hidden md:block md:min-w-[300px] bg-[#c7ecee]">
+          <div className="w-full h-full flex flex-col items-center justify-center">
+            <Image
+              src={imageForm}
+              width="203px"
+              height="203px"
+              preview={false}
+            />
+            <h4 className="text-base font-semibold py-5">
+              Mua sắm tại PeggyBooks Shop
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

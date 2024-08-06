@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as NewService from "../../services/NewService";
 import { WrapperNewDetail } from "./styles";
 
@@ -7,6 +7,7 @@ function NewDetailPage() {
   const [dataDetailNew, setDataDetailNew] = useState(null);
 
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const fetchDetailNew = async () => {
     const res = await NewService.getDetailNew(id);
@@ -19,9 +20,23 @@ function NewDetailPage() {
 
   return (
     <WrapperNewDetail>
-      <div style={{ width: "1285px", height: "100%", margin: "0 auto" }}>
-        <h2>Chi tiết bài viết</h2>
-        <h3>{dataDetailNew?.title}</h3>
+      <div className="w-[1285px] h-[100%] mx-auto my-0">
+        <div className="text-base py-4">
+          <span
+            className="font-semibold cursor-pointer"
+            onClick={() => navigate("/")}
+          >
+            Trang chủ
+          </span>
+          <span>
+            {" "}
+            /{" "}
+            <span className="cursor-pointer" onClick={() => navigate("/news")}>
+              Tin tức
+            </span>{" "}
+            / Chi tiết bài viết / {dataDetailNew?.title}
+          </span>
+        </div>
         <div
           dangerouslySetInnerHTML={{ __html: dataDetailNew?.ckeditor }}
         ></div>

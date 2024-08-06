@@ -1,27 +1,22 @@
 import React from "react";
-import {
-  WrapperIntro,
-  WrapperIntroNavigate,
-  WrapperIntroNavigateHome,
-} from "./styles";
 import { useNavigate } from "react-router-dom";
 
 function IntroPage() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ backgroundColor: "#f5f5fa" }}>
-      <WrapperIntro>
-        <WrapperIntroNavigate>
-          <WrapperIntroNavigateHome onClick={() => navigate("/")}>
+    <div className="bg-[#f5f5fa]">
+      <div className="w-[1285px] mx-auto my-0 pb-5">
+        <div className="text-base py-4">
+          <span className="font-semibold cursor-pointer" onClick={() => navigate("/")}>
             Trang chủ
-          </WrapperIntroNavigateHome>
-          <span> -- Giới thiệu</span>
-        </WrapperIntroNavigate>
+          </span>
+          <span> / Giới thiệu</span>
+        </div>
 
         <div>
-          <h2 style={{ margin: 0 }}>Giới thiệu nhà sách PeggyBooks</h2>
-          <div style={{ fontSize: "1.6rem" }}>
+          <h2 className="text-base">Giới thiệu nhà sách PeggyBooks</h2>
+          <div className="text-base">
             <br />
             My-shop-sandy-two.vercel.app là trang thương mại điện tử của Nhà
             Sách PeggyBooks, hệ thống nhà sách thân thuộc của nhiều gia đình
@@ -91,7 +86,7 @@ function IntroPage() {
             </span>
           </div>
         </div>
-      </WrapperIntro>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,6 @@ import {
   CaretDownOutlined,
   SearchOutlined,
   ShoppingCartOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import { Badge, Popover } from "antd";
 import { useEffect, useState } from "react";
@@ -11,17 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { resetUser } from "../../redux/slides/userSlice";
 import * as UserService from "../../services/UserService";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
-import {
-  WrapperCart,
-  WrapperContainer,
-  WrapperContentPopover,
-  WrapperHeader,
-  WrapperLogo,
-  WrapperSearch,
-  WrapperUser,
-  WrapperUserAll,
-  WrapperUserText,
-} from "./styles";
+import { WrapperContentPopover, WrapperSearch } from "./styles";
 
 const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const navigate = useNavigate();
@@ -129,16 +118,17 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   };
 
   return (
-    <WrapperContainer>
-      <WrapperHeader>
-        <div>
-          <WrapperLogo onClick={() => navigate("/")}>
-            PeggyBooks Shop
-          </WrapperLogo>
+    <div className="bg-[#189eff] flex justify-center">
+      <div className="w-[1285px] h-[70px] flex items-center justify-between py-[10px] overflow-x-auto whitespace-nowrap">
+        <div
+          onClick={() => navigate("/")}
+          className="text-lg cursor-pointer text-white font-semibold mr-4"
+        >
+          PeggyBooks Shop
         </div>
 
         {!isHiddenSearch && (
-          <div>
+          <div className="mx-4">
             <WrapperSearch
               placeholder="Vui lòng nhập..."
               allowClear
@@ -155,62 +145,53 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           </div>
         )}
 
-        <WrapperUserAll>
-          <WrapperUser>
-            {valueAvatar ? (
+        <div className="flex items-center gap-[30px] ml-4">
+          <div className="flex items-center gap-1">
+            {valueAvatar && (
               <img
                 src={valueAvatar}
                 alt="avatar"
-                style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
+                className="w-[36px] h-[36px] rounded-[50%] object-cover flex-shrink-0"
               />
-            ) : (
-              <div style={{ fontSize: "30px", color: "#fff" }}>
-                <UserOutlined />
-              </div>
             )}
 
             {user?.access_token ? (
               <LoadingComponent isLoading={isLoading}>
                 <Popover content={content} trigger="hover">
-                  <span
-                    style={{
-                      color: "rgba(255, 255, 255)",
-                      display: "block",
-                      cursor: "pointer",
-                      marginLeft: "4px",
-                    }}
-                  >
+                  <span className="text-white block cursor-pointer">
                     {valueName || user?.email}
                   </span>
                 </Popover>
               </LoadingComponent>
             ) : (
-              <WrapperUserText onClick={() => navigate("/sign-in")}>
+              <div
+                className="flex flex-col text-white cursor-pointer"
+                onClick={() => navigate("/sign-in")}
+              >
                 <span>Đăng nhập/Đăng ký</span>
-                <span>
+                <span className="flex items-center gap-1">
                   Tài khoản <CaretDownOutlined />
                 </span>
-              </WrapperUserText>
+              </div>
             )}
-          </WrapperUser>
+          </div>
+
           {!isHiddenCart && (
-            <WrapperCart onClick={() => navigate("/order")}>
+            <div
+              className="flex items-center gap-1 cursor-pointer"
+              onClick={() => navigate("/order")}
+            >
               <Badge count={order.orderItems?.length} size="small">
-                <div style={{ fontSize: "30px", color: "#fff" }}>
+                <div className="text-[30px] text-white">
                   <ShoppingCartOutlined />
                 </div>
               </Badge>
-              <span style={{ color: "#fff", marginLeft: "6px" }}>Giỏ hàng</span>
-            </WrapperCart>
+              <span className="text-white">Giỏ hàng</span>
+            </div>
           )}
-        </WrapperUserAll>
-      </WrapperHeader>
-    </WrapperContainer>
+        </div>
+      </div>
+    </div>
   );
 };
 

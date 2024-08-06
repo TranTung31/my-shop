@@ -64,23 +64,23 @@ const AdminContact = () => {
   const [formCreate] = Form.useForm();
   const [formUpdate] = Form.useForm();
 
-  const mutationUpdate = useMutationHook(({ id, data, access_token }) => {
-    const res = ContactService.updateContact(id, data, access_token);
+  const mutationUpdate = useMutationHook(({ id, data }) => {
+    const res = ContactService.updateContact(id, data);
     return res;
   });
 
-  const mutationDelete = useMutationHook(({ id, access_token }) => {
-    const res = ContactService.deleteContact(id, access_token);
+  const mutationDelete = useMutationHook(({ id }) => {
+    const res = ContactService.deleteContact(id);
     return res;
   });
 
-  const mutationDeleteMany = useMutationHook(({ ids, access_token }) => {
-    const res = ContactService.deleteManyContact(ids, access_token);
+  const mutationDeleteMany = useMutationHook(({ ids }) => {
+    const res = ContactService.deleteManyContact(ids);
     return res;
   });
 
-  const mutationCreate = useMutationHook(({ data, access_token }) => {
-    const res = ContactService.createContact(data, access_token);
+  const mutationCreate = useMutationHook(({ data }) => {
+    const res = ContactService.createContact(data);
     return res;
   });
 
@@ -196,7 +196,6 @@ const AdminContact = () => {
   const handleCreateContact = () => {
     mutationCreate.mutate({
       data: newStateContact,
-      access_token: user?.access_token,
     });
   };
 
@@ -214,23 +213,19 @@ const AdminContact = () => {
     });
   };
 
-  const fetchGetDetailContact = async () => {
+  const fetchDetailContact = async () => {
     const res = await ContactService.getDetailContact(isRowSelected);
-
-    if (res?.data) {
-      setStateDetailContact({
-        userName: res?.data?.userName,
-        email: res?.data?.email,
-        address: res?.data?.address,
-        content: res?.data?.content,
-      });
-    }
-    return res;
+    setStateDetailContact({
+      userName: res?.data?.userName,
+      email: res?.data?.email,
+      address: res?.data?.address,
+      content: res?.data?.content,
+    });
   };
 
   useEffect(() => {
-    if (isRowSelected) {
-      fetchGetDetailContact();
+    if (isRowSelected && isOpenModalEdit) {
+      fetchDetailContact();
     }
   }, [isRowSelected]);
 
@@ -256,7 +251,6 @@ const AdminContact = () => {
   const handleDeleteContact = () => {
     mutationDelete.mutate({
       id: isRowSelected,
-      access_token: user?.access_token,
     });
   };
 
@@ -392,7 +386,7 @@ const AdminContact = () => {
   ];
 
   const handleDeleteManyContact = (ids) => {
-    mutationDeleteMany.mutate({ ids: ids, access_token: user?.access_token });
+    mutationDeleteMany.mutate({ ids });
   };
 
   const handleOnChangePage = (page, pageSize) => {

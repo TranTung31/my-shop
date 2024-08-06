@@ -1,4 +1,5 @@
 import axios from "axios";
+import authorizedAxiosInstance from "../utils/authorizedAxios";
 
 export const createNew = async (data) => {
   const res = await axios.post(`${process.env.REACT_APP_API}/new`, data);
@@ -6,7 +7,7 @@ export const createNew = async (data) => {
 };
 
 export const getNew = async (page, limit) => {
-  const res = await axios.get(
+  const res = await authorizedAxiosInstance.get(
     `${process.env.REACT_APP_API}/new?page=${page}&limit=${limit}`
   );
   return res.data;

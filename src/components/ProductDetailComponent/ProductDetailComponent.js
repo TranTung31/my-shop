@@ -13,21 +13,6 @@ import * as PublisherService from "../../services/PublisherService";
 import { convertPrice, initFacebookSDK } from "../../utils/utils";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import LikeButtonComponent from "../LikeButtonComponent/LikeButtonComponent";
-import {
-  WrapperCurrentAddress,
-  WrapperCurrentPrice,
-  WrapperDescription,
-  WrapperDetailBook,
-  WrapperDetailBookAuthor,
-  WrapperImageProductSmall,
-  WrapperRating,
-  WrapperStyleTextHeader,
-  WrapperStyleTextSell,
-  WrapperTextQuantity,
-  WrapperTitleComment,
-  WrapperTitleDescription,
-  WrapperTitleRating,
-} from "./styles";
 
 const ProductDetailComponent = ({ id }) => {
   const [numberProduct, setNumberProduct] = useState(1);
@@ -206,12 +191,12 @@ const ProductDetailComponent = ({ id }) => {
   };
 
   return (
-    <Row style={{ padding: "20px 10px 10px", backgroundColor: "#fff" }}>
+    <Row className="px-3 pt-5 pb-3 bg-white">
       <Col span={10}>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <Col span={4} style={{ flex: "none" }}>
-            <WrapperImageProductSmall
-              style={{ width: "70px", height: "88px" }}
+        <div className="flex gap-3">
+          <Col span={4} className="flex-none">
+            <Image
+              className="w-[70px] h-[88px]"
               src={product?.image}
               alt="image product small"
               preview={true}
@@ -225,65 +210,69 @@ const ProductDetailComponent = ({ id }) => {
           />
         </div>
       </Col>
-      <Col span={14} style={{ padding: "0 16px 16px 100px" }}>
-        <WrapperStyleTextHeader>{product?.name}</WrapperStyleTextHeader>
-        <div style={{ padding: "10px 0" }}>
+      <Col
+        span={14}
+        className="flex flex-col gap-3 pt-0 px-4 pb-[100px] text-lg"
+      >
+        <h1 className="text-xl font-semibold">{product?.name}</h1>
+        <div className="flex items-center gap-2">
           <Rate
             allowHalf
             defaultValue={product?.averageRating}
             value={product?.averageRating}
             disabled
+            className="text-sm"
           />
-          <WrapperStyleTextSell>
+          <div>
             {" "}
             (Số lượng đánh giá: {product?.ratings?.length || 0}) | (Đã bán{" "}
             {`${product?.selled || 0}+`})
-          </WrapperStyleTextSell>
+          </div>
         </div>
-        <div>
-          <WrapperCurrentPrice>
+        <div className="text-[#d51c24]">
+          <span className="font-semibold">
             {convertPrice(
               product?.price - product?.price * (product?.discount / 100)
             )}{" "}
-            <sup>₫</sup> &nbsp;
-            <s style={{ color: "#ccc" }}>
-              {convertPrice(product?.price)} <sup>₫</sup>
-            </s>{" "}
-            &nbsp;
-            <span style={{ color: "#000", fontSize: "1.6rem" }}>
-              (Bạn đã tiết kiệm được {product?.discount}%)
-            </span>
-          </WrapperCurrentPrice>
+          </span>
+          <sup>₫</sup> &nbsp;
+          <s className="text-[#cccccc]">
+            {convertPrice(product?.price)} <sup>₫</sup>
+          </s>{" "}
+          &nbsp;
+          <span className="font-semibold">
+            (Bạn đã tiết kiệm được {product?.discount}%)
+          </span>
         </div>
-        <WrapperDetailBook>
+        <div>
           <span>Mã sách: {product?._id}</span>
-        </WrapperDetailBook>
-        <WrapperDetailBook>
+        </div>
+        <div>
           <span>Tác giả: </span>
           {authorBook?.name ? (
-            <WrapperDetailBookAuthor
-              className="author"
+            <span
+              className="author text-red-500 font-semibold hover:opacity-85 cursor-pointer"
               onClick={() => navigate(`/product-author/${authorBook?._id}`)}
             >
               {authorBook?.name}
-            </WrapperDetailBookAuthor>
+            </span>
           ) : (
             <span>Đang cập nhật</span>
           )}
-        </WrapperDetailBook>
-        <WrapperDetailBook>
+        </div>
+        <div>
           <span>Số trang: {product?.pageCount}</span>
-        </WrapperDetailBook>
-        <WrapperDetailBook>
+        </div>
+        <div>
           <span>Định dạng: {product?.format}</span>
-        </WrapperDetailBook>
-        <WrapperDetailBook>
+        </div>
+        <div>
           <span>Trọng lượng: {product?.weight}</span>
-        </WrapperDetailBook>
-        <WrapperDetailBook>
+        </div>
+        <div>
           <span>Nhà xuất bản: {publisherBook?.name}</span>
-        </WrapperDetailBook>
-        <WrapperCurrentAddress>
+        </div>
+        <div>
           <span>Giao đến: </span>
           <span className="address">
             {user?.address && user?.city
@@ -299,19 +288,20 @@ const ProductDetailComponent = ({ id }) => {
               Đổi địa chỉ
             </span>
           ) : null}
-        </WrapperCurrentAddress>
+        </div>
         <LikeButtonComponent
           dataHref={
             process.env.REACT_APP_CHECK_LOCAL
               ? "https://developers.facebook.com/docs/plugins/"
               : window.location.href
           }
+          className="mt-1"
         />
         {product?.countInStock !== 0 ? (
           <div>
-            <div style={{ marginTop: "20px" }}>
-              <WrapperTextQuantity>Số Lượng</WrapperTextQuantity>
-              <div style={{ marginTop: "10px" }}>
+            <div>
+              <div>Số Lượng</div>
+              <div className="mt-3">
                 <Button
                   onClick={() => handleChangeNumberProduct("decrease")}
                   icon={<MinusOutlined />}
@@ -322,7 +312,7 @@ const ProductDetailComponent = ({ id }) => {
                   value={numberProduct}
                   min={1}
                   max={product?.countInStock}
-                  style={{ width: "40px", margin: "0px 5px" }}
+                  className="w-10 mx-1 my-0"
                 />
                 <Button
                   onClick={() =>
@@ -335,7 +325,7 @@ const ProductDetailComponent = ({ id }) => {
                 />
               </div>
             </div>
-            <div style={{ marginTop: "20px", display: "flex", gap: "20px" }}>
+            <div className="mt-5 flex gap-5">
               <ButtonComponent
                 buttonText="Thêm vào giỏ"
                 styleButton={{
@@ -387,32 +377,34 @@ const ProductDetailComponent = ({ id }) => {
           </div>
         )}
       </Col>
-      <WrapperDescription>
-        <WrapperTitleDescription>Mô tả sản phẩm</WrapperTitleDescription>
-        <div style={{ marginTop: "10px", fontSize: "1.6rem" }}>
+      <div className="mt-5 text-lg">
+        <h1 className="text-xl font-semibold">Mô tả sản phẩm</h1>
+        <div className="mt-3">
           {product?.description ? product?.description : "Đang cập nhật..."}
         </div>
-      </WrapperDescription>
-      <WrapperRating>
-        <WrapperTitleRating>Đánh giá sản phẩm</WrapperTitleRating>
-        <div style={{ marginTop: "5px" }}>
+      </div>
+      <div className="w-full mt-5">
+        <h1 className="text-xl font-semibold">Đánh giá sản phẩm</h1>
+        <div className="flex items-center gap-3 mt-3">
           <Rate
             onChange={handleOnChangeRating}
             defaultValue={ratingValue}
             value={ratingValue}
+            className="text-base"
           />
-          &nbsp; &nbsp;
           <ButtonComponent
             buttonText="Gửi đánh giá"
             onClick={handleRatingProduct}
           />
         </div>
-      </WrapperRating>
-      <WrapperTitleComment>Viết bình luận</WrapperTitleComment>
-      <div style={{ width: "1270px" }}>
-        <FacebookProvider appId="1473682613178203">
-          <Comments href={`www.facebook.com/post/${id}`} />
-        </FacebookProvider>
+      </div>
+      <div className="w-full mt-5">
+        <h1 className="text-xl font-semibold">Viết bình luận</h1>
+        <div className="w-[1270px]">
+          <FacebookProvider appId="1473682613178203">
+            <Comments href={`www.facebook.com/post/${id}`} />
+          </FacebookProvider>
+        </div>
       </div>
     </Row>
   );
