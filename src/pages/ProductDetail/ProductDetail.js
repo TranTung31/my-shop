@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
 import ProductDetailComponent from "../../components/ProductDetailComponent/ProductDetailComponent";
-import { WrapperTitle, WrapperTitleHomePage } from "./styles";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -8,20 +7,16 @@ const ProductDetail = () => {
   const { id: idProduct } = useParams();
 
   return (
-    <div
-      style={{
-        width: "100%",
-        backgroundColor: "#efefef",
-      }}
-    >
-      <div style={{ width: "1285px", margin: "0 auto" }}>
-        <WrapperTitle>
-          <WrapperTitleHomePage onClick={() => navigate("/")}>
+    <div className="w-full bg-[#efefef]">
+      <div className="w-[1285px] mx-auto my-0">
+        <div className="flex gap-1 py-4 text-lg">
+          <div onClick={() => navigate("/")} className="font-semibold">
             Trang chủ
-          </WrapperTitleHomePage>
-          <span> -- Chi tiết sản phẩm</span>
-        </WrapperTitle>
-        <ProductDetailComponent id={idProduct}/>
+          </div>
+          <span>/</span>
+          <span>Chi tiết sản phẩm</span>
+        </div>
+        <ProductDetailComponent id={idProduct} />
       </div>
     </div>
   );

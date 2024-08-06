@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { WrapperTextProduct } from "./styles";
 
 const TypeProduct = ({ type, genre }) => {
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ const TypeProduct = ({ type, genre }) => {
     );
   };
   return (
-    <WrapperTextProduct onClick={handleTypeProduct}>{type}</WrapperTextProduct>
+    <div onClick={handleTypeProduct}>{type}</div>
   );
 };
 

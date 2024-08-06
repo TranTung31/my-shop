@@ -1,6 +1,6 @@
 import { WrapperSlider } from "./styles";
 
-const SlitherComponent = ({ arrImages }) => {
+const SliderComponent = ({ arrImages }) => {
   const settings = {
     dots: true,
     infinite: true,
@@ -11,12 +11,18 @@ const SlitherComponent = ({ arrImages }) => {
     autoplay: true,
   };
   return (
-    <WrapperSlider {...settings}>
-      {arrImages.map((image, index) => {
-        return <img src={image} alt="slider" key={index} width="100%" height="500px"/>;
-      })}
+    <WrapperSlider {...settings} className="hidden lg:block">
+      {arrImages.map((image, index) => (
+        <div key={index} className="h-[500px]">
+          <img
+            src={image}
+            alt={`slider-${index}`}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ))}
     </WrapperSlider>
   );
 };
 
-export default SlitherComponent;
+export default SliderComponent;

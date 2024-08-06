@@ -1,13 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
-import CardProduct from "../../../components/CardProduct/CardProduct";
-import { SmoothHorizontalScrolling } from "../../../utils/utils";
-import {
-  WrapperButtonLeft,
-  WrapperButtonRight,
-  WrapperProductsScroll,
-} from "./styles";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import React, { useEffect, useRef, useState } from "react";
+import CardProduct from "../../../components/CardProduct/CardProduct";
+import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
+import { SmoothHorizontalScrolling } from "../../../utils/utils";
 
 function ListProducts(props) {
   const { products, title, isLoading } = props;
@@ -68,9 +63,9 @@ function ListProducts(props) {
 
   return (
     <LoadingComponent isLoading={isLoading}>
-      <h2 style={{ margin: "20px 0 0", textAlign: "center" }}>{title}</h2>
+      <h2 className="mt-5 text-center text-lg font-semibold">{title}</h2>
       <div style={{ position: "relative" }}>
-        <WrapperProductsScroll
+        <div
           ref={slitherRef}
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}
@@ -83,6 +78,7 @@ function ListProducts(props) {
                 }
               : null
           }
+          className="px-0 py-5 grid gap-[17px] overflow-hidden transition scroll-smooth"
         >
           {products.map((product, index) => (
             <CardProduct
@@ -100,13 +96,19 @@ function ListProducts(props) {
               productRef={productRef}
             />
           ))}
-        </WrapperProductsScroll>
-        <WrapperButtonLeft onClick={handleScrollLeft}>
+        </div>
+        <div
+          className="w-10 h-10 rounded-[50%] absolute top-[50%] left-[-20px] translate-y-[-30px] bg-[#189eff] text-white text-center leading-[34px] cursor-pointer hover:bg-[#74b9ff] hover:transition"
+          onClick={handleScrollLeft}
+        >
           <LeftOutlined />
-        </WrapperButtonLeft>
-        <WrapperButtonRight onClick={handleScrollRight}>
+        </div>
+        <div
+          className="w-10 h-10 rounded-[50%] absolute top-[50%] right-[-20px] translate-y-[-30px] bg-[#189eff] text-white text-center leading-[34px] cursor-pointer hover:bg-[#74b9ff] hover:transition"
+          onClick={handleScrollRight}
+        >
           <RightOutlined />
-        </WrapperButtonRight>
+        </div>
       </div>
     </LoadingComponent>
   );

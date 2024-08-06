@@ -63,6 +63,14 @@ export const refreshToken = async (refresh_token) => {
   return res.data;
 };
 
+export const refreshTokenAPI = async (refreshToken) => {
+  const res = await axios.put(
+    `${process.env.REACT_APP_API}/user/refresh-token`,
+    { refreshToken }
+  );
+  return res.data;
+};
+
 export const getAllUser = async (access_token) => {
   const res = await axiosJWT.get(
     `${process.env.REACT_APP_API}/user/get-all-user`,

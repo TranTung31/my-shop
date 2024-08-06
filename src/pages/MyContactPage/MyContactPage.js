@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import * as Message from "../../components/Message/Message";
 import useMutationHook from "../../hooks/useMutationHook";
 import * as ContactService from "../../services/ContactService";
+import { sortDate } from "../../utils/sorts";
 import { convertDate } from "../../utils/utils";
 import {
   WrapperContainer,
@@ -19,15 +19,13 @@ import {
   WrapperStatusTitle,
   WrapperStyleTitle,
 } from "./styles";
-import { sortDate } from "../../utils/sorts";
 
 function MyContactPage() {
   const location = useLocation();
-  const user = useSelector((state) => state.user);
-  const { id, token } = location.state;
+  const { id } = location.state;
 
   const fetchAllContactById = async () => {
-    const res = await ContactService.getContactUser(id, token);
+    const res = await ContactService.getContactUser(id);
     return res.data;
   };
 
@@ -39,8 +37,8 @@ function MyContactPage() {
   const { data: dataContactUser, isLoading: isLoadingContactUser } =
     queryContactUser;
 
-  const mutationDelete = useMutationHook(({ id, access_token }) => {
-    const res = ContactService.deleteContact(id, access_token);
+  const mutationDelete = useMutationHook(({ id }) => {
+    const res = ContactService.deleteContact(id);
     return res;
   });
 
@@ -63,7 +61,6 @@ function MyContactPage() {
       mutationDelete.mutate(
         {
           id: contactId,
-          access_token: token,
         },
         {
           onSuccess: () => {
@@ -73,8 +70,6 @@ function MyContactPage() {
       );
     }
   };
-
-  console.log(dataContactUser);
 
   return (
     <LoadingComponent isLoading={isLoadingContactUser || isLoadingDelete}>

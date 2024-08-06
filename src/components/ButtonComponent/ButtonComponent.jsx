@@ -21,6 +21,7 @@ const ButtonComponent = ({
       onClick={onClick}
       disabled={disabled}
       {...rests}
+      className={disabled ? "" : "hover:opacity-85"}
     >
       <span style={styleTextButton}>{buttonText}</span>
     </Button>

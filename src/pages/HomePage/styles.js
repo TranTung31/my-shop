@@ -1,40 +1,5 @@
 import { styled } from "styled-components";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
-import { Dropdown } from "antd";
-
-export const WrapperTypeProduct = styled.div`
-  font-size: 1.6rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 24px;
-  height: 50px;
-`;
-
-export const WrapperDropdown = styled(Dropdown)`
-  height: 100%;
-  font-size: 1.6rem;
-  transition: 0.3s;
-  cursor: pointer;
-  &:hover {
-    color: #fff;
-    background-color: #189eff;
-  }
-`;
-
-export const WrapperNav = styled.div`
-  display: flex;
-  align-items: center;
-  height: 100%;
-  font-size: 1.6rem;
-  cursor: pointer;
-  padding: 10px;
-  transition: 0.3s;
-  &:hover {
-    color: #fff;
-    background-color: #189eff;
-  }
-`;
 
 export const WrapperProducts = styled.div`
   padding: 20px 0;
