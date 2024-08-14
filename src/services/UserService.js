@@ -108,16 +108,12 @@ export const deleteManyUser = async (ids, access_token) => {
   return res.data
 }
 
-export const changePassword = async (userId, data, access_token) => {
-  const res = await axiosJWT.put(
+export const changePassword = async (userId, data) => {
+  const res = await authorizedAxiosInstance.put(
     `${process.env.REACT_APP_API}/user/change-password/${userId}`,
-    data,
-    {
-      headers: {
-        token: `Bearer ${access_token}`,
-      },
-    }
+    data
   )
+
   return res.data
 }
 
