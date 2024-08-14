@@ -1,106 +1,100 @@
-import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import { Image } from "antd";
-import jwt_decode from "jwt-decode";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import imageForm from "../../assets/images/logo-signin.png";
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
-import InputForm from "../../components/InputForm/InputForm";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import * as Message from "../../components/Message/Message";
-import useMutationHook from "../../hooks/useMutationHook";
-import { updateUser } from "../../redux/slides/userSlice";
-import * as UserService from "../../services/UserService";
+import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'
+import { Image } from 'antd'
+import jwt_decode from 'jwt-decode'
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
+import imageForm from '../../assets/images/logo-signin.png'
+import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
+import InputForm from '../../components/InputForm/InputForm'
+import LoadingComponent from '../../components/LoadingComponent/LoadingComponent'
+import * as Message from '../../components/Message/Message'
+import useMutationHook from '../../hooks/useMutationHook'
+import { updateUser } from '../../redux/slides/userSlice'
+import * as UserService from '../../services/UserService'
 
 const SignInPage = () => {
-  const [isShowPassword, setIsShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [isShowPassword, setIsShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const { state: pathProductDetail } = useLocation();
+  const { state: pathProductDetail } = useLocation()
 
   const handleNavigateSignUp = () => {
-    navigate("/sign-up");
-  };
+    navigate('/sign-up')
+  }
 
-  const mutation = useMutationHook((data) => UserService.loginUser(data));
+  const mutation = useMutationHook((data) => UserService.loginUser(data))
 
-  const { data, isLoading } = mutation;
+  const { data, isLoading } = mutation
 
   useEffect(() => {
-    if (data?.status === "OK") {
+    if (data?.status === 'OK') {
       if (!!pathProductDetail) {
-        navigate(`${pathProductDetail}`);
-        Message.success("Đăng nhập thành công!");
+        navigate(`${pathProductDetail}`)
+        Message.success('Đăng nhập thành công!')
+        localStorage.setItem('access_token', JSON.stringify(data?.access_token))
         localStorage.setItem(
-          "access_token",
-          JSON.stringify(data?.access_token)
-        );
-        localStorage.setItem(
-          "refresh_token",
+          'refresh_token',
           JSON.stringify(data?.refresh_token)
-        );
+        )
 
         if (data?.access_token) {
           // Giải mã access_token bằng JWT decoded
-          const decoded = jwt_decode(data?.access_token);
+          const decoded = jwt_decode(data?.access_token)
           if (decoded?.id) {
-            handleGetDetailUser(decoded?.id, data?.access_token);
+            handleGetDetailUser(decoded?.id, data?.access_token)
           }
         }
-        return;
+        return
       }
 
-      navigate("/");
-      Message.success("Đăng nhập thành công!");
-      localStorage.setItem("access_token", JSON.stringify(data?.access_token));
-      localStorage.setItem(
-        "refresh_token",
-        JSON.stringify(data?.refresh_token)
-      );
+      navigate('/')
+      Message.success('Đăng nhập thành công!')
+      localStorage.setItem('access_token', JSON.stringify(data?.access_token))
+      localStorage.setItem('refresh_token', JSON.stringify(data?.refresh_token))
 
       if (data?.access_token) {
         // Giải mã access_token bằng JWT decoded
-        const decoded = jwt_decode(data?.access_token);
+        const decoded = jwt_decode(data?.access_token)
         if (decoded?.id) {
-          handleGetDetailUser(decoded?.id, data?.access_token);
+          handleGetDetailUser(decoded?.id, data?.access_token)
         }
       }
     }
 
-    if (data?.status === "ERR") {
-      Message.error("Đăng nhập thất bại!");
+    if (data?.status === 'ERR') {
+      Message.error('Đăng nhập thất bại!')
     }
-  }, [data?.status]);
+  }, [data?.status])
 
   const handleGetDetailUser = async (id, token) => {
-    const storage = localStorage.getItem("refresh_token");
-    const refresh_token = JSON.parse(storage);
-    const res = await UserService.getDetailUser(id, token);
+    const storage = localStorage.getItem('refresh_token')
+    const refresh_token = JSON.parse(storage)
+    const res = await UserService.getUserDetail(id)
     dispatch(
       updateUser({
         ...res?.data,
         access_token: token,
         refresh_token: refresh_token,
       })
-    );
-  };
+    )
+  }
 
   const handleSignIn = () => {
-    mutation.mutate({ email, password });
-  };
+    mutation.mutate({ email, password })
+  }
 
   const handleKeyDown = (e) => {
     if (email && password) {
-      if (e.key === "Enter") {
-        mutation.mutate({ email, password });
+      if (e.key === 'Enter') {
+        mutation.mutate({ email, password })
       }
     }
-  };
+  }
 
   return (
     <div className="flex items-center justify-center bg-[#cccccc] h-[100vh]">
@@ -111,7 +105,7 @@ const SignInPage = () => {
 
           <InputForm
             placeholder="abc@gmail.com"
-            style={{ margin: "10px 0" }}
+            style={{ margin: '10px 0' }}
             type="email"
             size="large"
             value={email}
@@ -129,12 +123,12 @@ const SignInPage = () => {
             <InputForm
               placeholder="password"
               size="large"
-              type={isShowPassword ? "text" : "password"}
+              type={isShowPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            {data?.status === "ERR" && (
+            {data?.status === 'ERR' && (
               <span className="text-base text-red-500 block pt-3">
                 {data?.message}
               </span>
@@ -144,16 +138,16 @@ const SignInPage = () => {
             <ButtonComponent
               buttonText="Đăng nhập"
               styleButton={{
-                backgroundColor: "rgb(255, 66, 78)",
-                width: "100%",
-                height: "42px",
-                border: "none",
-                margin: "26px 0",
+                backgroundColor: 'rgb(255, 66, 78)',
+                width: '100%',
+                height: '42px',
+                border: 'none',
+                margin: '26px 0',
               }}
               styleTextButton={{
-                color: "#fff",
-                fontSize: "15px",
-                fontWeight: "700",
+                color: '#fff',
+                fontSize: '15px',
+                fontWeight: '700',
               }}
               disabled={!email || !password}
               onClick={handleSignIn}
@@ -185,7 +179,7 @@ const SignInPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SignInPage;
+export default SignInPage

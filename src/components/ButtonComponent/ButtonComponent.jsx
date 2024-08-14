@@ -1,31 +1,33 @@
-import { Button } from "antd";
+import { Button } from 'antd'
 
 const ButtonComponent = ({
+  type,
   icon,
   size,
   styleButton,
   buttonText,
   styleTextButton,
   onClick,
-  disabled,
+  disabled = false,
   ...rests
 }) => {
   return (
     <Button
+      type={type}
       icon={icon}
       size={size}
       style={{
         ...styleButton,
-        backgroundColor: disabled ? "#ccc" : styleButton?.backgroundColor,
+        backgroundColor: disabled ? '#ccc' : styleButton?.backgroundColor,
       }}
       onClick={onClick}
       disabled={disabled}
+      className={disabled ? '' : 'hover:opacity-85'}
       {...rests}
-      className={disabled ? "" : "hover:opacity-85"}
     >
       <span style={styleTextButton}>{buttonText}</span>
     </Button>
-  );
-};
+  )
+}
 
-export default ButtonComponent;
+export default ButtonComponent

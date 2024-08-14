@@ -1,18 +1,17 @@
-import { Input } from "antd";
+import { Input } from 'antd'
 
 const InputForm = (props) => {
-  const { placeholder, value, onChange, onKeyDown, style, ...rests } = props;
+  const { placeholder, value, onChange, onKeyDown, ...rests } = props
+
   return (
     <Input
       placeholder={placeholder}
       value={value}
-      style={style}
       onChange={onChange}
       onKeyDown={onKeyDown}
       {...rests}
-      className=""
     />
-  );
-};
+  )
+}
 
-export default InputForm;
+export default InputForm
